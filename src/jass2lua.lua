@@ -349,27 +349,48 @@ local function main()
 		return
 	end
 	
-	local in_script  = arg[1]
+	local input_map  = arg[1]
 	local out_script = arg[2]
 	local root_dir   = arg[3]
-	local library    = root_dir .. 'build\\scripts\\ht\\'
 
-	package.path = package.path .. ';' .. root_dir .. 'src\\?.lua'
-	package.cpath = package.cpath .. ';' .. root_dir .. 'build\\?.dll'
-
+	package.path = package.path .. ';' .. arg[3] .. 'src\\?.lua'
+	package.cpath = package.cpath .. ';' .. arg[3] .. 'build\\?.dll'
+	require 'filesystem'
 	require 'mpq_util'
 
-	for line in io.lines(library .. "common.j") do
+	local input_map  = fs.path(arg[1])
+	local out_script = fs.path(arg[2])
+	local root_dir   = fs.path(arg[3])
+	local library    = root_dir / 'build' / 'scripts' / 'ht'
+	local war3map_j  = root_dir / 'test' / 'war3map.j'
+	local common_j   = library / 'common.j'
+	local blizzard_j = library / 'blizzard.j'
+	
+	local map = mpq_open(input_map)
+	if not map then
+		print('error: Open ' .. input_map:string() .. ' failed.')
+		return
+	end
+
+	if not map:extract('war3map.j', war3map_j) then
+		if not map:extract('script\\war3map.j', war3map_j) then
+			print('error: Not found war3map.j.')
+			return 
+		end
+	end
+	map:close()
+	
+	for line in io.lines(common_j:string()) do
 		--遍历cj的每一行
 		j2l(line, true)
 	end
 	
-	for line in io.lines(library .. "blizzard.j") do
+	for line in io.lines(blizzard_j:string()) do
 		--遍历脚本的每一行
 		j2l(line)
 	end
 	
-	for line in io.lines(in_script) do
+	for line in io.lines(war3map_j:string()) do
 		--遍历脚本的每一行
 		j2l(line)
 	end
@@ -383,7 +404,7 @@ local function main()
 		ModuloReal = math.fmod
 	]])
 	
-	local file = io.open(out_script,"w")
+	local file = io.open(out_script:string(),"w")
 	file:write(table.concat(luat))
 	file:close()
 	
