@@ -334,32 +334,54 @@ do
 	end
 end
 
-for line in io.lines("common.j") do
-	--遍历cj的每一行
-	j2l(line, true)
+local function usage()
+	print('\n')
+	print('usage: jass2lua.lua input output library_dir\n')
+	print('  input       : input script path \n')
+	print('  output      : output script path\n')
+	print('  library_dir : common.j/blizzard.j\'s dir\n')
+	print('\n')
 end
 
-for line in io.lines("blizzard.j") do
-	--遍历脚本的每一行
-	j2l(line)
+local function main()
+	if (not arg) or (#arg < 3) then
+		usage()
+		return
+	end
+	
+	local in_script  = arg[1]
+	local out_script = arg[2]
+	local library    = arg[3]
+
+	for line in io.lines(library .. "common.j") do
+		--遍历cj的每一行
+		j2l(line, true)
+	end
+	
+	for line in io.lines(library .. "blizzard.j") do
+		--遍历脚本的每一行
+		j2l(line)
+	end
+	
+	for line in io.lines(in_script) do
+		--遍历脚本的每一行
+		j2l(line)
+	end
+	
+	table.insert(luat, string.format("--project 'jass2lua' complete! %d lines in %s second,by '%s'", #luat / 2, os.clock() - starttime, "MoeUshio"))
+	
+	table.insert(luat, "\n\n")
+	
+	table.insert(luat, [[
+		ModuloInteger = math.fmod
+		ModuloReal = math.fmod
+	]])
+	
+	local file = io.open(out_script,"w")
+	file:write(table.concat(luat))
+	file:close()
+	
+	print("生成完成,共计", math.floor(#luat / 2), "行,用时", os.clock() - starttime, "秒")
 end
 
-for line in io.lines("war3map.j") do
-	--遍历脚本的每一行
-	j2l(line)
-end
-
-table.insert(luat, string.format("--project 'jass2lua' complete! %d lines in %s second,by '%s'", #luat / 2, os.clock() - starttime, "MoeUshio"))
-
-table.insert(luat, "\n\n")
-
-table.insert(luat, [[
-	ModuloInteger = math.fmod
-	ModuloReal = math.fmod
-]])
-
-local file = io.open("war3map.lua","w")
-file:write(table.concat(luat))
-file:close()
-
-print("生成完成,共计", math.floor(#luat / 2), "行,用时", os.clock() - starttime, "秒")
+main()
