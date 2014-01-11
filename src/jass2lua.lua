@@ -386,35 +386,69 @@ local function main()
 	local common_j     = library / 'common.j'
 	local blizzard_j   = library / 'blizzard.j'
 	
-	local map = mpq_open(input_map)
-	if not map then
+	local inmap = mpq_open(input_map)
+	if not inmap then
 		print('error: Open ' .. input_map:string() .. ' failed.')
 		return
 	end
 
-	if not map:extract('war3map.j', war3map_j) then
-		if not map:extract('script\\war3map.j', war3map_j) then
+	if not inmap:extract('war3map.j', war3map_j) then
+		if not inmap:extract('script\\war3map.j', war3map_j) then
 			print('error: Not found war3map.j.')
 			return 
 		end
 	end
-	map:close()
+	inmap:close()
 
+	local output_map = input_map:parent_path() / ('new_' .. input_map:filename():string())
 	local blizzard_lua   = root_dir / 'test' / 'blizzard.lua'
 	local war3map_lua    = root_dir / 'test' / 'war3map.lua'
 	local initialize_lua = root_dir / 'test' / 'initialize.lua'
+	local new_war3map_j  = root_dir / 'test' / 'new_war3map.j'
 	
 	io.save(blizzard_lua, table.concat(jass2lua({common_j}, {blizzard_j})))
 	io.save(war3map_lua,  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
 	io.save(initialize_lua,  [[
 jass_ext.EnableConsole()
-local bj = require "blizzard.lua"
-setmetatable(bj, { __index = getmetatable(jass).__index })
-setmetatable(_G, { __index = bj })
+setmetatable(_G, { __index = getmetatable(jass).__index })
+require "blizzard.lua"
 require "war3map.lua"
 main()
 ]])
+	io.save(new_war3map_j,  [[
+function main takes nothing returns nothing
+	call Cheat("run initialize.lua")
+endfunction
+function config takes nothing returns nothing
+	// TODO
+endfunction
+	]])
 
+	pcall(fs.copy_file, input_map, output_map, true)
+	local outmap = mpq_open(output_map)
+	if not outmap then
+		print('error: Open ' .. output_map:string() .. ' failed.')
+		return
+	end
+
+	if not outmap:import('war3map.j', new_war3map_j) then
+		print('error: Import war3map.j failed.')
+		return
+	end
+	if not outmap:import('blizzard.lua', blizzard_lua) then
+		print('error: Import blizzard.lua failed.')
+		return
+	end
+	if not outmap:import('war3map.lua', war3map_lua) then
+		print('error: Import war3map.lua failed.')
+		return
+	end
+	if not outmap:import('initialize.lua', initialize_lua) then
+		print('error: Import initialize.lua failed.')
+		return
+	end
+	outmap:close()
+	
 	print("Conversion completed.")
 end
 

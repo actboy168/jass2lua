@@ -5,9 +5,9 @@ local mpq_meta =  { __index = {} }
 
 function mpq_meta.__index:import(path_in_archive, import_file_path)
 	return stormlib.add_file_ex(
-			self.mpq_handle,
-			file_path,
+			self.handle,
 			import_file_path,
+			path_in_archive,
 			bit32.bor(stormlib.MPQ_FILE_COMPRESS, stormlib.MPQ_FILE_REPLACEEXISTING),
 			stormlib.MPQ_COMPRESSION_ZLIB,
 			stormlib.MPQ_COMPRESSION_ZLIB)
