@@ -336,10 +336,10 @@ end
 
 local function usage()
 	print('\n')
-	print('usage: jass2lua.lua input output library_dir\n')
-	print('  input       : input script path \n')
-	print('  output      : output script path\n')
-	print('  library_dir : common.j/blizzard.j\'s dir\n')
+	print('usage: jass2lua.lua input output root_dir\n')
+	print('  input    : input script path \n')
+	print('  output   : output script path\n')
+	print('  root_dir : root dir\'s dir\n')
 	print('\n')
 end
 
@@ -351,7 +351,13 @@ local function main()
 	
 	local in_script  = arg[1]
 	local out_script = arg[2]
-	local library    = arg[3]
+	local root_dir   = arg[3]
+	local library    = root_dir .. 'build\\scripts\\ht\\'
+
+	package.path = package.path .. ';' .. root_dir .. 'src\\?.lua'
+	package.cpath = package.cpath .. ';' .. root_dir .. 'build\\?.dll'
+
+	require 'mpq_util'
 
 	for line in io.lines(library .. "common.j") do
 		--遍历cj的每一行
