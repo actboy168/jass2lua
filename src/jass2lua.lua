@@ -344,27 +344,26 @@ local function usage()
 end
 
 local function main()
-	if (not arg) or (#arg < 3) then
+	if (not arg) or (#arg < 2) then
 		usage()
 		return
 	end
 	
 	local input_map  = arg[1]
-	local out_script = arg[2]
-	local root_dir   = arg[3]
+	local root_dir   = arg[2]
 
-	package.path = package.path .. ';' .. arg[3] .. 'src\\?.lua'
-	package.cpath = package.cpath .. ';' .. arg[3] .. 'build\\?.dll'
+	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
+	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
 	require 'filesystem'
 	require 'mpq_util'
-
-	local input_map  = fs.path(arg[1])
-	local out_script = fs.path(arg[2])
-	local root_dir   = fs.path(arg[3])
-	local library    = root_dir / 'build' / 'scripts' / 'ht'
-	local war3map_j  = root_dir / 'test' / 'war3map.j'
-	local common_j   = library / 'common.j'
-	local blizzard_j = library / 'blizzard.j'
+	
+	local input_map   = fs.path(arg[1])
+	local root_dir    = fs.path(arg[2])
+	local library     = root_dir / 'build' / 'scripts' / 'ht'
+	local war3map_j   = root_dir / 'test' / 'war3map.j'
+	local common_j    = library / 'common.j'
+	local blizzard_j  = library / 'blizzard.j'
+	local war3map_lua = root_dir / 'test' / 'war3map.lua'
 	
 	local map = mpq_open(input_map)
 	if not map then
@@ -404,7 +403,7 @@ local function main()
 		ModuloReal = math.fmod
 	]])
 	
-	local file = io.open(out_script:string(),"w")
+	local file = io.open(war3map_lua:string(),"w")
 	file:write(table.concat(luat))
 	file:close()
 	
