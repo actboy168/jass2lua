@@ -70,18 +70,6 @@ table.newboolean = function()
 	return t
 end
 
---remove all units,wait to recreate by lua
-
-local g = CreateGroup()
-
-for i = 0, 15 do
-    GroupEnumUnitsOfPlayer(g, Player(i), Condition(
-        function()
-            RemoveUnit(GetFilterUnit())
-        end
-    ))
-end
-
 local function ExecuteFunc(s)
     if _G[s] and type(_G[s]) == 'function' then
         pcall(_G[s])
