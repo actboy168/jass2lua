@@ -415,10 +415,8 @@ main()
 function main takes nothing returns nothing
 	call Cheat("run initialize.lua")
 endfunction
-function config takes nothing returns nothing
-	// TODO
-endfunction
-	]])
+]] .. war3map_j:match([[(function main takes nothing returns nothing.-endfunction)]])
+)
 
 	pcall(fs.copy_file, input_map, output_map, true)
 	local outmap = mpq_open(output_map)
