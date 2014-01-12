@@ -132,15 +132,6 @@ end]])
 			end
 			return word
 		end,
-		--删除部分初始化
-		function(word)
-			if ismain then
-				if word == "InitSounds" or word == "CreateRegions" or word == "InitBlizzard" then
-					word = false
-				end
-			end
-			return word
-		end,
 		--修改256进制符号
 		function(word)
 			if string.sub(word, 1, 1) == "'" then
