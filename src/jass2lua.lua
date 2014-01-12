@@ -80,8 +80,17 @@ for i = 0, 15 do
             RemoveUnit(GetFilterUnit())
         end
     ))
-end]])
-	
+end
+
+local function ExecuteFunc(s)
+    if _G[s] and type(_G[s]) == 'function' then
+        pcall(_G[s])
+    else
+	    jass.ExecuteFunc(s)
+    end
+end
+]])
+
 	table.insert(luat, "\n\n")
 	
 	local functionTypes = {} --存放函数的类型
@@ -296,7 +305,6 @@ end]])
 		functionType(jass) --词法分析(函数)
 		findString(jass)
 		jass = string.gsub(jass, "%$", "0x")
-		jass = string.gsub(jass, [[ExecuteFunc%((.-)%)]], "pcall(_G[%1])")
 		jass = string.gsub(jass, "([%+%-%*%,%(%)%[%]])", " %1 ")
 		jass = string.gsub(jass, "([%/%=])(.)", function(a, b)
 			if a == b or (b == "=" and (a == ">" or a == "<")) then
