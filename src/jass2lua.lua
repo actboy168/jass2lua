@@ -5,44 +5,6 @@ for _, name in ipairs(jasstypes) do
 	jasstypes[name] = true --建立反向表
 end
 
-function io.lines(path)
-    local f, e = io.open(path, "rb")
-    if not f then
-        return nil, e
-    end
-    local CHUNK_SIZE = 1024
-    local buffer = ""
-    local pos_beg = 1
-    return function()
-        local pos, chars
-        while 1 do
-            pos, chars = buffer:match('()([\r\n].)', pos_beg)
-            if pos or not f then
-                break
-            elseif f then
-                local chunk = f:read(CHUNK_SIZE)
-                if chunk then
-                    buffer = buffer:sub(pos_beg) .. chunk
-                    pos_beg = 1
-                else
-                    f:close()
-                    f = nil
-                end
-            end
-        end
-        if not pos then
-            pos = #buffer
-        elseif chars == '\r\n' then
-            pos = pos + 1
-        end
-        local line = buffer:sub(pos_beg, pos)
-        pos_beg = pos + 1
-        if #line > 0 then
-            return line
-        end
-    end
-end
-
 local function jass2lua(jass_decl, jass_impl)
 	
 	local luat = {} --存放每一行代码的table
@@ -420,7 +382,7 @@ local function main()
 	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
 	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
 	require 'filesystem'
-	require 'mpq_util'
+	require 'utility'
 	
 	local input_map    = fs.path(arg[1])
 	local root_dir     = fs.path(arg[2])
