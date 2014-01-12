@@ -388,35 +388,42 @@ local function main()
 	end
 	inmap:close()
 
+		
 	local output_map = input_map:parent_path() / ('new_' .. input_map:filename():string())
-	local blizzard_lua   = root_dir / 'test' / 'blizzard.lua'
-	local war3map_lua    = root_dir / 'test' / 'war3map.lua'
-	local initialize_lua = root_dir / 'test' / 'initialize.lua'
-	local new_war3map_j  = root_dir / 'test' / 'new_war3map.j'
+	local import = {
+		['war3map.j']    = root_dir / 'test' / 'new_war3map.j',
+		['blizzard.lua'] = root_dir / 'test' / 'blizzard.lua',
+		['war3map.lua']  = root_dir / 'test' / 'war3map.lua',
+		['main.lua']     = root_dir / 'test' / 'main.lua',
+		['config.lua']   = root_dir / 'test' / 'config.lua',
+	}
 	
 	--将bj_lua包在bj库中
-	local bj_table = jass2lua({common_j}, {blizzard_j})
-	table.insert(bj_table, 1, "return {")
-	table.insert(bj_table, "}")
-	
-	io.save(blizzard_lua, table.concat(bj_table))
-	io.save(war3map_lua,  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
-	io.save(initialize_lua,  [[
+	io.save(import['blizzard.lua'], table.concat(jass2lua({common_j}, {blizzard_j})))
+	io.save(import['war3map.lua'],  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
+	io.save(import['main.lua'],  [[
 jass_ext.EnableConsole()
-local bj = require "blizzard.lua"
+setmetatable(_G, { __index = getmetatable(jass).__index })
+require "blizzard.lua"
 require "war3map.lua"
-
-setmetatable(bj, { __index = getmetatable(jass).__index })
-setmetatable(_G, { __index = bj })
-
 main()
 ]])
-	io.save(new_war3map_j,  [[
+	io.save(import['config.lua'],  [[
+jass_ext.EnableConsole()
+setmetatable(_G, { __index = getmetatable(jass).__index })
+require "blizzard.lua"
+require "war3map.lua"
+config()
+]])
+
+	io.save(import['war3map.j'],  [[
 function main takes nothing returns nothing
-	call Cheat("run initialize.lua")
+	call Cheat("run main.lua")
 endfunction
-]] .. war3map_j:match([[(function main takes nothing returns nothing.-endfunction)]])
-)
+function config takes nothing returns nothing
+	call Cheat("run config.lua")
+endfunction
+]])
 
 	pcall(fs.copy_file, input_map, output_map, true)
 	local outmap = mpq_open(output_map)
@@ -425,21 +432,11 @@ endfunction
 		return
 	end
 
-	if not outmap:import('war3map.j', new_war3map_j) then
-		print('error: Import war3map.j failed.')
-		return
-	end
-	if not outmap:import('blizzard.lua', blizzard_lua) then
-		print('error: Import blizzard.lua failed.')
-		return
-	end
-	if not outmap:import('war3map.lua', war3map_lua) then
-		print('error: Import war3map.lua failed.')
-		return
-	end
-	if not outmap:import('initialize.lua', initialize_lua) then
-		print('error: Import initialize.lua failed.')
-		return
+	for k, v in pairs(import) do
+		if not outmap:import(k, v) then
+			print('error: Import ' .. k .. ' failed.')
+			return
+		end
 	end
 	outmap:close()
 	
