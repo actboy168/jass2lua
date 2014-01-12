@@ -409,8 +409,8 @@ local function main()
 
 		
 	local output_map = input_map:parent_path() / ('new_' .. input_map:filename():string())
+	local new_war3map_j = root_dir / 'test' / 'new_war3map.j'
 	local import = {
-		['war3map.j']    = root_dir / 'test' / 'new_war3map.j',
 		['blizzard.lua'] = root_dir / 'test' / 'blizzard.lua',
 		['war3map.lua']  = root_dir / 'test' / 'war3map.lua',
 		['main.lua']     = root_dir / 'test' / 'main.lua',
@@ -435,7 +435,7 @@ require "war3map.lua"
 config()
 ]])
 
-	io.save(import['war3map.j'],  [[
+	io.save(new_war3map_j,  [[
 function main takes nothing returns nothing
 	call Cheat("run main.lua")
 endfunction
@@ -451,16 +451,29 @@ endfunction
 		return
 	end
 
-	for k, v in pairs(import) do
-		if war3mapj_in_scripts and k == 'war3map.j' then
-			k = 'scripts\\war3map.j'
+	local luac = root_dir / 'build' / 'luac.exe'
+	local compile = function (src)
+		local dst = fs.path(src):replace_extension(fs.path('.luac'))
+		if not sys.spawn('"' .. luac:string() .. '" -s -o "' .. dst:string() .. '" "' .. src:string() .. '"', src:parent_path(), true) then
+			return nil
 		end
-		
+		return dst
+	end
+
+	for k, v in pairs(import) do
 		if not outmap:import(k, v) then
 			print('error: Import ' .. k .. ' failed.')
 			return
 		end
 	end
+
+	if not outmap:import(
+		war3mapj_in_scripts and 'scripts\\war3map.j' or 'war3map.j', 
+		new_war3map_j) then
+		print('error: Import war3map.j failed.')
+		return
+	end
+
 	outmap:close()
 	
 	print("Conversion completed.")

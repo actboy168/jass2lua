@@ -69,7 +69,7 @@ function io.lines(path)
     end
 end
 
-function sys.spawn (command_line, current_dir, wait)	
+function sys.spawn(command_line, current_dir, wait)
 	local p = sys.process()
 	if not p:create(nil, command_line, current_dir) then
 		return false
