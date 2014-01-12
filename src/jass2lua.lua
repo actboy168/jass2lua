@@ -71,11 +71,8 @@ end]])
 		)
 	end
 	
-	local function functionType(word, cj)
-		local match = "function%s+([%w_]+)%s+takes.-returns%s+([%w_]+)"
-		if cj then
-			match = "native%s+([%w_]+)%s+takes.-returns%s+([%w_]+)"
-		end
+	local function functionType(word)
+		local match = "%s+([%w_]+)%s+takes.-returns%s+([%w_]+)"
 		local name, type = string.match(word, match)
 		if type and type ~= "nothing" then
 			functionTypes[name] = type
@@ -267,7 +264,7 @@ end]])
 		if jass == "function main takes nothing returns nothing" then
 			ismain = true
 		end
-		functionType(jass, cj) --词法分析(函数)
+		functionType(jass) --词法分析(函数)
 		findString(jass)
 		jass = string.gsub(jass, "%$", "0x")
 		jass = string.gsub(jass, [[ExecuteFunc%((.-)%)]], "pcall(_G[%1])")
