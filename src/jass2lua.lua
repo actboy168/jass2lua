@@ -308,7 +308,7 @@ end
 				return a .. " " .. b
 			end
 		end)
-		jass = string.gsub(jass, "([%<%>])([^%=])", "%1 %2")
+		jass = string.gsub(jass, "([%<%>])([^%=])", " %1 %2")
 		jass = string.gsub(jass, "! =", " ~=")
 		jass = string.gsub(jass, "constant", "")
 		globalType(jass) --词法分析(全局变量)
