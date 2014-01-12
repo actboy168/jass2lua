@@ -4,11 +4,11 @@ local jasstypes = {"boolean", "integer", "real", "string", "code", "handle", "ag
 for _, name in ipairs(jasstypes) do
 	jasstypes[name] = true --建立反向表
 end
-
+	
 local function jass2lua(jass_decl, jass_impl)
-
+	
 	local luat = {} --存放每一行代码的table
-
+	
 	table.insert(luat, [[
 --metatable
 
@@ -43,9 +43,9 @@ for i = 0, 15 do
         end
     ))
 end]])
-
+	
 	table.insert(luat, "\n\n")
-
+	
 	local functionTypes = {} --存放函数的类型
 	local globalTypes = {} --存放全局变量的类型
 	local localTypes = {} --存放局部变量的类型,每个endfunction处重置
@@ -70,7 +70,7 @@ end]])
 			end
 		)
 	end
-
+	
 	local function functionType(word)
 		local match = "%s+([%w_]+)%s+takes.-returns%s+([%w_]+)"
 		local name, type = string.match(word, match)
@@ -78,7 +78,7 @@ end]])
 			functionTypes[name] = type
 		end
 	end
-
+	
 	local function globalType(word)
 		if isglobal then
 			local t = {}
@@ -104,7 +104,7 @@ end]])
 			end
 		end
 	end
-
+	
 	local function localType(word)
 		if not isglobal then
 			local type, arrayorname, name = string.match(word, "local (%S+)%s+(%S+)%s+(%S+)")
@@ -123,7 +123,7 @@ end]])
 			end
 		end
 	end
-
+	
 	local j2lfuncs = {
 		--修改转义符
 		function(word)
@@ -246,9 +246,9 @@ end]])
 			return word
 		end,
 	}
-
+	
 	local Debug = {}
-
+	
 	--将读取进来的jass代码转换成lua代码
 	local function j2l(jass, cj)
 		local words = {} --存放当前行找到的所有单词
@@ -322,13 +322,13 @@ end]])
 			j2l(line, true)
 		end
 	end
-
+	
 	for _, v in pairs(jass_impl) do
 		for line in io.lines(v:string()) do
 			j2l(line)
 		end
 	end
-
+	
 	return luat
 end
 
@@ -353,27 +353,27 @@ local function usage()
 	print('\n')
 end
 
-local function main(...)
+local function main()
 	if (not arg) or (#arg < 2) then
 		usage()
 		return
 	end
-
+	
 	local input_map  = arg[1]
 	local root_dir   = arg[2]
 
 	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
 	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
-	require 'filesystem' --用SciTE试运行了一下,在这一步提示找不到指定模块,确认了路径与文件名都是正确的(lua: error loading module 'filesystem' from file 'Y:\GitHub\jass2lua\build\filesystem.dll':找不到指定的模块。)
+	require 'filesystem'
 	require 'mpq_util'
-
+	
 	local input_map    = fs.path(arg[1])
 	local root_dir     = fs.path(arg[2])
 	local library      = root_dir / 'build' / 'scripts' / 'ht'
 	local war3map_j    = root_dir / 'test' / 'war3map.j'
 	local common_j     = library / 'common.j'
 	local blizzard_j   = library / 'blizzard.j'
-
+	
 	local inmap = mpq_open(input_map)
 	if not inmap then
 		print('error: Open ' .. input_map:string() .. ' failed.')
@@ -383,7 +383,7 @@ local function main(...)
 	if not inmap:extract('war3map.j', war3map_j) then
 		if not inmap:extract('script\\war3map.j', war3map_j) then
 			print('error: Not found war3map.j.')
-			return
+			return 
 		end
 	end
 	inmap:close()
@@ -393,12 +393,12 @@ local function main(...)
 	local war3map_lua    = root_dir / 'test' / 'war3map.lua'
 	local initialize_lua = root_dir / 'test' / 'initialize.lua'
 	local new_war3map_j  = root_dir / 'test' / 'new_war3map.j'
-
+	
 	--将bj_lua包在bj库中
 	local bj_table = jass2lua({common_j}, {blizzard_j})
 	table.insert(bj_table, 1, "return {")
 	table.insert(bj_table, "}")
-
+	
 	io.save(blizzard_lua, table.concat(bj_table))
 	io.save(war3map_lua,  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
 	io.save(initialize_lua,  [[
@@ -442,8 +442,8 @@ endfunction
 		return
 	end
 	outmap:close()
-
+	
 	print("Conversion completed.")
 end
 
-main("Y:\\GitHub\\jass2lua\\","Y:\\GitHub\\jass2lua\\") --话说这个东西不能用相对路径吗?不要吐槽我这网吧是Y盘...
+main()
