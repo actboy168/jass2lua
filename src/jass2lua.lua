@@ -373,6 +373,7 @@ local function main()
 	local war3map_j    = root_dir / 'test' / 'war3map.j'
 	local common_j     = library / 'common.j'
 	local blizzard_j   = library / 'blizzard.j'
+	local war3mapj_in_scripts = false
 	
 	local inmap = mpq_open(input_map)
 	if not inmap then
@@ -381,10 +382,11 @@ local function main()
 	end
 
 	if not inmap:extract('war3map.j', war3map_j) then
-		if not inmap:extract('script\\war3map.j', war3map_j) then
+		if not inmap:extract('scripts\\war3map.j', war3map_j) then
 			print('error: Not found war3map.j.')
 			return 
 		end
+		war3mapj_in_scripts = true
 	end
 	inmap:close()
 
@@ -433,6 +435,10 @@ endfunction
 	end
 
 	for k, v in pairs(import) do
+		if war3mapj_in_scripts and k == 'war3map.j' then
+			k = 'scripts\\war3map.j'
+		end
+		
 		if not outmap:import(k, v) then
 			print('error: Import ' .. k .. ' failed.')
 			return
