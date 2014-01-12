@@ -312,11 +312,20 @@ end
 		jass = string.gsub(jass, "constant", "")
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
+		local isinstring = false
 		for word in string.gmatch(jass, "([%S]+)") do
-			for _, func in ipairs(j2lfuncs) do
-				word = func(word)
-				if not word then
-					break
+			if word:sub(1, 1) == "\"" then
+				isinstring = true
+			end
+			if word:sub(-1, -1) == "\"" then
+				isinstring = false
+			end
+			if not isinstring then
+				for _, func in ipairs(j2lfuncs) do
+					word = func(word)
+					if not word then
+						break
+					end
 				end
 			end
 			if word == false then
