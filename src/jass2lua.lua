@@ -331,10 +331,16 @@ end
 			if word == false then
 				break
 			elseif word ~= nil then
-				if lastType == "string" and words[#words] == "+" then
-					--修改上一个"+"
-					lastType = nil
-					words[#words] = ".."
+				--将连接字符串用的+改成..
+				if lastType == "string" or isinstring then
+					for i = #words, 1, -1 do
+						if words[i] == "+" then
+							lastType = nil
+							words[i] = ".."
+						elseif words[i] ~= "(" then
+							break
+						end
+					end
 				end
 				table.insert(words, word)
 			end
