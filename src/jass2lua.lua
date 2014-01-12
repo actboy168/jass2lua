@@ -296,19 +296,20 @@ end
 		jass = string.gsub(jass, "([%+%-%*%,%(%)%[%]])", " %1 ")
 		jass = string.gsub(jass, "([%/%=])(.)", function(a, b)
 			if a == b or (b == "=" and (a == ">" or a == "<")) then
-				return a .. b
+				return a .. b .. " "
 			else
 				return a .. " " .. b
 			end
 		end)
 		jass = string.gsub(jass, "(.)([%/%=])", function(a, b)
 			if a == b or (b == "=" and (a == ">" or a == "<")) then
-				return a .. b
+				return " " .. a .. b
 			else
 				return a .. " " .. b
 			end
 		end)
-		jass = string.gsub(jass, "! =", "~=")
+		jass = string.gsub(jass, "([%<%>])([^%=])", "%1 %2")
+		jass = string.gsub(jass, "! =", " ~=")
 		jass = string.gsub(jass, "constant", "")
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
