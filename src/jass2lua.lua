@@ -1,13 +1,13 @@
 
---ÉùÃ÷ËùÓĞµÄjass±äÁ¿ÀàĞÍ
+--å£°æ˜æ‰€æœ‰çš„jasså˜é‡ç±»å‹
 local jasstypes = {"boolean", "integer", "real", "string", "code", "handle", "agent", "event", "player", "widget", "unit", "destructable", "item", "ability", "buff", "force", "group", "trigger", "triggercondition", "triggeraction", "timer", "location", "region", "rect", "boolexpr", "sound", "conditionfunc", "filterfunc", "unitpool", "itempool", "race", "alliancetype", "racepreference", "gamestate", "igamestate", "fgamestate", "playerstate", "playerscore", "playergameresult", "unitstate", "aidifficulty", "eventid", "gameevent", "playerevent", "playerunitevent", "unitevent", "limitop", "widgetevent", "dialogevent", "unittype", "gamespeed", "gamedifficulty", "gametype", "mapflag", "mapvisibility", "mapsetting", "mapdensity", "mapcontrol", "playerslotstate", "volumegroup", "camerafield", "camerasetup", "playercolor", "placement", "startlocprio", "raritycontrol", "blendmode", "texmapflags", "effect", "effecttype", "weathereffect", "terraindeformation", "fogstate", "fogmodifier", "dialog", "button", "quest", "questitem", "defeatcondition", "timerdialog", "leaderboard", "multiboard", "multiboarditem", "trackable", "gamecache", "version", "itemtype", "texttag", "attacktype", "damagetype", "weapontype", "soundtype", "lightning", "pathingtype", "image", "ubersplat", "hashtable"}
 for _, name in ipairs(jasstypes) do
-	jasstypes[name] = true --½¨Á¢·´Ïò±í
+	jasstypes[name] = true --å»ºç«‹åå‘è¡¨
 end
 	
 local function jass2lua(jass_decl, jass_impl)
 	
-	local luat = {} --´æ·ÅÃ¿Ò»ĞĞ´úÂëµÄtable
+	local luat = {} --å­˜æ”¾æ¯ä¸€è¡Œä»£ç çš„table
 	
 	table.insert(luat, [[
 --metatable
@@ -46,9 +46,9 @@ end]])
 	
 	table.insert(luat, "\n\n")
 	
-	local functionTypes = {} --´æ·Åº¯ÊıµÄÀàĞÍ
-	local globalTypes = {} --´æ·ÅÈ«¾Ö±äÁ¿µÄÀàĞÍ
-	local localTypes = {} --´æ·Å¾Ö²¿±äÁ¿µÄÀàĞÍ,Ã¿¸öendfunction´¦ÖØÖÃ
+	local functionTypes = {} --å­˜æ”¾å‡½æ•°çš„ç±»å‹
+	local globalTypes = {} --å­˜æ”¾å…¨å±€å˜é‡çš„ç±»å‹
+	local localTypes = {} --å­˜æ”¾å±€éƒ¨å˜é‡çš„ç±»å‹,æ¯ä¸ªendfunctionå¤„é‡ç½®
 	local strings
 
 	local function findString(s)
@@ -125,21 +125,21 @@ end]])
 	end
 	
 	local j2lfuncs = {
-		--ĞŞ¸Ä×ªÒå·û
+		--ä¿®æ”¹è½¬ä¹‰ç¬¦
 		function(word)
 			if string.sub(word, 1, 2) == "//" then
 				word = false
 			end
 			return word
 		end,
-		--ĞŞ¸Ä256½øÖÆ·ûºÅ
+		--ä¿®æ”¹256è¿›åˆ¶ç¬¦å·
 		function(word)
 			if string.sub(word, 1, 1) == "'" then
 				word = string.gsub(word, "'", "|")
 			end
 			return word
 		end,
-		--É¾³ıglobalsÓëendglobals
+		--åˆ é™¤globalsä¸endglobals
 		function(word)
 			if word == "globals" then
 				word = nil
@@ -149,7 +149,7 @@ end]])
 			end
 			return word
 		end,
-		--É¾³ı±äÁ¿ÀàĞÍ
+		--åˆ é™¤å˜é‡ç±»å‹
 		function(word)
 			if jasstypes[word] then
 				nextType = word
@@ -157,14 +157,14 @@ end]])
 			end
 			return word
 		end,
-		--É¾³ısetºÍcall
+		--åˆ é™¤setå’Œcall
 		function(word)
 			if word == "set" or word == "call" then
 				word = nil
 			end
 			return word
 		end,
-		--ĞŞ¸ÄfunctionÑùÊ½
+		--ä¿®æ”¹functionæ ·å¼
 		function(word)
 			if word == "function" then
 				word = nil
@@ -177,7 +177,7 @@ end]])
 			end
 			return word
 		end,
-		--ĞŞ¸ÄendÀà
+		--ä¿®æ”¹endç±»
 		function(word)
 			if word == "end" then
 				word = "end_"
@@ -185,18 +185,18 @@ end]])
 				word = "end"
 			elseif word == "endfunction" then
 				word = "end"
-				localtypes = {} --º¯Êı½áÊøÖØÖÃ¾Ö²¿±äÁ¿
+				localtypes = {} --å‡½æ•°ç»“æŸé‡ç½®å±€éƒ¨å˜é‡
 			end
 			return word
 		end,
-		--ĞŞ¸ÄnullÎªnil
+		--ä¿®æ”¹nullä¸ºnil
 		function(word)
 			if word == "null" then
 				word = "nil"
 			end
 			return word
 		end,
-		--ĞŞ¸ÄÑ­»·ÑùÊ½
+		--ä¿®æ”¹å¾ªç¯æ ·å¼
 		function(word)
 			if word == "loop" then
 				word = "for _i = 1, 10000 do"
@@ -206,7 +206,7 @@ end]])
 			end
 			return word
 		end,
-		--ĞŞ¸ÄÊı×éÑùÊ½
+		--ä¿®æ”¹æ•°ç»„æ ·å¼
 		function(word)
 			if word == "array" then
 				word = nil
@@ -220,7 +220,7 @@ end]])
 			end
 			return word
 		end,
-		--ĞŞ¸ÄreturnÑùÊ½
+		--ä¿®æ”¹returnæ ·å¼
 		function(word)
 			if word == "return" then
 				word = "do return"
@@ -228,14 +228,14 @@ end]])
 			end
 			return word
 		end,
-		--ĞŞ¸ÄÖîÈç  .0 µÈ²»¹æ·¶Êı×Ö
+		--ä¿®æ”¹è¯¸å¦‚  .0 ç­‰ä¸è§„èŒƒæ•°å­—
 		function(word)
 			if string.sub(word, 1, 1) == "." then
 				word = 0 .. word
 			end
 			return word
 		end,
-		--¼ÇÂ¼µ±Ç°×ßµ½µÄÀàĞÍ
+		--è®°å½•å½“å‰èµ°åˆ°çš„ç±»å‹
 		function(word)
 			local thisword = string.match(word, "([%w_]+)")
 			if string.sub(word, 1, 1) == [["]] then
@@ -249,13 +249,13 @@ end]])
 	
 	local Debug = {}
 	
-	--½«¶ÁÈ¡½øÀ´µÄjass´úÂë×ª»»³Élua´úÂë
+	--å°†è¯»å–è¿›æ¥çš„jassä»£ç è½¬æ¢æˆluaä»£ç 
 	local function j2l(jass, cj)
-		local words = {} --´æ·Åµ±Ç°ĞĞÕÒµ½µÄËùÓĞµ¥´Ê
+		local words = {} --å­˜æ”¾å½“å‰è¡Œæ‰¾åˆ°çš„æ‰€æœ‰å•è¯
 		if jass == "function main takes nothing returns nothing" then
 			ismain = true
 		end
-		functionType(jass) --´Ê·¨·ÖÎö(º¯Êı)
+		functionType(jass) --è¯æ³•åˆ†æ(å‡½æ•°)
 		findString(jass)
 		jass = string.gsub(jass, "%$", "0x")
 		jass = string.gsub(jass, [[ExecuteFunc%((.-)%)]], "pcall(_G[%1])")
@@ -276,8 +276,8 @@ end]])
 		end)
 		jass = string.gsub(jass, "! =", "~=")
 		jass = string.gsub(jass, "constant", "")
-		globalType(jass) --´Ê·¨·ÖÎö(È«¾Ö±äÁ¿)
-		localType(jass) --´Ê·¨·ÖÎö(¾Ö²¿±äÁ¿)
+		globalType(jass) --è¯æ³•åˆ†æ(å…¨å±€å˜é‡)
+		localType(jass) --è¯æ³•åˆ†æ(å±€éƒ¨å˜é‡)
 		for word in string.gmatch(jass, "([%S]+)") do
 			for _, func in ipairs(j2lfuncs) do
 				word = func(word)
@@ -289,7 +289,7 @@ end]])
 				break
 			elseif word ~= nil then
 				if lastType == "string" and words[#words] == "+" then
-					--ĞŞ¸ÄÉÏÒ»¸ö"+"
+					--ä¿®æ”¹ä¸Šä¸€ä¸ª"+"
 					lastType = nil
 					words[#words] = ".."
 				end
@@ -313,7 +313,7 @@ end]])
 			local ss = table.concat(words, " ")
 			ss = backString(ss)
 			table.insert(luat, ss)
-			table.insert(luat, "\n") --ÏÈÌí¼ÓÒ»¸ö»»ĞĞ·û
+			table.insert(luat, "\n") --å…ˆæ·»åŠ ä¸€ä¸ªæ¢è¡Œç¬¦
 		end
 	end
 
@@ -394,7 +394,7 @@ local function main()
 	local initialize_lua = root_dir / 'test' / 'initialize.lua'
 	local new_war3map_j  = root_dir / 'test' / 'new_war3map.j'
 	
-	--½«bj_lua°üÔÚbj¿âÖĞ
+	--å°†bj_luaåŒ…åœ¨bjåº“ä¸­
 	local bj_table = jass2lua({common_j}, {blizzard_j})
 	table.insert(bj_table, 1, "return {")
 	table.insert(bj_table, "}")
