@@ -403,13 +403,21 @@ local function main()
 	local initialize_lua = root_dir / 'test' / 'initialize.lua'
 	local new_war3map_j  = root_dir / 'test' / 'new_war3map.j'
 	
-	io.save(blizzard_lua, table.concat(jass2lua({common_j}, {blizzard_j})))
+	--将bj_lua包在bj库中
+	local bj_table = jass2lua({common_j}, {blizzard_j})
+	table.insert(bj_table, 1, "return {")
+	table.insert(bj_table, "}")
+	
+	io.save(blizzard_lua, table.concat(bj_table))
 	io.save(war3map_lua,  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
 	io.save(initialize_lua,  [[
 jass_ext.EnableConsole()
-setmetatable(_G, { __index = getmetatable(jass).__index })
-require "blizzard.lua"
+local bj = require "blizzard.lua"
 require "war3map.lua"
+
+setmetatable(bj, { __index = getmetatable(jass).__index })
+setmetatable(_G, { __index = bj })
+
 main()
 ]])
 	io.save(new_war3map_j,  [[
