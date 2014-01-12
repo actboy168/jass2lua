@@ -142,12 +142,17 @@ end
 	
 	local function localType(word)
 		if not isglobal then
-			local type, arrayorname, name = string.match(word, "local (%S+)%s+(%S+)%s+(%S+)")
-			if type and jasstypes[type] then
-				if arrayorname == "array" then
+			local type, name = string.match(word, "local%s+(%S+)%s+array%s+(%S+)")
+			if type then
+				if jasstypes[type] then
 					localTypes[name] = type
-				else
-					localTypes[arrayorname] = type
+				end
+			else
+				type, name = string.match(word, "local%s+(%S+)%s+(%S+)")
+				if type then
+					if jasstypes[type] then
+						localTypes[name] = type
+					end
 				end
 			end
 			local thiswords = string.match(word, "takes(.+)returns")
