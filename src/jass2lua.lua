@@ -520,18 +520,6 @@ end
 	return luat
 end
 
-function io.save(file_path, content)
-	local f, e = io.open(file_path:string(), "wb")
-
-	if f then
-		f:write(content)
-		f:close()
-		return true
-	else
-		return false, e
-	end
-end
-
 local function usage()
 	print('\n')
 	print('usage: jass2lua.lua input output root_dir\n')
