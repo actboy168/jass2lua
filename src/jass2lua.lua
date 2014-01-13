@@ -534,20 +534,20 @@ local function main()
 	
 	local inmap = mpq_open(input_map)
 	if inmap then
-		print('Open ' .. input_map:string() .. '.')
+		print('[ok]: Open ' .. input_map:string() .. '.')
 	else
-		print('error: Open ' .. input_map:string() .. ' failed.')
+		print('[error]: Open ' .. input_map:string() .. '.')
 		return
 	end
 
 	if inmap:extract('war3map.j', war3map_j) then
-		print('Extract war3map.j.')
+		print('[ok]: Extract war3map.j.')
 	else
 		if inmap:extract('scripts\\war3map.j', war3map_j) then
-			print('Extract scripts\\war3map.j.')
+			print('[ok]: Extract scripts\\war3map.j.')
 			war3mapj_in_scripts = true
 		else
-			print('error: Not found war3map.j.')
+			print('[error]: Extract war3map.j.')
 			return 
 		end
 	end
@@ -565,9 +565,9 @@ local function main()
 	
 	--将bj_lua包在bj库中
 	io.save(import['blizzard.lua'], table.concat(jass2lua({common_j}, {blizzard_j})))
-	print('Convert blizzard.lua.')
+	print('[ok]: Convert blizzard.lua.')
 	io.save(import['war3map.lua'],  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
-	print('Convert war3map.lua.')
+	print('[ok]: Convert war3map.lua.')
 	io.save(import['main.lua'],  [[
 jass_ext.EnableConsole()
 setmetatable(_G, { __index = getmetatable(jass).__index })
@@ -595,9 +595,9 @@ endfunction
 	pcall(fs.copy_file, input_map, output_map, true)
 	local outmap = mpq_open(output_map)
 	if outmap then
-		print('Open ' .. output_map:string() .. '.')
+		print('[ok]: Open ' .. output_map:string() .. '.')
 	else
-		print('error: Open ' .. output_map:string() .. ' failed.')
+		print('[error]: Open ' .. output_map:string() .. '.')
 		return
 	end
 
@@ -612,9 +612,9 @@ endfunction
 
 	for k, v in pairs(import) do
 		if outmap:import(k, v) then
-			print('Import  ' .. k .. '.')
+			print('[ok]: Import ' .. k .. '.')
 		else
-			print('error: Import ' .. k .. ' failed.')
+			print('[error]: Import ' .. k .. '.')
 			return
 		end
 	end
@@ -622,9 +622,9 @@ endfunction
 	if outmap:import(
 		war3mapj_in_scripts and 'scripts\\war3map.j' or 'war3map.j', 
 		new_war3map_j) then
-		print('Import war3map.j.')
+		print('[ok]: Import war3map.j.')
 	else
-		print('error: Import war3map.j failed.')
+		print('[error]: Import war3map.j.')
 		return
 	end
 
