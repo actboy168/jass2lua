@@ -619,9 +619,11 @@ endfunction
 		end
 	end
 
-	if not outmap:import(
+	if outmap:import(
 		war3mapj_in_scripts and 'scripts\\war3map.j' or 'war3map.j', 
 		new_war3map_j) then
+		print('Import war3map.j.')
+	else
 		print('error: Import war3map.j failed.')
 		return
 	end
