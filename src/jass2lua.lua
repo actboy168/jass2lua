@@ -532,6 +532,8 @@ local function main()
 	local blizzard_j   = library / 'blizzard.j'
 	local war3mapj_in_scripts = false
 	
+	fs.create_directories(root_dir / 'test')
+	
 	local inmap = mpq_open(input_map)
 	if inmap then
 		print('[ok]: Open ' .. input_map:string() .. '.')
