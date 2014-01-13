@@ -10,27 +10,8 @@ local function jass2lua(jass_decl, jass_impl)
 	local luat = {} --存放每一行代码的table
 	
 	table.insert(luat, [[
---metatable
-
-_mt_number = { __index = function()
-	return 0
-end}
-
-_mt_boolean = { __index = function()
-	return false
-end}
-
-table.newnumber = function()
-	local t = {}
-	setmetatable(t, _mt_number)
-	return t
-end
-
-table.newboolean = function()
-	local t = {}
-	setmetatable(t, _mt_boolean)
-	return t
-end
+local _mt_number = { __index = function() return 0 end }
+local _mt_boolean = { __index = function() return false end }
 
 local function ExecuteFunc(s)
     if _G[s] and type(_G[s]) == 'function' then
@@ -213,9 +194,9 @@ end
 			if word == "array" then
 				word = nil
 				if nextType == "integer" or nextType == "real" then
-					word2 = "= table.newnumber()"
+					word2 = "= setmetatable({}, _mt_number)"
 				elseif nextType == "boolean" then
-					word2 = "= table.newboolean()"
+					word2 = "= setmetatable({}, _mt_boolean)"
 				else
 					word2 = "= {}"
 				end
