@@ -413,7 +413,7 @@ end
 						table.insert(words, x + 1, "math.floor(")
 					end
 				end
-			elseif w == "%/" then
+			elseif not isinstring and w == "%/" then
 				words[i] = "/"
 			end
 		end
