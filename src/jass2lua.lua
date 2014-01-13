@@ -249,6 +249,176 @@ end
 		end,
 	}
 	
+	--将5/2改成math.floor(5/2)	
+	local function number2int(words)
+	
+		local function isreal(word)
+			local type = functionTypes[word] or localTypes[word] or globalTypes[word]
+			return type == "real" or string.find(word, "%.")
+		end
+		
+		local function isbreak(word)
+			return word == nil or word:find("[%+%-%,%=%>%<]") or word == "if" or word == "do" or word == "end" or word == "for" or word == "then"
+		end
+		
+		local isbrackreal
+		isbrackreal = function(words, x, y)
+			if x == false or y == false then return end
+			local brack = 0 --括号
+			local index = 0
+			local brackx
+			local bracky
+			for j = x + 1, y - 1 do
+				local word = words[j]
+				if word == "(" then
+					brack = brack + 1
+					if functionTypes[words[j - 1]] == "integer" then
+						brackx = false
+					elseif functionTypes[words[j - 1]] == "real" then
+						return true
+					elseif brack == 1 then
+						brackx = j
+					end
+				elseif word == ")" then
+					brack = brack - 1
+					if brack == 0 then
+						bracky = j
+						if isbrackreal(words, brackx, bracky) then
+							return true
+						end
+					end
+				elseif word == "[" then
+					index = index - 1
+				elseif word == "]" then
+					index = index + 1
+				elseif index == 0 and brack == 0 and isreal(word) then
+					return true
+				end
+			end
+		end
+		
+		--先搜寻"/"
+		local isinstring = false
+		for i, w in ipairs(words) do
+			if w:sub(1, 1) == "\"" then
+				isinstring = true
+			end
+			if w:sub(-1, -1) == "\"" then
+				isinstring = false
+			end
+			if not isinstring and w == "/" then
+				local x
+				local y
+				local flag = true
+				--先向后找
+				local brack = 0 --括号
+				local index = 0
+				local brackx
+				local bracky
+				for j = i + 1, #words + 1 do
+					y = j
+					local w2 = words[j]
+					if w2 == "(" then
+						brack = brack + 1
+						if functionTypes[words[j - 1]] == "integer" then
+							brackx = false
+						elseif functionTypes[words[j - 1]] == "real" then
+							flag = false
+							break
+						elseif brack == 1 then
+							brackx = j
+						end
+					elseif w2 == ")" then
+						brack = brack - 1
+						if brack == 0 then
+							bracky = j
+							if isbrackreal(words, brackx, bracky) then
+								flag = false
+								break
+							end
+						end
+					elseif w2 == "[" then
+						index = index + 1
+					elseif w2 == "]" then
+						index = index - 1
+						if index < 0 then
+							break
+						end
+					end
+					if brack == 0 and index == 0 then
+						if isbreak(w2) or w2 == "*" or w2 == "/" then
+							break
+						end
+						if isreal(w2) then
+							flag = false
+							break
+						end
+					elseif brack < 0 then
+						break
+					end
+				end
+				if flag then
+					--向前找
+					local brack = 0 --括号
+					local index = 0
+					local brackx
+					local bracky
+					for j = i - 1, 0, -1 do
+						x = j
+						local w2 = words[j]
+						if w2 == "(" then
+							brack = brack - 1
+							if functionTypes[words[j - 1]] == "integer" then
+								brackx = false
+							elseif functionTypes[words[j - 1]] == "real" then
+								flag = false
+								break
+							end
+							if brack == 0 then
+								brackx = j
+								if isbrackreal(words, brackx, bracky) then
+									flag = false
+									break
+								end
+							end
+						elseif w2 == ")" then
+							brack = brack + 1
+							if brack == 1 then
+								bracky = j
+							end
+						elseif w2 == "[" then
+							index = index - 1
+							if index < 0 then
+								break
+							end
+						elseif w2 == "]" then
+							index = index + 1
+						end
+						if brack == 0 and index == 0 then
+							if isbreak(w2) then
+								break
+							end
+							if isreal(w2) then
+								flag = false
+								break
+							end
+						elseif brack < 0 then
+							break
+						end
+					end
+					if flag then
+						--do return end
+						words[i] = "%/"
+						table.insert(words, y, ")")
+						table.insert(words, x + 1, "math.floor(")
+					end
+				end
+			elseif w == "%/" then
+				words[i] = "/"
+			end
+		end
+	end
+	
 	local Debug = {}
 	
 	--将读取进来的jass代码转换成lua代码
@@ -326,6 +496,7 @@ end
 				return
 			end
 		end
+		number2int(words)
 		if #words ~= 0 and not cj then
 			local ss = table.concat(words, " ")
 			ss = backString(ss)
