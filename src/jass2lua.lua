@@ -533,17 +533,23 @@ local function main()
 	local war3mapj_in_scripts = false
 	
 	local inmap = mpq_open(input_map)
-	if not inmap then
+	if inmap then
+		print('Open ' .. input_map:string() .. '.')
+	else
 		print('error: Open ' .. input_map:string() .. ' failed.')
 		return
 	end
 
-	if not inmap:extract('war3map.j', war3map_j) then
-		if not inmap:extract('scripts\\war3map.j', war3map_j) then
+	if inmap:extract('war3map.j', war3map_j) then
+		print('Extract war3map.j.')
+	else
+		if inmap:extract('scripts\\war3map.j', war3map_j) then
+			print('Extract scripts\\war3map.j.')
+			war3mapj_in_scripts = true
+		else
 			print('error: Not found war3map.j.')
 			return 
 		end
-		war3mapj_in_scripts = true
 	end
 	inmap:close()
 
@@ -559,7 +565,9 @@ local function main()
 	
 	--将bj_lua包在bj库中
 	io.save(import['blizzard.lua'], table.concat(jass2lua({common_j}, {blizzard_j})))
+	print('Convert blizzard.lua.')
 	io.save(import['war3map.lua'],  table.concat(jass2lua({common_j, blizzard_j}, {war3map_j})))
+	print('Convert war3map.lua.')
 	io.save(import['main.lua'],  [[
 jass_ext.EnableConsole()
 setmetatable(_G, { __index = getmetatable(jass).__index })
@@ -586,7 +594,9 @@ endfunction
 
 	pcall(fs.copy_file, input_map, output_map, true)
 	local outmap = mpq_open(output_map)
-	if not outmap then
+	if outmap then
+		print('Open ' .. output_map:string() .. '.')
+	else
 		print('error: Open ' .. output_map:string() .. ' failed.')
 		return
 	end
@@ -601,7 +611,9 @@ endfunction
 	end
 
 	for k, v in pairs(import) do
-		if not outmap:import(k, v) then
+		if outmap:import(k, v) then
+			print('Import  ' .. k .. '.')
+		else
 			print('error: Import ' .. k .. ' failed.')
 			return
 		end
