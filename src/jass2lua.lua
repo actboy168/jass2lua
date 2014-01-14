@@ -29,10 +29,17 @@ end
 	local localTypes = {} --存放局部变量的类型,每个endfunction处重置
 	local strings
 
-	local function findString(s)
+	local function findString(s, isinstring)
 		strings = {}
+		if isinstring then
+			s = "\"" .. s .. "\""
+			strings.flag = true
+		end
 		for word in string.gmatch(s, [["(.-)"]]) do
 			table.insert(strings, word)
+		end
+		if isinstring then
+			strings[#strings] = strings[#strings]:sub(1, -2)
 		end
 	end
 
@@ -40,13 +47,20 @@ end
 		if #strings == 0 then
 			return s
 		end
-		return string.gsub(s, [["(.-)"]],
+		if strings.flag then
+			s = "\"" .. s .. "\""
+		end
+		s = string.gsub(s, [["(.-)"]],
 			function(word)
 				local word = strings[1]
 				table.remove(strings, 1)
 				return [["]] .. word .. [["]]
 			end
 		)
+		if strings.flag then
+			s = s:sub(2, -2)
+		end
+		return s
 	end
 	
 	local function functionType(word)
@@ -284,7 +298,7 @@ end
 			if w:sub(1, 1) == "\"" then
 				isinstring = true
 			end
-			if w:sub(-1, -1) == "\"" then
+			if w:sub(-1, -1) == "\"" and w:sub(-2, -2) ~= "\\" then
 				isinstring = false
 			end
 			if not isinstring and w == "/" then
@@ -403,13 +417,15 @@ end
 	local Debug = {}
 	
 	--将读取进来的jass代码转换成lua代码
+	local isinstring = false
+	
 	local function j2l(jass, cj)
 		local words = {} --存放当前行找到的所有单词
 		if jass == "function main takes nothing returns nothing" then
 			ismain = true
 		end
 		functionType(jass) --词法分析(函数)
-		findString(jass)
+		findString(jass, isinstring)
 		jass = string.gsub(jass, "%$", "0x")
 		jass = string.gsub(jass, "([%+%-%*%,%(%)%[%]])", " %1 ")
 		jass = string.gsub(jass, "([%/%=])(.)", function(a, b)
@@ -431,13 +447,16 @@ end
 		jass = string.gsub(jass, "constant", "")
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
-		local isinstring = false
 		for word in string.gmatch(jass, "([%S]+)") do
-			if word:sub(1, 1) == "\"" then
-				isinstring = true
-			end
-			if word:sub(-1, -1) == "\"" then
-				isinstring = false
+			if word == "\"" then
+				isinstring = not isinstring
+			else
+				if word:sub(1, 1) == "\"" then
+					isinstring = true
+				end
+				if word:sub(-1, -1) == "\"" and word:sub(-2, -2) ~= "\\" then
+					isinstring = false
+				end
 			end
 			if not isinstring then
 				for _, func in ipairs(j2lfuncs) do
@@ -483,6 +502,9 @@ end
 			ss = backString(ss)
 			table.insert(luat, ss)
 			table.insert(luat, "\n") --先添加一个换行符
+		end
+		if isinstring then
+			table.insert(luat, #luat, "\\")
 		end
 	end
 
