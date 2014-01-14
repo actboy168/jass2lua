@@ -129,6 +129,13 @@ end
 			end
 			return word
 		end,
+		--重命名关键字
+		function(word)
+			if word == "end" or word == "do" or word == "in" or word == "nil" or word == "break" or word == "for" then
+				word = "_" .. word
+			end
+			return word
+		end,
 		--修改256进制符号
 		function(word)
 			if string.sub(word, 1, 1) == "'" then
@@ -176,9 +183,7 @@ end
 		end,
 		--修改end类
 		function(word)
-			if word == "end" then
-				word = "end_"
-			elseif word == "endif" or word == "endloop" then
+			if word == "endif" or word == "endloop" then
 				word = "end"
 			elseif word == "endfunction" then
 				word = "end"
