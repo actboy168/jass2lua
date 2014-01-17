@@ -433,6 +433,7 @@ end
 		findString(jass, isinstring)
 		jass = string.gsub(jass, "%$", "0x")
 		jass = string.gsub(jass, "([%+%-%*%,%(%)%[%]])", " %1 ")
+		jass = string.gsub(jass, [["(.-[^\\]-)"]], [[ "%1" ]])
 		jass = string.gsub(jass, "([%/%=])(.)", function(a, b)
 			if a == b or (b == "=" and (a == ">" or a == "<")) then
 				return a .. b .. " "
