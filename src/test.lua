@@ -27,14 +27,15 @@ local function main()
 	if buf then
 		local lex = jass.lexer(buf)
 		local success = true
+		local start = os.clock()
 		for it in lex:tokenize() do
 			if not it:is_valid() then
 				success = false
 				break
 			end
-			print('==== ' .. it:id() .. ' : ' .. it:value())
+			--print('==== ' .. it:id() .. ' : ' .. it:value())
 		end
-		
+		print('time: ' .. tostring(os.clock() - start))
 		if success then
 			print("-------------------------")
 			print("Parsing succeeded")
