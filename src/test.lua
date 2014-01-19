@@ -18,11 +18,15 @@ local function main()
 	
 	local input_map  = arg[1]
 	local root_dir   = arg[2]
-
-	package.path = package.path .. ';' .. arg[2] .. '?.lua'
-	package.cpath = package.cpath .. ';' .. arg[2] .. '?.dll'
-	require 'jass_lexer'
 	
+	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
+	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
+	require 'jass_lexer'
+	local token = require 'token_id'
+	for k, v in pairs(token) do
+		print(string.format('%-16s %d', k, v))
+	end
+
 	local buf = io.load(input_map)
 	if buf then
 		local lex = jass.lexer(buf)
