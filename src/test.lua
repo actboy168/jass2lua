@@ -22,10 +22,11 @@ local function main()
 	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
 	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
 	require 'jass_lexer'
+	require 'token_print_pos'
 	local token = require 'token_id'
-	for k, v in pairs(token) do
-		print(string.format('%-16s %d', k, v))
-	end
+	--for k, v in pairs(token) do
+	--	print(string.format('%-16s %d', k, v))
+	--end
 
 	local buf = io.load(input_map)
 	if buf then
@@ -36,6 +37,9 @@ local function main()
 			if not it:is_valid() then
 				success = false
 				break
+			end
+			if token.newline ~= it:id() then
+				token_print_pos(it, buf)
 			end
 			--print('==== ' .. it:id() .. ' : ' .. it:value())
 		end
