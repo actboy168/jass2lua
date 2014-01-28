@@ -51,6 +51,9 @@ function io.lines(path)
     local CHUNK_SIZE = 1024
     local buffer = ""
     local pos_beg = 1
+    if f:read(3) ~= '\xEF\xBB\xBF' then
+        f:seek('set')
+    end
     return function()
         local pos, chars
         while 1 do
