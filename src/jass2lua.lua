@@ -451,6 +451,11 @@ end
 		jass = string.gsub(jass, "([%<%>])([^%=])", " %1 %2")
 		jass = string.gsub(jass, "! =", " ~=")
 		jass = string.gsub(jass, "constant", "")
+		jass = string.gsub(jass, "(%W%d+)([%a])", function(a, b)
+			if a:sub(-1) ~= "0" and b ~= "x" then
+				return a .. " " .. b
+			end
+		end)
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
 		for word in string.gmatch(jass, "([%S]+)") do
