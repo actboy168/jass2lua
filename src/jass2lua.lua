@@ -507,8 +507,9 @@ end
 			local ss = table.concat(words, " ")
 			ss = backString(ss)
 			table.insert(luat, ss)
-			table.insert(luat, "\n") --先添加一个换行符
+			
 		end
+		table.insert(luat, "\n") --先添加一个换行符
 		if isinstring then
 			table.insert(luat, #luat, "\\")
 		end
