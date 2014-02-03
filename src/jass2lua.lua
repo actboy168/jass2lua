@@ -514,10 +514,13 @@ end
 			table.insert(luat, ss)
 			
 		end
-		table.insert(luat, "\n") --先添加一个换行符
 		if isinstring then
-			table.insert(luat, #luat, "\\")
+			luat[#luat] = luat[#luat]:gsub("\r", "") --该死的换行符
+			luat[#luat] = luat[#luat]:gsub("\n(.)", "\\\n%1")
+			
+			table.insert(luat, "\\")
 		end
+		table.insert(luat, "\n") --先添加一个换行符
 	end
 
 	for _, v in pairs(jass_decl) do
