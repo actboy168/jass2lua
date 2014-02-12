@@ -457,6 +457,7 @@ end
 			end
 		end)
 		jass = string.gsub(jass, "'|'", "124")
+		jass = string.gsub(jass, [[native%s+([%w_]+).+]], [[%1 = japi.%1]])
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
 		for word in string.gmatch(jass, "([%S]+)") do
