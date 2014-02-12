@@ -522,7 +522,9 @@ end
 			
 			table.insert(luat, "\\")
 		end
-		table.insert(luat, "\n") --先添加一个换行符
+		if not cj then
+			table.insert(luat, "\n") --先添加一个换行符
+		end
 	end
 
 	for _, v in pairs(jass_decl) do
