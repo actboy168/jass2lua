@@ -300,11 +300,15 @@ end
 		--先搜寻"/"
 		local isinstring = false
 		for i, w in ipairs(words) do
-			if w:sub(1, 1) == "\"" then
-				isinstring = true
-			end
-			if w:sub(-1, -1) == "\"" and w:sub(-2, -2) ~= "\\" then
-				isinstring = false
+			if w == "\"" then
+				isinstring = not isinstring
+			else
+				if w:sub(1, 1) == "\"" then
+					isinstring = true
+				end
+				if w:sub(-1, -1) == "\"" and w:sub(-2, -2) ~= "\\" then
+					isinstring = false
+				end
 			end
 			if not isinstring and w == "/" then
 				local x
