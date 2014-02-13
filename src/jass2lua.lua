@@ -240,7 +240,7 @@ end
 		--记录当前走到的类型
 		function(word)
 			local thisword = string.match(word, "([%w_]+)")
-			if string.sub(word, 1, 1) == [["]] then
+			if string.sub(word, 1, 1) == "\"" then
 				lastType = "string"
 			elseif thisword then
 				lastType = functionTypes[thisword] or localTypes[thisword] or globalTypes[thisword]
@@ -492,7 +492,7 @@ end
 				break
 			elseif word ~= nil then
 				--将连接字符串用的+改成..
-				if lastType == "string" or isinstring then
+				if lastType == "string" or isinstring or stringflag then
 					for i = #words, 1, -1 do
 						if words[i] == "+" then
 							lastType = nil
