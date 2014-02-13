@@ -298,16 +298,16 @@ end
 		end
 		
 		--先搜寻"/"
-		local isinstring = false
+		local isinstring = isinstring
 		for i, w in ipairs(words) do
 			if w == "\"" then
 				isinstring = not isinstring
 			else
 				if w:sub(1, 1) == "\"" then
-					isinstring = true
+					isinstring = not isinstring
 				end
 				if w:sub(-1, -1) == "\"" and w:sub(-2, -2) ~= "\\" then
-					isinstring = false
+					isinstring = not isinstring
 				end
 			end
 			if not isinstring and w == "/" then
@@ -426,7 +426,7 @@ end
 	local Debug = {}
 	
 	--将读取进来的jass代码转换成lua代码
-	local isinstring = false
+	isinstring = false
 	
 	local function j2l(jass, cj)
 		local words = {} --存放当前行找到的所有单词
@@ -465,17 +465,21 @@ end
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
 		for word in string.gmatch(jass, "([%S]+)") do
+			local stringflag
 			if word == "\"" then
 				isinstring = not isinstring
 			else
 				if word:sub(1, 1) == "\"" then
-					isinstring = true
+					isinstring = not isinstring
 				end
-				if word:sub(-1, -1) == "\"" and word:sub(-2, -2) ~= "\\" then
-					isinstring = false
+				if isinstring then
+					stringflag = true
+				end
+				if word:sub(-1, -1) == "\"" and word:sub(-3, -3) ~= "\\" then
+					isinstring = not isinstring
 				end
 			end
-			if not isinstring then
+			if not isinstring and not stringflag then
 				for _, func in ipairs(j2lfuncs) do
 					word = func(word)
 					if not word then
