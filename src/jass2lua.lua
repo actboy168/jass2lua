@@ -399,7 +399,7 @@ end
 							index = index + 1
 						end
 						if brack == 0 and index == 0 then
-							if isbreak(w2) then
+							if isbreak(w2)then
 								break
 							end
 							if isreal(w2) then
@@ -414,7 +414,8 @@ end
 						--do return end
 						words[i] = "%/"
 						table.insert(words, y, ")")
-						table.insert(words, x + 1, "math.floor(")
+						table.insert(words, x + 1, "(")
+						table.insert(words, x + 1, "math.floor")
 					end
 				end
 			elseif not isinstring and w == "%/" then
