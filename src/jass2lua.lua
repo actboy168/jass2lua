@@ -451,7 +451,7 @@ end
 		jass = string.gsub(jass, "([%<%>])([^%=])", " %1 %2")
 		jass = string.gsub(jass, "! =", " ~=")
 		jass = string.gsub(jass, "constant", "")
-		jass = string.gsub(jass, "(%W%d+)([%a])", function(a, b)
+		jass = string.gsub(jass, "([^%w_]%d+)([%a])", function(a, b)
 			if a:sub(-1) ~= "0" and b ~= "x" then
 				return a .. " " .. b
 			end
