@@ -20,6 +20,10 @@ local function ExecuteFunc(s)
 	    jass.ExecuteFunc(s)
     end
 end
+
+GetUnitState = japi.GetUnitState
+
+SetUnitState = japi.SetUnitState
 ]])
 
 	table.insert(luat, "\n\n")
