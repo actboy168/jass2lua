@@ -12,6 +12,7 @@ local function jass2lua(jass_decl, jass_impl)
 	table.insert(luat, [[
 local _mt_number = { __index = function() return 0 end }
 local _mt_boolean = { __index = function() return false end }
+local _mt_string = { __index = function() return "" end }
 
 local function ExecuteFunc(s)
     if _G[s] and type(_G[s]) == 'function' then
@@ -220,6 +221,8 @@ SetUnitState = japi.SetUnitState
 					word2 = "= setmetatable({}, _mt_number)"
 				elseif nextType == "boolean" then
 					word2 = "= setmetatable({}, _mt_boolean)"
+				elseif nextType == "string" then
+					word2 = "= setmetatable({}, _mt_string)"
 				else
 					word2 = "= {}"
 				end
