@@ -21,10 +21,6 @@ local function ExecuteFunc(s)
 	    jass.ExecuteFunc(s)
     end
 end
-
-GetUnitState = japi.GetUnitState
-
-SetUnitState = japi.SetUnitState
 ]])
 
 	table.insert(luat, "\n\n")
@@ -130,6 +126,13 @@ SetUnitState = japi.SetUnitState
 		--修改转义符
 		function(word)
 			if string.sub(word, 1, 2) == "//" then
+				word = false
+			end
+			return word
+		end,
+		--删除japi定义
+		function(word)
+			if word == "native" then
 				word = false
 			end
 			return word
@@ -469,7 +472,6 @@ SetUnitState = japi.SetUnitState
 			end
 		end)
 		jass = string.gsub(jass, "'|'", "124")
-		jass = string.gsub(jass, [[native%s+([%w_]+).+]], [[%1 = japi.%1]])
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
 		for word in string.gmatch(jass, "([%S]+)") do
@@ -636,7 +638,11 @@ main()
 ]])
 	io.save(import['config.lua'],  [[
 jass_ext.EnableConsole()
-setmetatable(_G, { __index = getmetatable(jass).__index })
+local japi = getmetatable(japi).__index
+local jass = getmetatable(jass).__index
+setmetatable(_ENV, {__index = function(self, name)
+	return japi(self, name) or jass(self, name)
+end})
 require "blizzard.lua"
 require "war3map.lua"
 config()
