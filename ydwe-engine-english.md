@@ -73,7 +73,7 @@ You can also register japi functions by the way of native function so that you c
 	call EXDisplayChat(Player(0), 0, "Hello!")
 
 ##7. jass.hook
-jass.hook library functions within common.j registered under the hook. Note: jass.common library will not be affected.
+jass.hook library can hook functions registered within common.j registered. Note: jass.common library will not be affected.
 
 ######example
 
@@ -106,14 +106,14 @@ slk contains
 * Buff
 * Upgrade
 
-And you object editor project correspondence.
+They are correspond to the classes in editor
 
-Gets the index when you can use the data in the object Ctrl+D to query the editor
+You can find the index used for getting object data by pressing Ctrl + D in editor
 
-Note that when accessing the correct return value is always a string. If you get the value of a unit of life, you may need to use tonumber to convert. When accessing incorrect returns nil.
+Note that when accessing is correct, the return value is always a string. If you want to get the value of life or a unit, you may need to use 'tonumber' to convert. When accessing incorrect it returns nil.
 
 ##9. jass.runtime
-### jass.runtime part of the configuration database can obtain information or to modify the engine lua lua runtime engine map.
+###jass.runtime library can obtain information or modify configurations of lua engin in map runtime.
 
 ######example
 
@@ -121,7 +121,7 @@ Note that when accessing the correct return value is always a string. If you get
 	local runtime = require 'jass.runtime'
 ```
 ####runtime.console (default is false)
-Assigned to true open a cmd window, print function converts text displayed here
+Assigned to true creates a cmd window, 'print' function will converts text displayed here
 
 ######example
 ```lua
@@ -138,7 +138,7 @@ Returns the current version number of the lua engine
 ```
 
 ####runtime.error_handle
-When your lua script error callback function. Note that this function efficiently after registration lua script will be reduced, even if no error occurred. If you do not register this function, the script also displays a simple error in the cmd prompt window.
+Lua callback this function when your script occurred errors. Note that lua script efficiency will be reduced after this function registered, even if no error occurred. If you do not register this function, the script also displays a simple error in the cmd window.
 
 ######example
 
@@ -154,9 +154,9 @@ When your lua script error callback function. Note that this function efficientl
 ```
 
 ####Runtime.handle_level (defaults to 2)
-Handle grade lua, there are currently three possible values: 0,1,2. When you are using 0,1,2, efficiency lua script will in turn reduce, but will in turn increase security.
+Handle level in lua, there are currently three possible values: 0,1,2. When you are using 0,1,2, lua script will in turn reduce efficiency, but in turn increase security.
 
-#####0: handle the direct use number, jass lua you can not understand the reference to the handle, the handle will not come to protect this by increasing the reference count
+#####0: handle is number in lua, jass can not understand the reference of the handle in lua, the handle will not be protected by increasing the reference count
 
 ######example
 
@@ -166,7 +166,7 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 	type(t) -- "number"
 ```
 
-#####1: handle encapsulated in lightuserdata, a 0 can be implicitly converted to nil, the same does not increase the reference count of the handle
+#####1: handle encapsulated in lightuserdata, a 0 can be implicitly converted to nil, and also not increase the reference count of the handle
 
 ######example 1
 
@@ -192,7 +192,7 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 	)
 ```
 
-#####2: Will increase when the handle is encapsulated in the userdata, lua holding the handle handle reference count. Of course, after the end of the function local variables are automatically recovered and released to handle references.
+#####2: handle encapsulated in userdata, increase the reference count of the handle when lua holding the handle. Of course, after the end of a function local variables are automatically recovered and released to handle references.
 
 ######example
 
@@ -210,9 +210,9 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 ```
 
 ####runtime.sleep (default is true)
-contains the sleep function common.j operation has four, TriggerSleepAction / TriggerSyncReady / TriggerWaitForSound / SyncSelections. Warning When this is when false, lua engine will ignore the call of these four functions, and give runtime. When this is true, these four functions will be performed correctly.
+There are four functions contain 'sleep' within common.j, they are 'TriggerSleepAction / TriggerSyncReady / TriggerWaitForSound / SyncSelections'. When it is false, lua engine will ignore the call of these four functions, and give runtime warning. When it is true, these four functions will be performed correctly.
 
-However, please note that this is true lua will reduce the operating efficiency of the engine, even if you do not use these four functions.
+However, please note that when it is true, lua engine will reduce the operating efficiency, even if you do not use these four functions.
 
 ######example
 
