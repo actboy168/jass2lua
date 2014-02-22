@@ -28,17 +28,21 @@ jass.common库包含common.j内注册的所有函数。
  
 ######例  
 
+```lua
 	local jass = require 'jass.common'
 	print(jass.GetHandleId(jass.Player(0)))
+```
 	
 特别的,你可以通过jass.common库来访问jass中的自定义变量  
 
 ######例  
 
+```lua
 	local jass = require 'jass.common'
 	jass.udg_code = function() --将一个jass中定义的code变量赋值为一个lua函数
 		print(jass.udg_strings[2]) --获取jass中定义的string数组
 	end
+```
 	
 你可以通过这个方式来实现和jass脚本之间的数据交互  
 
@@ -46,7 +50,9 @@ jass.common库包含common.j内注册的所有函数。
 
 在上面的例子中,你可以在jass中执行:
 	
+```
 	call TimerStart(CreateTimer(), 1, true, udg_code)
+```
 	
 这个计时器将在每次到期时正确的回调你在lua中定义的函数
 
@@ -55,36 +61,44 @@ jass.japi库当前已经注册的所有japi函数。
 
 ######例  
 
+```lua
 	local jass = require 'jass.common'
 	local japi = require 'jass.japi'
 	japi.EXDisplayChat(jass.Player(0), 0, "Hello!")
+```
 	
 你也可以在jass中通过native的方式注册japi函数，以便你在jass中调用它们  
 
 ######例  
 
+```
 	native EXDisplayChat takes player p, type i, string text returns nothing
 	call EXDisplayChat(Player(0), 0, "Hello!")
+```
 
 ##7. jass.hook
 jass.hook库可以对common.j内注册的函数下钩子。注：jass.common库不会受到影响。  
 
 ######例  
 
+```lua
 	local hook = require 'jass.hook'
 	function hook.CreateUnit(pid, uid, x, y, face, realCreateUnit)
 		-- 当jass内调用CreateUnit时，就会被执行
 		print('CreateUnit')
 		return realCreateUnit(pid, uid, x, y, face)
 	end
+```
 
 ##8. jass.slk
 jass.slk库可以在地图运行时读取地图内的slk/w3*文件。  
 
 ######例  
 
+```lua
 	local slk = require 'jass.slk'
 	print(slk.ability.AHbz.Name)
+```
 	
 slk包含
 
@@ -107,27 +121,34 @@ slk包含
 
 ######例
 
+```lua
 	local runtime = require 'jass.runtime'
+```
 
 ####runtime.console(默认为false)
 赋值为true后打开一个cmd窗口，print函数会将文本显示在这里
 
 ######例
 
+```lua
 	runtime.console = true
+```
 
 ####runtime.version
 返回当前lua引擎的版本号
 
 ######例
 
+```lua
 	print(runtime.version) -- 1
+```
 
 ####runtime.error_handle
 当你的lua脚本出现错误时将回调此函数。注意，注册此函数后lua脚本的效率会降低，即使并没有发生错误。如果你不注册此函数，脚本出现错误时也会在cmd窗口中显示简单的提示。
 
 ######例
 
+```lua
 	runtime.error_handle = function(msg)
 		print("---------------------------------------")
 		print("              LUA ERROR!!              ")
@@ -136,6 +157,7 @@ slk包含
 		print(debug.traceback())
 		print("---------------------------------------")
 	end
+```
 	
 ####runtime.handle_level(默认为2)
 lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，1，2时，lua脚本的效率将依次降低，但是安全性会依次增加。
@@ -144,21 +166,26 @@ lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，
 
 ######例
 
+```lua
 	local t = jass.CreateTimer()
 	print(t) -- 1048000
 	type(t) -- "number"
+```
 
 #####1: handle封装在lightuserdata中，0可以隐转为nil，同样不会增加这个handle的引用计数
 
 ######例1
 
+```lua
 	local t = jass.CreateTimer()
 	print(t) -- "handle: 0x10005D"
 	type(t) -- "userdata"
 	jass.TimerStart(t, 1, false, 0) -- ok
+```
 	
 ######例2
 
+```lua
 	local t = jass.CreateTimer()
 	local h1 = jass.CreateTimer()
 	jass.DestroyTimer(h1)
@@ -169,11 +196,13 @@ lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，
 			print(h2) -- "handle: 0x10005E"
 		end
 	)
+```
 
 #####2: handle封装在userdata中，lua持有该handle时将增加handle的引用计数。当然，函数结束后局部变量会自动回收并释放对handle的引用。
 
 ######例
 
+```lua
 	local t = jass.CreateTimer()
 	local h1 = jass.CreateTimer()
 	jass.DestroyTimer(h1)
@@ -184,6 +213,8 @@ lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，
 			print(h2) -- "handle: 0x10005F"
 		end
 	)
+```
+
 ####runtime.sleep(默认为true)
 common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncReady/TriggerWaitForSound/SyncSelections。当此项为false时，lua引擎会忽略这4个函数的调用，并给予运行时警告。当此项为true时，这4个函数将会得到正确的执行。
 
@@ -191,6 +222,7 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 
 ######例
 
+```lua
 	local trg = jass.CreateTrigger()
 	local a = 1
 	jass.TriggerAddAction(trg, function()
@@ -199,3 +231,4 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 	end)
 	jass.TriggerExecute(trg)
 	a = 2
+```
