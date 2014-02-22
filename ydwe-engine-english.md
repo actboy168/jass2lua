@@ -15,7 +15,7 @@ In order to fit in War3, lua engin relatives to the B with some modifications
 4. table element random seed depends on the War3 internal random seed.
 
 ##4. Built-in library
-lua engine a total of five built-in libraries, you can "require 'library name'" call. 5 built-in libraries are
+lua engine has a total of five built-in libraries, you can call them by "require 'library name'". They are
 
 * jass.common
 * jass.japi
@@ -33,7 +33,7 @@ jass.common library contains all the functions within common.j registration.
 	print(jass.GetHandleId(jass.Player(0)))
 ```
 
-In particular, you can access jass custom variables jass.common library
+In particular, you can access jass custom variables by jass.common library
 
 ######example
 
@@ -44,18 +44,18 @@ In particular, you can access jass custom variables jass.common library
 	end
 ```
 
-You can interact with the data in this way to achieve and between jass script
+You can interact with the data in this way between jass script and lua script
 
-Note that you can not access jass custom function through this way. That is, you can not call a function to call each other with arguments, but with no parameters by code variables
+Note that you can not access jass custom function through this way. That is, you can not call a function with arguments each other, but with no parameters by code variables
 
 In the above example, you can run in the jass:
 
-	call TimerStart(CreateTimer (), 1, true, udg_code)
+	call TimerStart(CreateTimer(), 1, true, udg_code)
 
-The timer will correct your callback function defined in the lua maturity at the time of each
+The timer will correct callback function which defined in the lua when expired each time
 
 ##6. jass.japi
-All japi function jass.japi libraries currently registered.
+All currently registered japi function within jass.japi libraries 
 
 ######example
 
@@ -65,12 +65,12 @@ All japi function jass.japi libraries currently registered.
 	japi.EXDisplayChat(jass.Player (0), 0, "Hello!")
 ```
 
-You can also by way of registered japi native function jass so that you call them in the jass
+You can also register japi functions by the way of native function so that you call them in the jass
 
 ######example
 
 	native EXDisplayChat takes player p, type i, string text returns nothing
-	call EXDisplayChat(Player (0), 0, "Hello!")
+	call EXDisplayChat(Player(0), 0, "Hello!")
 
 ##7. jass.hook
 jass.hook library functions within common.j registered under the hook. Note: jass.common library will not be affected.
