@@ -10,8 +10,8 @@ Called `call Cheat("run hello.lua")` within jass, which is equivalent to called 
 In order to fit in War3, lua engin relatives to the B with some modifications
  
 1. Supporting character integer. |AHbz| represents an integer, its value and 'AHbz' in jass equals.
-2. math.randomseed to use jass function SetRandomSeed achieved.
-3. math.random to use jass function GetRandomReal achieved.
+2. math.randomseed achieved by jass function SetRandomSeed.
+3. math.random achieved by jass function GetRandomReal.
 4. table element random seed depends on the War3 internal random seed.
 
 ##4. Built-in library
