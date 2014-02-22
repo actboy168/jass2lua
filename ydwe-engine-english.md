@@ -39,8 +39,8 @@ In particular, you can access jass custom variables by jass.common library
 
 ```lua
 	local jass = require 'jass.common'
-	jass.udg_code = function() -- a defined code jass variable assignment as a lua function
-	print(jass.udg_strings [2]) -- Get string array defined jass
+	jass.udg_code = function() -- a code variable defined in jass assignment as a lua function
+	print(jass.udg_strings [2]) -- get string array defined in jass
 	end
 ```
 
@@ -98,13 +98,13 @@ jass.slk library can read slk/w3 * files within the map in the map runtime.
 
 slk contains
 
-* Unit
-* Item
-* Destructable
-* Doodad
-* Ability
-* Buff
-* Upgrade
+* unit
+* item
+* destructable
+* doodad
+* ability
+* buff
+* upgrade
 
 They are correspond to the classes in editor
 
