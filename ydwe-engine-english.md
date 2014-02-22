@@ -1,10 +1,10 @@
-# Ydwe lua engine use
+# YDWE lua engine instructions
 
 ##1. Introduction
-ydwe lua engine (hereinafter referred to as lua engine) is an embedded "Warcraft III" (hereinafter referred to as World of Warcraft) in a plug-in, which lets Warcraft World of Warcraft can execute lua and call the exported functions (functions defined in common.j ), as did the use of jass. The instructions assume that you have mastered the grammar jass and lua, the problem no longer be explained about grammar.
+ydwe lua engine(hereinafter referred to as lua engine) is a plugin for "Warcraft III"(hereinafter referred to as War3), which can make War3 execute lua and call the exported functions(defined in common.j ), just as use them in jass. The instructions assume that you have mastered the grammar of jass and lua, the problem about grammar will no longer be explained.
 
 ##2. Entrance
-Called within jass `call Cheat("run hello.lua")`, which is equivalent to the lua you called `require 'hello.lua'`. lua engine has to load the file within the map to search path, so hello.lua within the map will be implemented.
+Called `call Cheat("run hello.lua")` within jass, which is equivalent to called `require 'hello.lua'` within lua. lua engine has added the files within the map to search path, so 'hello.lua' within the map will be implemented.
 
 ##3. Modify lua lua's standard engine
 In order to fit in the engine using lua lua slight modification of Warcraft.
