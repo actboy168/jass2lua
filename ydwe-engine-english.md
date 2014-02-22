@@ -28,17 +28,21 @@ jass.common library contains all the functions within common.j registration.
  
 ######example
 
+```lua
 	local jass = require 'jass.common'
 	print(jass.GetHandleId(jass.Player(0)))
+```
 
 In particular, you can access jass custom variables jass.common library
 
 ######example
 
+```lua
 	local jass = require 'jass.common'
 	jass.udg_code = function() -- a defined code jass variable assignment as a lua function
 	print(jass.udg_strings [2]) -- Get string array defined jass
 	end
+```
 
 You can interact with the data in this way to achieve and between jass script
 
@@ -55,9 +59,11 @@ All japi function jass.japi libraries currently registered.
 
 ######example
 
+```lua
 	local jass = require 'jass.common'
 	local japi = require 'jass.japi'
 	japi.EXDisplayChat(jass.Player (0), 0, "Hello!")
+```
 
 You can also by way of registered japi native function jass so that you call them in the jass
 
@@ -71,20 +77,24 @@ jass.hook library functions within common.j registered under the hook. Note: jas
 
 ######example
 
+```lua
 	local hook = require 'jass.hook'
 	function hook.CreateUnit(pid, uid, x, y, face, realCreateUnit)
 		-- When you call CreateUnit the jass, will be executed
 		print('CreateUnit')
 		return realCreateUnit(pid, uid, x, y, face)
 	end
+```
 
 ##8. Jass.slk
 jass.slk library can read slk/w3 * files within the map in the map runtime.
 
 ######example
 
+```lua
 	local slk = require 'jass.slk'
 	print(slk.ability.AHbz.Name)
+```
 
 slk contains
 
@@ -107,27 +117,32 @@ Note that when accessing the correct return value is always a string. If you get
 
 ######example
 
-local runtime = require 'jass.runtime'
-
+```lua
+	local runtime = require 'jass.runtime'
+```
 ####runtime.console (default is false)
 Assigned to true open a cmd window, print function converts text displayed here
 
 ######example
-
-runtime.console = true
+```lua
+	runtime.console = true
+```
 
 ####runtime.version
 Returns the current version number of the lua engine
 
 ######example
 
-	print(runtime.version) - 1
+```lua
+	print(runtime.version) -- 1
+```
 
 ####runtime.error_handle
 When your lua script error callback function. Note that this function efficiently after registration lua script will be reduced, even if no error occurred. If you do not register this function, the script also displays a simple error in the cmd prompt window.
 
 ######example
 
+```lua
 	runtime.error_handle = function(msg)
 		print("---------------------------------------")
 		print("             LUA ERROR!!               ")
@@ -136,6 +151,7 @@ When your lua script error callback function. Note that this function efficientl
 		print(debug.traceback ())
 		print("---------------------------------------")
 	end
+```
 
 ####Runtime.handle_level (defaults to 2)
 Handle grade lua, there are currently three possible values: 0,1,2. When you are using 0,1,2, efficiency lua script will in turn reduce, but will in turn increase security.
@@ -144,21 +160,26 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 
 ######example
 
+```lua
 	local t = jass.CreateTimer ()
 	print(t) -- 1048000
 	type(t) -- "number"
+```
 
 #####1: handle encapsulated in lightuserdata, a 0 can be implicitly converted to nil, the same does not increase the reference count of the handle
 
 ######example 1
 
+```lua
 	local t = jass.CreateTimer()
 	print(t) -- "handle: 0x10005D"
 	type(t) -- "userdata"
 	jass.TimerStart(t, 1, false, 0) -- ok
+```
 
 ######example 2
 
+```lua
 	local t = jass.CreateTimer()
 	local h1 = jass.CreateTimer()
 	jass.DestroyTimer(h1)
@@ -169,11 +190,13 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 			print (h2) -- "handle: 0x10005E"
 		end
 	)
+```
 
 #####2: Will increase when the handle is encapsulated in the userdata, lua holding the handle handle reference count. Of course, after the end of the function local variables are automatically recovered and released to handle references.
 
 ######example
 
+```lua
 	local t = jass.CreateTimer()
 	local h1 = jass.CreateTimer()
 	jass.DestroyTimer(h1)
@@ -184,7 +207,8 @@ Handle grade lua, there are currently three possible values: 0,1,2. When you are
 			print(h2) -- "handle: 0x10005F"
 		end
 	)
-	
+```
+
 ####runtime.sleep (default is true)
 contains the sleep function common.j operation has four, TriggerSleepAction / TriggerSyncReady / TriggerWaitForSound / SyncSelections. Warning When this is when false, lua engine will ignore the call of these four functions, and give runtime. When this is true, these four functions will be performed correctly.
 
@@ -192,6 +216,7 @@ However, please note that this is true lua will reduce the operating efficiency 
 
 ######example
 
+```lua
 	local trg = jass.CreateTrigger()
 	local a = 1
 	jass.TriggerAddAction (trg, function()
@@ -200,3 +225,4 @@ However, please note that this is true lua will reduce the operating efficiency 
 	end)
 	jass.TriggerExecute(trg)
 	a = 2
+```
