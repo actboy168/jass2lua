@@ -6,13 +6,13 @@ ydwe lua engine(hereinafter referred to as lua engine) is a plugin for "Warcraft
 ##2. Entrance
 Called `call Cheat("run hello.lua")` within jass, which is equivalent to called `require 'hello.lua'` within lua. lua engine has added the files within the map to search path, so 'hello.lua' within the map will be implemented.
 
-##3. Modify lua lua's standard engine
-In order to fit in the engine using lua lua slight modification of Warcraft.
+##3. Modification betweens lua engin and standard lua
+In order to fit in War3, lua engin relatives to the B with some modifications
  
-1. Supporting character integer. |AHbz| represents an integer, its value and jass in 'AHbz' equal.
-2. Math.randomseed to use jass function SetRandomSeed achieved.
-3. Math.random to use jass function GetRandomReal achieved.
-4. Table element random seed depends on the internal Warcraft random seed.
+1. Supporting character integer. |AHbz| represents an integer, its value and 'AHbz' in jass equals.
+2. math.randomseed to use jass function SetRandomSeed achieved.
+3. math.random to use jass function GetRandomReal achieved.
+4. table element random seed depends on the War3 internal random seed.
 
 ##4. Built-in library
 lua engine a total of five built-in libraries, you can "require 'library name'" call. 5 built-in libraries are
