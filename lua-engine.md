@@ -99,7 +99,19 @@ jass.slk库可以在地图运行时读取地图内的slk/w3*文件。
 	local slk = require 'jass.slk'
 	print(slk.ability.AHbz.Name)
 ```
-	
+
+你也可以遍历一个表或者一个物体
+
+```lua
+	local slk = require 'jass.slk'
+	for k, v in pairs(slk.ability) do
+		print(k .. ' ' .. v)
+	end
+	for k, v in pairs(slk.ability.AHbz) do
+		print(k .. ' ' .. v)
+	end
+```
+
 slk包含
 
 * unit
