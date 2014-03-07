@@ -139,7 +139,7 @@ slk包含
 返回当前lua引擎的版本号
 
 ```lua
-	print(runtime.version) -- 1
+	print(runtime.version)
 ```
 
 ####runtime.error_handle
