@@ -73,11 +73,14 @@ japi函数不同环境下可能会略有不同，你可以通过pairs遍历当�
 ##jass.hook
 jass.hook库可以对common.j内注册的函数下钩子。注：jass.common库不会受到影响。  
 
+同时，为了避免jass和lua之间传递浮点数时产生误差，通过jass.hook传递到lua中的浮点数，并不是number类型，而是userdata。当你需要**精确**地操纵浮点数时，也请注意这点。
+
 ```lua
 	local hook = require 'jass.hook'
 	function hook.CreateUnit(pid, uid, x, y, face, realCreateUnit)
 		-- 当jass内调用CreateUnit时，就会被执行
 		print('CreateUnit')
+		print(type(x))
 		return realCreateUnit(pid, uid, x, y, face)
 	end
 ```
