@@ -55,19 +55,19 @@ jass.common库包含common.j内注册的所有函数。
 ##jass.japi
 jass.japi库当前已经注册的所有japi函数。  
 
-######例  
-
 ```lua
 	local jass = require 'jass.common'
 	local japi = require 'jass.japi'
 	japi.EXDisplayChat(jass.Player(0), 0, "Hello!")
 ```
-	
-你也可以在jass中通过native的方式注册japi函数，以便你在jass中调用它们  
 
-```
-	native EXDisplayChat takes player p, type i, string text returns nothing
-	call EXDisplayChat(Player(0), 0, "Hello!")
+japi函数不同环境下可能会略有不同，你可以通过pairs遍历当前的所有japi函数
+
+
+```lua
+	for k, v in pairs(require 'jass.japi') do
+		print(k .. ' ' .. v)
+	end
 ```
 
 ##jass.hook
