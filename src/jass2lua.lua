@@ -580,6 +580,7 @@ local function main()
 
 	package.path = package.path .. ';' .. arg[2] .. 'src\\?.lua'
 	package.cpath = package.cpath .. ';' .. arg[2] .. 'build\\?.dll'
+	require 'luabind'
 	require 'filesystem'
 	require 'utility'
 	
