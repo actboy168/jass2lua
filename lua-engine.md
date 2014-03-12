@@ -15,13 +15,14 @@ ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以
 4. table元素随机化种子依赖于魔兽内部的随机种子。
 
 ##内置库
-lua引擎一共有5个内置库，可以通过"require '库名'"调用。5个内置库分别为  
+lua引擎一共有6个内置库，可以通过"require '库名'"调用。5个内置库分别为  
 
 * jass.common
 * jass.japi
 * jass.hook
 * jass.runtime
 * jass.slk
+* jass.storm
 
 ##jass.common
 jass.common库包含common.j内注册的所有函数。 
@@ -120,6 +121,19 @@ slk包含
 获取数据时使用的索引你可以在物体编辑器中通过Ctrl+D来查询到  
 
 注意，当访问正确时返回值永远是字符串。如果你获取的是某个单位的生命值，你可能需要使用tonumber来进行转换。当访问不正确时将返回nil。
+
+##jass.storm
+jass.storm库可以读取mpq/本地硬盘的文件，并可以向本地硬盘写文件。
+
+```lua
+	local storm = require 'jass.storm'
+	local buf = storm.load('war3map.j')
+	if buf then
+		print(buf)
+		print(storm.save('save_war3map.j', buf))
+	end
+```
+
 
 ##jass.runtime
 ###jass.runtime库可以在地图运行时获取lua引擎的信息或修改lua引擎的部分配置。
