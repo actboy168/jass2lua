@@ -4,7 +4,7 @@
 ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以下简称魔兽)中的一个插件，它可以让魔兽可以执行lua并且调用魔兽的导出函数(在common.j内定义的函数)，就像使用jass那样。本说明假定你已经掌握了jass和lua的相关语法，有关语法的问题不再另行解释。
 
 ##入口
-在jass内调用 `call Cheat("run hello.lua")`，这等价于在lua里调用了 `require 'hello.lua'` 。lua引擎已经把地图内的文件加载到搜索路径，所以地图内的hello.lua将会得到执行。
+在jass内调用 `call Cheat("exec-lua: hello.lua")`，这等价于在lua里调用了 `require 'hello.lua'` 。lua引擎已经把地图内的文件加载到搜索路径，所以地图内的hello.lua将会得到执行。
 
 ##lua引擎对标准lua的修改
 为了适合在魔兽内使用lua引擎对lua略有修改。 
