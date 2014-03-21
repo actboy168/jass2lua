@@ -143,7 +143,7 @@ jass.storm库可以读取mpq/本地硬盘的文件，并可以向本地硬盘写
 ```
 
 ####runtime.console(默认为false)
-赋值为true后打开一个cmd窗口，print函数会将文本显示在这里
+赋值为true后会打开一个cmd窗口，print函数可以输出到这里
 
 ```lua
 	runtime.console = true
@@ -157,8 +157,16 @@ jass.storm库可以读取mpq/本地硬盘的文件，并可以向本地硬盘写
 ```
 
 ####runtime.error_handle
-当你的lua脚本出现错误时将回调此函数。注意，注册此函数后lua脚本的效率会降低，即使并没有发生错误。如果你不注册此函数，脚本出现错误时也会在cmd窗口中显示简单的提示。
+当你的lua脚本出现错误时将会调用此函数。
 
+runtime.error_handle有一个默认值，等价于以下函数
+```lua
+	runtime.error_handle = function(msg)
+		print("Error: ", msg, "\n")
+	end
+```
+
+你也可以让它输出更多的信息，比如输出错误时的调用栈
 ```lua
 	runtime.error_handle = function(msg)
 		print("---------------------------------------")
@@ -170,10 +178,12 @@ jass.storm库可以读取mpq/本地硬盘的文件，并可以向本地硬盘写
 	end
 ```
 	
-####runtime.handle_level(默认为2)
-lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，1，2时，lua脚本的效率将依次降低，但是安全性会依次增加。
+注意，注册此函数后lua脚本的效率会降低(即使并没有发生错误)。
 
-#####0: handle直接使用number，jass无法了解你在lua中对这个handle的引用情况，不会通过增加引用计数来保护这个handle
+####runtime.handle_level(默认为2)
+lua引擎处理的handle的安全等级，有效值为0~2，注，等级越高，效率越低，安全性越高、
+
+#####0: handle直接使用number，jass无法了解你在lua中对这个handle的引用情况，也不会通过增加引用计数来保护这个handle
 
 ```lua
 	local t = jass.CreateTimer()
@@ -181,7 +191,7 @@ lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，
 	type(t) -- "number"
 ```
 
-#####1: handle封装在lightuserdata中，0可以隐转为nil，同样不会增加这个handle的引用计数
+#####1: handle封装在lightuserdata中，保证handle不能和整数相互转换，同样不支持引用计数
 
 ```lua
 	local t = jass.CreateTimer()
@@ -203,7 +213,7 @@ lua的句柄等级，目前有3个可选值：0，1，2。当你分别使用0，
 	)
 ```
 
-#####2: handle封装在userdata中，lua持有该handle时将增加handle的引用计数。当然，函数结束后局部变量会自动回收并释放对handle的引用。
+#####2: handle封装在userdata中，lua持有该handle时将增加handle的引用计数。lua释放handle时会释放handle的引用计数。
 
 ```lua
 	local t = jass.CreateTimer()
