@@ -632,7 +632,11 @@ local function main()
 	print('[ok]: Convert war3map.lua.')
 	io.save(import['main.lua'],  [[
 jass_ext.EnableConsole()
-setmetatable(_G, { __index = getmetatable(jass).__index })
+local japi = getmetatable(japi).__index
+local jass = getmetatable(jass).__index
+setmetatable(_ENV, {__index = function(self, name)
+	return japi(self, name) or jass(self, name)
+end})
 require "blizzard.lua"
 require "war3map.lua"
 main()
