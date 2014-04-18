@@ -268,7 +268,7 @@ end
 		end
 		
 		local function isbreak(word)
-			return word == nil or word:find("[%+%-%,%=%>%<]") or word == "if" or word == "do" or word == "end" or word == "for" or word == "then" or word == "do return"
+			return word == nil or word:find("[%+%-%,%=%>%<]") or word == "if" or word == "do" or word == "end" or word == "for" or word == "then" or word == "do return" or word == "elseif"
 		end
 		
 		local isbrackreal
