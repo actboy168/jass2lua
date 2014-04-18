@@ -485,7 +485,7 @@ end
 				if isinstring then
 					stringflag = true
 				end
-				if word:sub(-1, -1) == "\"" and word:sub(-2, -2) ~= "\\" then
+				if word:sub(-1, -1) == "\"" and (word:sub(-2, -2) ~= "\\" or word:sub(-3, -2) == "\\\\") then
 					isinstring = not isinstring
 				end
 			end
