@@ -146,10 +146,13 @@ end
 		end,
 		--修改256进制符号
 		function(word)
-			if string.sub(word, 1, 1) == "'" then
-				word = string.gsub(word, "'", "|")
-			end
-			return word
+			return word:gsub("'(.-)'",
+				function(c)
+					if #c <= 4 then
+						return ('>L'):unpack(c)
+					end
+				end
+			)
 		end,
 		--删除globals与endglobals
 		function(word)
@@ -471,7 +474,6 @@ end
 				return a .. " " .. b
 			end
 		end)
-		jass = string.gsub(jass, "'|'", "124")
 		globalType(jass) --词法分析(全局变量)
 		localType(jass) --词法分析(局部变量)
 		for word in string.gmatch(jass, "([%S]+)") do
