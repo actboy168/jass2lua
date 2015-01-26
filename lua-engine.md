@@ -9,10 +9,9 @@ ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以
 ##lua引擎对标准lua的修改
 为了适合在魔兽内使用lua引擎对lua略有修改。 
  
-1. 支持字符型整数。|AHbz|表示一个整数，其值和jass内的'AHbz'相等。
-2. math.randomseed改为使用jass函数SetRandomSeed实现。
-3. math.random改为使用jass函数GetRandomReal实现。
-4. table元素随机化种子依赖于魔兽内部的随机种子。
+1. math.randomseed改为使用jass函数SetRandomSeed实现。
+2. math.random改为使用jass函数GetRandomReal实现。
+3. table元素随机化种子依赖于魔兽内部的随机种子。
 
 ##内置库
 lua引擎一共有6个内置库，可以通过"require '库名'"调用。6个内置库分别为  
