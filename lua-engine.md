@@ -14,7 +14,7 @@ ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以
 3. table元素随机化种子依赖于魔兽内部的随机种子。
 
 ##内置库
-lua引擎一共有6个内置库，可以通过"require '库名'"调用。6个内置库分别为  
+lua引擎一共有7个内置库，可以通过"require '库名'"调用。7个内置库分别为  
 
 * jass.common
 * jass.japi
@@ -22,6 +22,7 @@ lua引擎一共有6个内置库，可以通过"require '库名'"调用。6个内
 * jass.runtime
 * jass.slk
 * jass.storm
+* jass.console
 
 ##jass.common
 jass.common库包含common.j内注册的所有函数。 
@@ -142,7 +143,7 @@ jass.storm库可以读取mpq/本地硬盘的文件，并可以向本地硬盘写
 ```
 
 ####runtime.console(默认为false)
-赋值为true后会打开一个cmd窗口，print函数可以输出到这里
+赋值为true后会打开一个cmd窗口，print与console.write函数可以输出到这里
 
 ```lua
 	runtime.console = true
@@ -245,3 +246,49 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 
 ####runtime.catch_crash(默认为true)
 调用jass.xxx/japi.xxx发生崩溃时，会生产一个lua错误，并忽略这个崩溃。你可以注册jass.runtime.error_handle来获得这个错误。注：开启此项会略微增加运行时消耗（即使没有发生错误）。
+
+
+##jass.console
+###jass.console与控制台相关
+
+####console.enable(默认为false)
+赋值为true后会打开一个cmd窗口，print与console.write函数可以输出到这里
+
+```lua
+	console.enable = true
+```
+
+####console.write
+将utf8编码的字符串转化为ansi编码后输出到cmd窗口中，如果你需要输出魔兽中的中文，请使用该函数而不是print
+
+####console.read
+将控制台中的输入传入魔兽中(会自动转换编码)
+
+首次调用console.read后将允许用户在控制台输入，输入完成后按回车键提交输入。
+
+用户提交完成后，传入一个函数f来调用console.read，将会调用函数f，并将用户的输入作为参数传入(已转换为utf8编码)。
+
+推荐的做法是每0.1秒运行一次console.read，见下面的例子：
+
+```lua
+	local jass    = require 'jass.common'
+	local console = require 'jass.console'
+
+	console.write('测试开始...')
+
+	--开启计时器,每0.1秒检查输入
+	jass.TimerStart(jass.CreateTimer(), 0.1, true,
+		function()
+
+			--检查CMD窗口中的用户输入,如果用户有提交了的输入,则回调函数(按回车键提交输入).否则不做任何动作
+			console.read(
+				function(str)
+					--参数即为用户的输入.需要注意的是这个函数调用是不同步的(毕竟其他玩家不知道你输入了什么)
+					jass.DisplayTimedTextToPlayer(jass.Player(0), 0, 0, 60, '你在控制台中输入了:' .. str)
+				end
+			)
+		end
+	)
+```
+
+需要注意的是控制台输入是不同步的。
