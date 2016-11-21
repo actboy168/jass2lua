@@ -12,17 +12,23 @@ ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以
 1. math.randomseed改为使用jass函数SetRandomSeed实现。
 2. math.random改为使用jass函数GetRandomReal实现。
 3. table元素随机化种子依赖于魔兽内部的随机种子。
+4. 屏蔽了部分被认为不安全的函数
 
 ##内置库
-lua引擎一共有7个内置库，可以通过"require '库名'"调用。7个内置库分别为  
+lua引擎一共有12个内置库，可以通过"require '库名'"调用。  
 
 * jass.common
+* jass.globals
 * jass.japi
 * jass.hook
 * jass.runtime
 * jass.slk
 * jass.storm
 * jass.console
+* jass.debug
+* jass.log
+* jass.message
+* jass.bignum
 
 ##jass.common
 jass.common库包含common.j内注册的所有函数。 
@@ -32,11 +38,12 @@ jass.common库包含common.j内注册的所有函数。
 	print(jass.GetHandleId(jass.Player(0)))
 ```
 	
-特别的,你可以通过jass.common库来访问jass中的自定义变量  
+##jass.globals
+jass.globals库可以让你访问到jass内的全局变量。
 
 ```lua
-	local jass = require 'jass.common'
-	jass.udg_code = function() --将一个jass中定义的code变量赋值为一个lua函数
+	local g = require 'jass.globals'
+	g.udg_code = function() --将一个jass中定义的code变量赋值为一个lua函数
 		print(jass.udg_strings[2]) --获取jass中定义的string数组
 	end
 ```
@@ -115,6 +122,7 @@ slk包含
 * ability
 * buff
 * upgrade
+* misc
 
 与你物体编辑器中的项目一一对应。  
 
@@ -228,7 +236,7 @@ lua引擎处理的handle的安全等级，有效值为0~2，注，等级越高�
 	)
 ```
 
-####runtime.sleep(默认为true)
+####runtime.sleep(默认为false)
 common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncReady/TriggerWaitForSound/SyncSelections。当此项为false时，lua引擎会忽略这4个函数的调用，并给予运行时警告。当此项为true时，这4个函数将会得到正确的执行。
 
 但请注意此项为true时将降低lua引擎的运行效率，即使你没有使用这4个函数。
@@ -292,3 +300,16 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 ```
 
 需要注意的是控制台输入是不同步的。
+
+
+##jass.debug
+TODO
+
+##jass.log
+TODO
+
+##jass.message
+TODO
+
+##jass.bignum
+TODO
