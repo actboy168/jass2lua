@@ -303,13 +303,86 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 
 
 ##jass.debug
-TODO
+jass.debug库能帮助你更深入地剖析lua引擎的内部机制。
+
+* functiondef jass.common或者jass.japi函数的定义
+
+```lua
+	local jass = require 'jass.common'
+	local dbg = require 'jass.debug'
+	print(dbg.functiondef(jass.GetUnitX))
+```
+
+* globaldef jass.globals内值的定义
+
+* handledef handle对应对象的内部定义
+
+* currentpos 当前jass执行到的位置
+
+* handlemax jass虚拟机当前最大的handle
+
+* handlecount jass虚拟机当前的handle数
+
+* h2i/i2h handle和integer的转换，当你runtime.handle_level不是0时，你可能会需要它
+
+* handle_ref 增加handle的引用
+
+* handle_unref 减少handle的引用
+
+* gchash 指定一张table的gchash，gchash会决定了在其他table中这个table的排序次序
+在默认的情况下，lua对table的排序次序是由随机数决定的，不同玩家的lua生成的随机数不一致，所以下面的代码在不同的玩家上执行的次序是不一致的，这可能会引起不同步掉线
+
+
+```lua
+	local tbl = {}
+	for i = 1, 10 do
+		local k = { id = i }
+		tbl[k] = i
+	end
+	for k, v in pairs(tbl) do
+		print(k.id)
+	end
+```
+
+加上如果指定了gchash，那么它的次序就可以固定了
+
+```lua
+	local dbg = require 'jass.debug'
+	local tbl = {}
+	for i = 1, 10 do
+		local k = { id = i }
+		dbg.gchash(k, i)
+		tbl[k] = i
+	end
+	for k, v in pairs(tbl) do
+		print(k.id)
+	end
+```
 
 ##jass.log
-TODO
+日志库
+
+* path 日志的输出路径
+* level 日志的等级，指定等级以上的日志才会输出
+* 日志有6个等级 trace、debug、info、warn、error、fatal
+
+```lua
+	local log = require 'jass.log'
+	log.info('这是一行日志')
+	log.error('这是一行', '日志')
+```
 
 ##jass.message
-TODO
 
+* keyboard 一张表，魔兽的键盘码
+* mouse 本地玩家的鼠标坐标(游戏坐标)
+* button 本地玩家技能按钮的状态
+* hook 魔兽的消息回调，可以获得部分鼠标和键盘消息
+* selection 获得本地玩家当前选中单位
+* order_immediate 发布本地命令，无目标
+* order_point 发布本地命令，点目标
+* order_target 发布本地命令，单位目标
+* order_enable_debug 开启后，会在控制台打印当前的本地命令，调试用
+				
 ##jass.bignum
-TODO
+加密算法库
