@@ -1,4 +1,4 @@
-local chunk
+local lines
 local jass
 local file
 local tab_count
@@ -7,11 +7,20 @@ local current_function
 local get_exp
 local add_lines
 
-local function insert_line(str)
+local function insert_line(n, str)
     if tab_count > 0 then
         str = ('\t'):rep(tab_count) .. str
     end
-    chunk[#chunk+1] = str
+    if lines[n] then
+        print('该行已被使用:', n, lines[n], str)
+        return
+    end
+    if n > #lines+1 then
+        for i = #lines+1, n-1 do
+            lines[i] = ''
+        end
+    end
+    lines[n] = str
 end
 
 local function struct_start()
@@ -247,9 +256,9 @@ local function add_global(global)
         value = new_array(global.type)
     end
     if value then
-        insert_line(([[%s = %s]]):format(global.name, value))
+        insert_line(global.line, ([[%s = %s]]):format(global.name, value))
     else
-        insert_line(([[-- %s]]):format(global.name))
+        insert_line(global.line, ([[-- %s]]):format(global.name))
     end
 end
 
@@ -265,9 +274,9 @@ local function add_local(loc)
         value = new_array(loc.type)
     end
     if value then
-        insert_line(('local %s = %s'):format(get_var_name(loc.name), value))
+        insert_line(loc.line, ('local %s = %s'):format(get_var_name(loc.name), value))
     else
-        insert_line(('local %s'):format(get_var_name(loc.name)))
+        insert_line(loc.line, ('local %s'):format(get_var_name(loc.name)))
     end
 end
 
@@ -289,53 +298,53 @@ local function get_args(line)
 end
 
 local function add_call(line)
-    insert_line(('%s(%s)'):format(get_function_name(line.name), get_args(line)))
+    insert_line(line.line, ('%s(%s)'):format(get_function_name(line.name), get_args(line)))
 end
 
 local function add_set(line)
-    insert_line(('%s = %s'):format(get_var_name(line.name), get_exp(line[1])))
+    insert_line(line.line, ('%s = %s'):format(get_var_name(line.name), get_exp(line[1])))
 end
 
 local function add_seti(line)
-    insert_line(('%s[%s] = %s'):format(get_var_name(line.name), get_exp(line[1]), get_exp(line[2])))
+    insert_line(line.line, ('%s[%s] = %s'):format(get_var_name(line.name), get_exp(line[1]), get_exp(line[2])))
 end
 
 local function add_return(line, last)
     if last then
         if line[1] then
-            insert_line(('return %s'):format(get_exp(line[1])))
+            insert_line(line.line, ('return %s'):format(get_exp(line[1])))
         else
-            insert_line 'return'
+            insert_line(line.line, 'return')
         end
     else
         if line[1] then
-            insert_line(('do return %s end'):format(get_exp(line[1])))
+            insert_line(line.line, ('do return %s end'):format(get_exp(line[1])))
         else
-            insert_line 'do return end'
+            insert_line(line.line, 'do return end')
         end
     end
 end
 
 local function add_exit(line)
-    insert_line(('if %s then break end'):format(get_exp(line[1])))
+    insert_line(line.line, ('if %s then break end'):format(get_exp(line[1])))
 end
 
 local function add_if(data)
-    insert_line(('if %s then'):format(get_exp(data.condition)))
+    insert_line(data.line, ('if %s then'):format(get_exp(data.condition)))
     struct_start()
     add_lines(data)
     struct_end()
 end
 
 local function add_elseif(data)
-    insert_line(('elseif %s then'):format(get_exp(data.condition)))
+    insert_line(data.line, ('elseif %s then'):format(get_exp(data.condition)))
     struct_start()
     add_lines(data)
     struct_end()
 end
 
 local function add_else(data)
-    insert_line 'else'
+    insert_line(data.line, 'else')
     struct_start()
     add_lines(data)
     struct_end()
@@ -353,15 +362,15 @@ local function add_ifs(chunk)
             print('未知的判断类型', line.type)
         end
     end
-    insert_line 'end'
+    insert_line(chunk.endline, 'end')
 end
 
 local function add_loop(chunk)
-    insert_line 'for _i = 1, 1000000 do'
+    insert_line(chunk.line, 'for _i = 1, 1000000 do')
     struct_start()
     add_lines(chunk)
     struct_end()
-    insert_line 'end'
+    insert_line(chunk.endline, 'end')
 end
 
 function add_lines(chunk)
@@ -397,13 +406,12 @@ local function add_function(func)
             args[i] = get_available_name(arg.name)
         end
     end
-    insert_line ''
-    insert_line(([[function %s(%s)]]):format(get_function_name(func.name), table.concat(args, ', ')))
+    insert_line(func.line, ([[function %s(%s)]]):format(get_function_name(func.name), table.concat(args, ', ')))
     struct_start()
     add_locals(func.locals)
     add_lines(func)
     struct_end()
-    insert_line 'end'
+    insert_line(func.endline, 'end')
 end
 
 local function add_functions()
@@ -422,7 +430,7 @@ local function special()
 end
 
 return function (_jass, _file)
-    chunk = {}
+    lines = {}
     jass = _jass
     file = _file
     tab_count = 0
@@ -432,5 +440,5 @@ return function (_jass, _file)
     add_globals()
     add_functions()
 
-    return table.concat(chunk, '\r\n')
+    return table.concat(lines, '\r\n')
 end
