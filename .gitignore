@@ -1,2 +1,5 @@
 test/
 *.w3x
+blizzard.lua
+war3map.lua
+*.j
