@@ -20,6 +20,7 @@ local function main()
         local result = parser()
         local buf = converter(result)
         io.save(root / 'blizzard.lua', buf)
+        print('完成,用时', os.clock(), '秒')
         return
     end
     

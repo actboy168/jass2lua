@@ -31,39 +31,7 @@ local function get_available_name(name)
 end
 
 local function add_head()
-    insert_line [[
-local jass = require 'jass.common'
-local japi = require 'jass.japi'
-]]
-
-    if file == 'war3map.j' then
-        insert_line [[
-local bj = require 'blizzard.lua'
-]]
-    end
-
-    insert_line [[
-local mt_array = {}
-function mt_array:__index(i)
-    if i < 0 or i > 8191 then
-        error('数组索引越界:'..i)
-    end
-    return self._default
-end
-
-function mt_array:__newindex(i, v)
-    if i < 0 or i > 8191 then
-        error('数组索引越界:'..i)
-    end
-    rawset(self, i, v)
-end
-
-local function new_array(default)
-    return setmetatable({ _default = default }, mt_array)
-end
-
-local mt = {}
-]]
+    insert_line "require 'utility'"
 end
 
 local function add_tail()
