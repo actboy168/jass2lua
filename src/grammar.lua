@@ -19,8 +19,9 @@ local Cmt = lpeg.Cmt
 
 local jass
 local file
-local line_count = 1
-local line_pos = 1
+local comments
+local line_count
+local line_pos
 
 local function errorpos(pos, str)
     local endpos = jass:find('[\r\n]', pos) or (#jass+1)
@@ -38,6 +39,15 @@ end
 local function newline(pos)
     line_count = line_count + 1
     line_pos = pos
+end
+
+local function comment(str)
+    if comments[line_count] then
+        print('注释行重复:' .. line_count)
+        print(comments[line_count])
+        print(str)
+    end
+    comments[line_count] = str
 end
 
 local w = (1-S' \t\r\n()[]')^0
@@ -84,7 +94,7 @@ local function binary(...)
 end
 
 local nl  = (P'\r\n' + S'\r\n') * Cp() / newline
-local com = P'//' * (1-nl)^0
+local com = P'//' * C((1-nl)^0) / comment
 local sp  = (S' \t' + P'\xEF\xBB\xBF' + com)^0
 local sps = (S' \t' + P'\xEF\xBB\xBF' + com)^1
 local cl  = com^0 * nl
@@ -279,6 +289,7 @@ mt.Function = Function
 function mt:__call(_jass, _file, mode)
     jass = _jass
     file = _file
+    comments = {}
     line_count = 1
     line_pos = 1
     lpeg.setmaxstack(1000)
@@ -286,7 +297,7 @@ function mt:__call(_jass, _file, mode)
     if mode then
         return Ct((mt[mode] + spl)^1 + err'语法不正确'):match(_jass)
     else
-        return Ct(pjass):match(_jass)
+        return Ct(pjass):match(_jass), comments
     end
 end
 

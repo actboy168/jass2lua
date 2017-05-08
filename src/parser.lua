@@ -420,16 +420,18 @@ function mt:parse_jass(jass, _file)
     --collectgarbage()
     --local m = collectgarbage 'count'
     --print('任务:', name)
-    local gram = grammar(jass, file)
+    local gram, comments = grammar(jass, file)
     --print('用时:', os.clock() - clock)
     --collectgarbage()
     --collectgarbage()
     --print('内存:', collectgarbage 'count' - m, 'k')
 
-    self:parser(gram, file)
+    self:parser(gram)
 
     self.current_line = nil
     self.loop_count = nil
+    
+    self.comments = comments
     
     return gram
 end
