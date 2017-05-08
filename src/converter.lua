@@ -7,9 +7,10 @@ local current_function
 local get_exp
 local add_lines
 
-local function insert_line(n, str)
-    if tab_count > 0 then
-        str = ('\t'):rep(tab_count) .. str
+local function insert_one_line(n, str, ignore_tab)
+    local tab = ignore_tab and 0 or tab_count
+    if tab > 0 then
+        str = ('\t'):rep(tab) .. str
     end
     if lines[n] then
         print('该行已被使用:', n, lines[n], str)
@@ -18,7 +19,7 @@ local function insert_line(n, str)
     if n > #lines+1 then
         for i = #lines+1, n-1 do
             if jass.comments[i] then
-                lines[i] = ('%s--%s'):format(('\t'):rep(tab_count), jass.comments[i])
+                lines[i] = ('%s--%s'):format(('\t'):rep(tab), jass.comments[i])
             else
                 lines[i] = ''
             end
@@ -28,6 +29,22 @@ local function insert_line(n, str)
         lines[n] = ('%s --%s'):format(str, jass.comments[n])
     else
         lines[n] = str
+    end
+end
+
+local function insert_line(n, str)
+    local start = 1
+    local i = 0
+    while start <= #str do
+        local pos = str:find('[\r\n]', start) or #str+1
+        local line = str:sub(start, pos-1)
+        if str:sub(pos, pos+1) == '\r\n' then
+            start = pos+2
+        else
+            start = pos+1
+        end
+        insert_one_line(n + i, line, i > 0)
+        i = i + 1
     end
 end
 
