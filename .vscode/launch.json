@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "launch",
+            "type": "lua",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/src/main.lua",
+            "cwd": "${workspaceRoot}/src/build",
+            "path": "${workspaceRoot}/src/build/?.lua",
+            "cpath": "${workspaceRoot}/src/build/?.dll;",
+            "arg": [
+                "${workspaceRoot}/war3map.j"
+            ],
+            "console": "ansi"
+        },
+    ]
+}
