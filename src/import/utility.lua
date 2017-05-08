@@ -44,5 +44,5 @@ function ExecuteFunc(name)
 end
 
 function UnitAlive(unit)
-    return not jass.IsUnitType(unit, jass.UNIT_TYPE_DEAD) and jass.GetUnitTypeId() ~= 0
+    return not jass.IsUnitType(unit, jass.UNIT_TYPE_DEAD) and jass.GetUnitTypeId(unit) ~= 0
 end
