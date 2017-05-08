@@ -17,10 +17,28 @@ local function insert_line(n, str)
     end
     if n > #lines+1 then
         for i = #lines+1, n-1 do
-            lines[i] = ''
+            if jass.comments[i] then
+                lines[i] = ('%s--%s'):format(('\t'):rep(tab_count), jass.comments[i])
+            else
+                lines[i] = ''
+            end
         end
     end
-    lines[n] = str
+    if jass.comments[n] then
+        lines[n] = ('%s --%s'):format(str, jass.comments[n])
+    else
+        lines[n] = str
+    end
+end
+
+local function insert_comments(n, str)
+    if lines[n] then
+        return
+    end
+    for i = #lines+1, n-1 do
+        lines[i] = ''
+    end
+    lines[n] = ('--%s'):format(str)
 end
 
 local function struct_start()
@@ -258,7 +276,7 @@ local function add_global(global)
     if value then
         insert_line(global.line, ([[%s = %s]]):format(global.name, value))
     else
-        insert_line(global.line, ([[-- %s]]):format(global.name))
+        insert_line(global.line, ([[%s = %s]]):format(global.name, 'nil'))
     end
 end
 
@@ -420,6 +438,12 @@ local function add_functions()
     end
 end
 
+local function add_comments()
+    for n, comment in pairs(jass.comments) do
+        insert_comments(n, comment)
+    end
+end
+
 local function special()
     jass.functions.SetUnitState.file     = file
     jass.functions.InitGameCache.file    = file
@@ -439,6 +463,9 @@ return function (_jass, _file)
 
     add_globals()
     add_functions()
+    add_comments()
+
+    lines[#lines+1] = ''
 
     return table.concat(lines, '\r\n')
 end
