@@ -24,21 +24,10 @@ end
 
 local key_name = {'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while'}
 for _, name in ipairs(key_name) do
-    key_name[name] = '_' .. name
+    key_name[name] = name .. '_'
 end
 local function get_available_name(name)
     return key_name[name] or name
-end
-
-local function add_head()
-    insert_line "require 'utility'"
-end
-
-local function add_tail()
-    insert_line [[
-
-return mt
-]]
 end
 
 local function get_string(exp)
@@ -61,22 +50,7 @@ local function is_arg(name)
 end
 
 local function get_var_name(name)
-    if is_arg(name) then
-        return get_available_name(name)
-    end
-    local field
-    if jass.globals[name] then
-        if jass.globals[name].file == 'common.j' then
-            field = 'jass'
-        elseif jass.globals[name].file == file then
-            field = 'mt'
-        else
-            field = 'bj'
-        end
-    else
-        field = 'loc'
-    end
-    return ('%s.%s'):format(field, get_available_name(name))
+    return get_available_name(name)
 end
 
 local function get_var(exp)
@@ -88,24 +62,7 @@ local function get_vari(exp)
 end
 
 local function get_function_name(name)
-    local field
-    local func = jass.functions[name]
-    if func.file == 'common.j' then
-        field = 'jass'
-    elseif func.file == file then
-        if func.native then
-            field = 'japi'
-        else
-            field = 'mt'
-        end
-    else
-        if func.native then
-            field = 'japi'
-        else
-            field = 'bj'
-        end
-    end
-    return ('%s.%s'):format(field, get_available_name(name))
+    return get_available_name(name)
 end
 
 local function get_call(exp)
@@ -281,7 +238,7 @@ local function new_array(type)
     else
         default = ''
     end
-    return ([[new_array(%s)]]):format(default)
+    return ([[_array(%s)]]):format(default)
 end
 
 local function add_global(global)
@@ -289,10 +246,11 @@ local function add_global(global)
     if global.array then
         value = new_array(global.type)
     end
-    if not value then
-        return
+    if value then
+        insert_line(([[%s = %s]]):format(global.name, value))
+    else
+        insert_line(([[-- %s]]):format(global.name))
     end
-    insert_line(([[mt.%s = %s]]):format(global.name, value))
 end
 
 local function add_globals()
@@ -306,17 +264,17 @@ local function add_local(loc)
     if loc.array then
         value = new_array(loc.type)
     end
-    if not value then
-        return
+    if value then
+        insert_line(('local %s = %s'):format(get_var_name(loc.name), value))
+    else
+        insert_line(('local %s'):format(get_var_name(loc.name)))
     end
-    insert_line(('%s = %s'):format(get_var_name(loc.name), value))
 end
 
 local function add_locals(locals)
     if #locals == 0 then
         return
     end
-    insert_line 'local loc = {}'
     for _, loc in ipairs(locals) do
         add_local(loc)
     end
@@ -471,10 +429,8 @@ return function (_jass, _file)
 
     special()
 
-    add_head()
     add_globals()
     add_functions()
-    add_tail()
 
     return table.concat(chunk, '\r\n')
 end
