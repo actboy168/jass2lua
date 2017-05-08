@@ -58,7 +58,7 @@ local function get_available_name(name)
 end
 
 local function get_string(exp)
-    return ('%q'):format(exp.value)
+    return ('"%s"'):format(exp.value)
 end
 
 local function get_boolean(exp)

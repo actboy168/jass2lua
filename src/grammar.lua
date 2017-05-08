@@ -125,13 +125,13 @@ local Str = P{
     Def  = Ct(keyvalue('type', 'string') * Cg(V'Str', 'value')),
     Str  = '"' * Cs((nl + V'Char')^0) * '"',
     Char = V'Esc' + '\\' * err'不合法的转义字符' + (1-P'"'),
-    Esc  = P'\\b' / function() return '\b' end 
-         + P'\\t' / function() return '\t' end
-         + P'\\r' / function() return '\r' end
-         + P'\\n' / function() return '\n' end
-         + P'\\f' / function() return '\f' end
-         + P'\\"' / function() return '\"' end
-         + P'\\\\' / function() return '\\' end,
+    Esc  = P'\\b'
+         + P'\\t'
+         + P'\\r'
+         + P'\\n'
+         + P'\\f'
+         + P'\\"'
+         + P'\\\\',
 }
 
 local Real = P{
