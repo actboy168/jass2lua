@@ -61,6 +61,10 @@ local function currentline()
          * Cg(P(true) / function() return line_count end, 'line')
 end
 
+local function endline()
+    return Cg(P(true) / function() return line_count end, 'endline')
+end
+
 local function binary(...)
     local e1, op = ...
     if not op then
@@ -228,7 +232,7 @@ local Logic = P{
             * V'Ifif'
             * V'Ifelseif'^0 
             * V'Ifelse'^-1
-            * sp * 'endif'
+            * sp * 'endif' * endline()
             ),
     Ifif     = Ct(keyvalue('type', 'if') * currentline() * sp * 'if' * #(1-Id) * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
     Ifelseif = Ct(keyvalue('type', 'elseif') * currentline() * sp * 'elseif' * #(1-Id) * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
@@ -238,7 +242,7 @@ local Logic = P{
     Loop     = Ct(keyvalue('type', 'loop') * currentline() * sp
             * 'loop' * spl
             * (spl + V'Def' + Line * spl)^0
-            * sp * 'endloop'
+            * sp * 'endloop' * endline()
             ),
 }
 
@@ -255,7 +259,7 @@ local Function = P{
     Content  = sp * Cg(V'Locals', 'locals') * V'Lines',
     Locals   = Ct((spl + Local * spl)^0),
     Lines    = (spl + Logic * spl + Line * spl)^0,
-    End    = expect(sp * P'endfunction', '缺少endfunction'),
+    End      = expect(sp * P'endfunction', '缺少endfunction') * endline(),
 }
 
 local pjass = expect(sps + cl + Type + Function + Global, P(1), '语法不正确')^0
