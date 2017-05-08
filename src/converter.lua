@@ -224,7 +224,7 @@ function get_exp(exp)
         return nil
     end
     if exp.type == 'null' then
-        return nil
+        return 'nil'
     elseif exp.type == 'integer' then
         return exp.value
     elseif exp.type == 'real' then
