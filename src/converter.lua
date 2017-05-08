@@ -58,7 +58,20 @@ local function get_available_name(name)
 end
 
 local function get_string(exp)
-    return ('"%s"'):format(exp.value)
+    local str = exp.value
+    local lines = {}
+    local start = 1
+    while start <= #str do
+        local pos = str:find('[\r\n]', start) or #str+1
+        local line = str:sub(start, pos-1)
+        if str:sub(pos, pos+1) == '\r\n' then
+            start = pos+2
+        else
+            start = pos+1
+        end
+        lines[#lines+1] = line
+    end
+    return ('"%s"'):format(table.concat(lines, '\\\r\n'))
 end
 
 local function get_boolean(exp)
