@@ -1,5 +1,4 @@
 local grammar = require 'grammar'
-local convert = require 'convert'
 
 local root
 local file
