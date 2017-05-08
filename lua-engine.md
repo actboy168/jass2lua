@@ -12,17 +12,23 @@ ydwe lua引擎(以下简称lua引擎)是一个嵌入到《魔兽争霸III》(以
 1. math.randomseed改为使用jass函数SetRandomSeed实现。
 2. math.random改为使用jass函数GetRandomReal实现。
 3. table元素随机化种子依赖于魔兽内部的随机种子。
+4. 屏蔽了部分被认为不安全的函数
 
 ##内置库
-lua引擎一共有7个内置库，可以通过"require '库名'"调用。7个内置库分别为  
+lua引擎一共有12个内置库，可以通过"require '库名'"调用。  
 
 * jass.common
+* jass.globals
 * jass.japi
 * jass.hook
 * jass.runtime
 * jass.slk
 * jass.storm
 * jass.console
+* jass.debug
+* jass.log
+* jass.message
+* jass.bignum
 
 ##jass.common
 jass.common库包含common.j内注册的所有函数。 
@@ -32,11 +38,12 @@ jass.common库包含common.j内注册的所有函数。
 	print(jass.GetHandleId(jass.Player(0)))
 ```
 	
-特别的,你可以通过jass.common库来访问jass中的自定义变量  
+##jass.globals
+jass.globals库可以让你访问到jass内的全局变量。
 
 ```lua
-	local jass = require 'jass.common'
-	jass.udg_code = function() --将一个jass中定义的code变量赋值为一个lua函数
+	local g = require 'jass.globals'
+	g.udg_code = function() --将一个jass中定义的code变量赋值为一个lua函数
 		print(jass.udg_strings[2]) --获取jass中定义的string数组
 	end
 ```
@@ -115,6 +122,7 @@ slk包含
 * ability
 * buff
 * upgrade
+* misc
 
 与你物体编辑器中的项目一一对应。  
 
@@ -228,7 +236,7 @@ lua引擎处理的handle的安全等级，有效值为0~2，注，等级越高�
 	)
 ```
 
-####runtime.sleep(默认为true)
+####runtime.sleep(默认为false)
 common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncReady/TriggerWaitForSound/SyncSelections。当此项为false时，lua引擎会忽略这4个函数的调用，并给予运行时警告。当此项为true时，这4个函数将会得到正确的执行。
 
 但请注意此项为true时将降低lua引擎的运行效率，即使你没有使用这4个函数。
@@ -292,3 +300,89 @@ common.j中包含sleep操作的函数有4个，TriggerSleepAction/TriggerSyncRea
 ```
 
 需要注意的是控制台输入是不同步的。
+
+
+##jass.debug
+jass.debug库能帮助你更深入地剖析lua引擎的内部机制。
+
+* functiondef jass.common或者jass.japi函数的定义
+
+```lua
+	local jass = require 'jass.common'
+	local dbg = require 'jass.debug'
+	print(dbg.functiondef(jass.GetUnitX))
+```
+
+* globaldef jass.globals内值的定义
+
+* handledef handle对应对象的内部定义
+
+* currentpos 当前jass执行到的位置
+
+* handlemax jass虚拟机当前最大的handle
+
+* handlecount jass虚拟机当前的handle数
+
+* h2i/i2h handle和integer的转换，当你runtime.handle_level不是0时，你可能会需要它
+
+* handle_ref 增加handle的引用
+
+* handle_unref 减少handle的引用
+
+* gchash 指定一张table的gchash，gchash会决定了在其他table中这个table的排序次序
+在默认的情况下，lua对table的排序次序是由随机数决定的，不同玩家的lua生成的随机数不一致，所以下面的代码在不同的玩家上执行的次序是不一致的，这可能会引起不同步掉线
+
+
+```lua
+	local tbl = {}
+	for i = 1, 10 do
+		local k = { id = i }
+		tbl[k] = i
+	end
+	for k, v in pairs(tbl) do
+		print(k.id)
+	end
+```
+
+加上如果指定了gchash，那么它的次序就可以固定了
+
+```lua
+	local dbg = require 'jass.debug'
+	local tbl = {}
+	for i = 1, 10 do
+		local k = { id = i }
+		dbg.gchash(k, i)
+		tbl[k] = i
+	end
+	for k, v in pairs(tbl) do
+		print(k.id)
+	end
+```
+
+##jass.log
+日志库
+
+* path 日志的输出路径
+* level 日志的等级，指定等级以上的日志才会输出
+* 日志有6个等级 trace、debug、info、warn、error、fatal
+
+```lua
+	local log = require 'jass.log'
+	log.info('这是一行日志')
+	log.error('这是一行', '日志')
+```
+
+##jass.message
+
+* keyboard 一张表，魔兽的键盘码
+* mouse 本地玩家的鼠标坐标(游戏坐标)
+* button 本地玩家技能按钮的状态
+* hook 魔兽的消息回调，可以获得部分鼠标和键盘消息
+* selection 获得本地玩家当前选中单位
+* order_immediate 发布本地命令，无目标
+* order_point 发布本地命令，点目标
+* order_target 发布本地命令，单位目标
+* order_enable_debug 开启后，会在控制台打印当前的本地命令，调试用
+				
+##jass.bignum
+加密算法库
