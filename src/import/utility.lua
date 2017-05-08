@@ -20,7 +20,7 @@ function mt:__index(i)
     if i < 0 or i > 8191 then
         error('数组索引越界:'..i)
     end
-    return self._default
+    return rawget(self, '_default')
 end
 
 function mt:__newindex(i, v)
@@ -41,4 +41,8 @@ function ExecuteFunc(name)
     else
         jass.ExecuteFunc(name)
     end
+end
+
+function UnitAlive(unit)
+    return not jass.IsUnitType(unit, jass.UNIT_TYPE_DEAD) and jass.GetUnitTypeId() ~= 0
 end
