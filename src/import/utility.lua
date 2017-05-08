@@ -33,3 +33,12 @@ end
 function _array(default)
     return setmetatable({ _default = default }, mt)
 end
+
+
+function ExecuteFunc(name)
+    if _G[name] and type(_G[name]) == 'function' then
+        pcall(_G[name])
+    else
+        jass.ExecuteFunc(name)
+    end
+end
