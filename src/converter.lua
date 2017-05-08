@@ -1,6 +1,5 @@
 local lines
 local jass
-local file
 local tab_count
 
 local current_function
@@ -474,22 +473,10 @@ local function add_comments()
     end
 end
 
-local function special()
-    jass.functions.SetUnitState.file     = file
-    jass.functions.InitGameCache.file    = file
-    jass.functions.SaveGameCache.file    = file
-    jass.functions.StoreInteger.file     = file
-    jass.functions.GetStoredInteger.file = file
-    jass.functions.FlushGameCache.file   = file
-end
-
-return function (_jass, _file)
+return function (_jass)
     lines = {}
     jass = _jass
-    file = _file
     tab_count = 0
-
-    special()
 
     add_globals()
     add_functions()
