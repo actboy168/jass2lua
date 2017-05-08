@@ -1,5 +1,3 @@
-test/
-*.w3x
-blizzard.lua
-war3map.lua
-*.j
+/*.w3x
+/*.j
+/*.lua
