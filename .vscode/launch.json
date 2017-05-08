@@ -8,12 +8,12 @@
             "stopOnEntry": false,
             "program": "${workspaceRoot}/src/main.lua",
             "cwd": "${workspaceRoot}/src/build",
-            "path": "${workspaceRoot}/src/build/?.lua",
+            "path": "${workspaceRoot}/src/?.lua",
             "cpath": "${workspaceRoot}/src/build/?.dll;",
             "arg": [
                 "${workspaceRoot}/war3map.j"
             ],
             "console": "ansi"
-        },
+        }
     ]
 }

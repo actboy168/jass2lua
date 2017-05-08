@@ -1,8 +1,7 @@
 local exepath
 (function()
 	exepath = package.cpath:sub(1, package.cpath:find(';')-6)
-	package.path = package.path .. ';' .. exepath .. '..\\?.lua'
-	package.path = package.path .. ';' .. exepath .. '..\\?\\init.lua'
+	package.path = package.path .. ';' .. exepath .. '..\\src\\?.lua'
 end)()
 
 require 'filesystem'
@@ -12,7 +11,7 @@ local parser = require 'parser'
 local converter = require 'converter'
 
 local function main()
-    local root = fs.path(uni.a2u(exepath)):parent_path():parent_path():parent_path()
+    local root = fs.path(uni.a2u(exepath)):parent_path():parent_path()
     print(root)
     parser:init(root)
 
