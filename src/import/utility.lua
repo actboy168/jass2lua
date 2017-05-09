@@ -35,6 +35,17 @@ function _array(default)
     return setmetatable({ _default = default }, mt)
 end
 
+function _loop()
+    local i = 0
+    return function()
+        if i > 1000000 then
+            error('循环次数太多')
+        end
+        i = i + 1
+        return true
+    end
+end
+
 
 function ExecuteFunc(name)
     if _G[name] and type(_G[name]) == 'function' then

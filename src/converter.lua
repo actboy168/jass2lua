@@ -431,7 +431,7 @@ local function add_ifs(chunk)
 end
 
 local function add_loop(chunk)
-    insert_line(chunk.line, 'for _i = 1, 1000000 do')
+    insert_line(chunk.line, 'for _ in _loop() do')
     struct_start()
     add_lines(chunk)
     struct_end()
