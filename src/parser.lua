@@ -404,14 +404,29 @@ local function parser_gram(gram)
     end
 end
 
-local function parse_jass(jass, file, _ast)
-    ast = _ast
+return function (jass, file, _ast)
+    if _ast then
+        ast = _ast
 
-    for i = 1, #ast.functions do
-        ast.functions[i] = nil
-    end
-    for i = 1, #ast.globals do
-        ast.globals[i] = nil
+        for i = 1, #ast.functions do
+            ast.functions[i] = nil
+        end
+        for i = 1, #ast.globals do
+            ast.globals[i] = nil
+        end
+    else
+        ast = {}
+        ast.types = {
+            null    = {type = 'type'},
+            handle  = {type = 'type'},
+            code    = {type = 'type'},
+            integer = {type = 'type'},
+            real    = {type = 'type'},
+            boolean = {type = 'type'},
+            string  = {type = 'type'},
+        }
+        ast.globals = {}
+        ast.functions = {}
     end
 
     ast.file = file
@@ -426,36 +441,5 @@ local function parse_jass(jass, file, _ast)
     
     ast.comments = comments
     
-    return ast, gram
-end
-
-return function (...)
-    local ast, gram
-    
-    ast = {}
-    ast.types = {
-        null    = {type = 'type'},
-        handle  = {type = 'type'},
-        code    = {type = 'type'},
-        integer = {type = 'type'},
-        real    = {type = 'type'},
-        boolean = {type = 'type'},
-        string  = {type = 'type'},
-    }
-    ast.globals = {}
-    ast.functions = {}
-
-    for i, buf in ipairs {...} do
-        local name
-        if i == 1 then
-            name = 'common.j'
-        elseif i == 2 then
-            name = 'blizzard.j'
-        else
-            name = 'war3map.j'
-        end
-        ast, gram = parse_jass(buf, name, ast)
-    end
-
     return ast, gram
 end
