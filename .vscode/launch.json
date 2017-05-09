@@ -11,7 +11,7 @@
             "path": "${workspaceRoot}/src/?.lua",
             "cpath": "${workspaceRoot}/bin/?.dll;",
             "arg": [
-                "${workspaceRoot}/All_Star_Battle_3.1d_editor2_slk.w3x"
+                "${workspaceRoot}/war3map.j"
             ],
             "console": "ansi"
         }

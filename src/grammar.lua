@@ -181,7 +181,7 @@ local Exp = P{
     MulDiv   = V'Not'     * (C(S'*/')                  * V'Not')^0     / binary,
 
     -- 由于消耗了字符串,可以递归回顶层
-    Not   = Ct(keyvalue('type', 'not') * sp * 'not' * (V'Not' + V'Exp')) + sp * V'Exp',
+    Not   = Ct(keyvalue('type', 'not') * sp * 'not' * Cut * (V'Not' + V'Exp')) + sp * V'Exp',
 
     -- 由于消耗了字符串,可以递归回顶层
     Paren = Ct(keyvalue('type', 'paren')    * sp * '(' * Cg(V'Def', 1) * ')' * sp),
