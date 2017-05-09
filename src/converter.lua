@@ -69,7 +69,7 @@ local function int32(int)
     if int & 0x80000000 == 0 then
         return int & 0xFFFFFFFF
     else
-        return - (int ~ 0xFFFFFFFF) - 1
+        return - (~ int & 0xFFFFFFFF) - 1
     end
 end
 
