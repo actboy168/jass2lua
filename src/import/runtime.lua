@@ -6,10 +6,10 @@ console.enable = true
 runtime.handle_level = 2
 runtime.sleep = true
 runtime.error_handle = function(msg)
-    print("---------------------------------------")
-    print("              LUA ERROR!!              ")
-    print("---------------------------------------")
-    print(tostring(msg) .. "\n")
-    print(debug.traceback())
-    print("---------------------------------------")
+    console.write("---------------------------------------")
+    console.write("              LUA ERROR!!              ")
+    console.write("---------------------------------------")
+    console.write(tostring(msg) .. "\n")
+    console.write(debug.traceback())
+    console.write("---------------------------------------")
 end
