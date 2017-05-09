@@ -85,7 +85,7 @@ local function main()
         io.save(root / 'blizzard.lua', buf)
     else
         local path = fs.path(uni.a2u(arg[1]))
-        if path:filename():string() == 'war3map.j' then
+        if path:extension():string() == '.j' then
             local buf = convert_war3map(io.load(path))
             io.save(root / 'war3map.lua', buf)
         else
