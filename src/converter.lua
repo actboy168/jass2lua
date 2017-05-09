@@ -321,9 +321,9 @@ local function add_global(global)
         value = new_array(global.type)
     end
     if value then
-        insert_line(global.line, ([[%s = %s]]):format(global.name, value))
+        insert_line(global.line, ([[%s = %s]]):format(get_available_name(global.name), value))
     else
-        insert_line(global.line, ([[%s = %s]]):format(global.name, 'nil'))
+        insert_line(global.line, ([[%s = %s]]):format(get_available_name(global.name), 'nil'))
     end
 end
 
