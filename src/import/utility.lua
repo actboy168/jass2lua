@@ -3,6 +3,15 @@ local japi    = require 'jass.japi'
 local ai      = require 'jass.ai'
 local console = require 'jass.console'
 
+local setmetatable = setmetatable
+local tostring     = tostring
+local debug        = debug
+local rawset       = rawset
+local rawget       = rawget
+local error        = error
+local type         = type
+local pcall        = pcall
+
 local mt = {}
 
 function mt:__index(key)
