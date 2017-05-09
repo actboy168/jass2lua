@@ -312,7 +312,7 @@ local function new_array(type)
     else
         default = ''
     end
-    return ([[_array(%s)]]):format(default)
+    return ([[_array_(%s)]]):format(default)
 end
 
 local function add_global(global)
@@ -431,7 +431,7 @@ local function add_ifs(chunk)
 end
 
 local function add_loop(chunk)
-    insert_line(chunk.line, 'for _ in _loop() do')
+    insert_line(chunk.line, 'for _ in _loop_() do')
     struct_start()
     add_lines(chunk)
     struct_end()

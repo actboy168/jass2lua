@@ -31,11 +31,11 @@ function mt:__newindex(i, v)
     rawset(self, i, v)
 end
 
-function _array(default)
+function _array_(default)
     return setmetatable({ _default = default }, mt)
 end
 
-function _loop()
+function _loop_()
     local i = 0
     return function()
         if i > 1000000 then
