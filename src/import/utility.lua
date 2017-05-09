@@ -1,6 +1,7 @@
-local jass = require 'jass.common'
-local japi = require 'jass.japi'
-local ai   = require 'jass.ai'
+local jass    = require 'jass.common'
+local japi    = require 'jass.japi'
+local ai      = require 'jass.ai'
+local console = require 'jass.console'
 
 local mt = {}
 
@@ -16,17 +17,29 @@ end
 setmetatable(_G, mt)
 
 
+local function warning(msg)
+    console.write("---------------------------------------")
+    console.write("             LUA WARNING!!             ")
+    console.write("---------------------------------------")
+    console.write(tostring(msg) .. "\n")
+    console.write(debug.traceback())
+    console.write("---------------------------------------")
+end
+
+
 local mt = {}
 function mt:__index(i)
     if i < 0 or i > 8191 then
-        error('数组索引越界:'..i)
+        warning('数组索引越界:'..i)
     end
     return rawget(self, '_default')
 end
 
 function mt:__newindex(i, v)
-    if i < 0 or i > 8191 then
+    if i < 0 then
         error('数组索引越界:'..i)
+    elseif i > 8191 then
+        warning('数组索引越界:'..i)
     end
     rawset(self, i, v)
 end
