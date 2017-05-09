@@ -2,6 +2,7 @@ local jass    = require 'jass.common'
 local japi    = require 'jass.japi'
 local ai      = require 'jass.ai'
 local console = require 'jass.console'
+local runtime = require 'jass.runtime'
 
 local setmetatable = setmetatable
 local tostring     = tostring
@@ -10,7 +11,7 @@ local rawset       = rawset
 local rawget       = rawget
 local error        = error
 local type         = type
-local pcall        = pcall
+local xpcall       = xpcall
 
 local mt = {}
 
@@ -71,7 +72,7 @@ end
 
 function ExecuteFunc(name)
     if _G[name] and type(_G[name]) == 'function' then
-        pcall(_G[name])
+        xpcall(_G[name], runtime.error_handle)
     else
         jass.ExecuteFunc(name)
     end
