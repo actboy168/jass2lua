@@ -1,10 +1,11 @@
 local jass = require 'jass.common'
 local japi = require 'jass.japi'
+local ai   = require 'jass.ai'
 
 local mt = {}
 
 function mt:__index(key)
-    local v = japi[key] or jass[key]
+    local v = japi[key] or jass[key] or ai[key]
     if not v then
         return nil
     end
@@ -41,8 +42,4 @@ function ExecuteFunc(name)
     else
         jass.ExecuteFunc(name)
     end
-end
-
-function UnitAlive(unit)
-    return not jass.IsUnitType(unit, jass.UNIT_TYPE_DEAD) and jass.GetUnitTypeId(unit) ~= 0
 end
