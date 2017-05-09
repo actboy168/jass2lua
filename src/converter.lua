@@ -66,10 +66,11 @@ local function struct_end()
 end
 
 local function int32(int)
+    int = int & 0xFFFFFFFF
     if int & 0x80000000 == 0 then
-        return int & 0xFFFFFFFF
+        return int
     else
-        return - (~ int & 0xFFFFFFFF) - 1
+        return - (((~ int) & 0xFFFFFFFF) + 1)
     end
 end
 
