@@ -7,11 +7,11 @@
             "request": "launch",
             "stopOnEntry": false,
             "program": "${workspaceRoot}/src/main.lua",
-            "cwd": "${workspaceRoot}/src/build",
+            "cwd": "${workspaceRoot}/bin",
             "path": "${workspaceRoot}/src/?.lua",
-            "cpath": "${workspaceRoot}/src/build/?.dll;",
+            "cpath": "${workspaceRoot}/bin/?.dll;",
             "arg": [
-                "${workspaceRoot}/war3map.j"
+                "${workspaceRoot}/All_Star_Battle_3.1d_editor2_slk.w3x"
             ],
             "console": "ansi"
         }
