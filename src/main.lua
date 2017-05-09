@@ -17,7 +17,9 @@ local root = fs.path(uni.a2u(exepath)):parent_path():parent_path()
 local function convert_blizzard()
     local common   = io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = io.load(root / 'src' / 'jass' / 'blizzard.j')
-    local ast = parser(common, blizzard)
+    local ast
+    ast = parser(common,   'common.j',   ast)
+    ast = parser(blizzard, 'blizzard.j', ast)
     local buf = converter(ast)
     return buf
 end
@@ -25,7 +27,10 @@ end
 local function convert_war3map(war3map)
     local common   = io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = io.load(root / 'src' / 'jass' / 'blizzard.j')
-    local ast = parser(common, blizzard, war3map)
+    local ast
+    ast = parser(common,   'common.j',   ast)
+    ast = parser(blizzard, 'blizzard.j', ast)
+    ast = parser(war3map,  'war3map.j',  ast)
     local buf = converter(ast)
     return buf
 end
