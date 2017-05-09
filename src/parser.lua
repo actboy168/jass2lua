@@ -17,11 +17,15 @@ local function base_type(type)
 end
 
 local function get_var(name)
-    local var = ast.globals[name]
-             or ast.current_function.locals[name]
-             or ast.current_function.args[name]
-
-    return var
+    if ast.current_function then
+        if ast.current_function.locals[name] then
+            return ast.current_function.locals[name]
+        end
+        if ast.current_function.args and ast.current_function.args[name] then
+            return ast.current_function.args[name]
+        end
+    end
+    return ast.globals[name]
 end
 
 local function get_function(name)
@@ -270,9 +274,6 @@ end
 
 local function parse_local(data, locals, args)
     ast.current_line = data.line
-    if ast.globals[data.name] then
-        paser_error(('局部变量[%s]和全局变量重名 --> 已经定义在[%s]第[%d]行'):format(data.name, ast.globals[data.name].file, ast.globals[data.name].line))
-    end
     if not ast.types[data.type] then
         paser_error(('类型[%s]未定义'):format(data.type))
     end

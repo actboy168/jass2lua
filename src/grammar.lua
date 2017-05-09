@@ -111,6 +111,8 @@ local Id = P{
     Id   = R('az', 'AZ') * R('az', 'AZ', '09', '__')^0,
 }
 
+local Cut = #(1-R('az', 'AZ', '09', '__'))
+
 local Null = Ct(keyvalue('type', 'null') * P'null')
 
 local Bool = P{
@@ -228,10 +230,11 @@ local Line = P{
     Def    = sp * (V'Call' + V'Set' + V'Seti' + V'Return' + V'Exit'),
     Call   = Ct(keyvalue('type', 'call') * currentline() * 'call' * sps * Cg(Id, 'name') * sp * '(' * V'Args' * ')' * sp),
     Args   = Exp * (',' * Exp)^0 + sp,
-    Set    = Ct(keyvalue('type', 'set') * currentline() * 'set' * sps * Cg(Id, 'name') * sp * '=' * Exp),
+    Set    = Ct(keyvalue('type', 'set')  * currentline() * 'set' * sps * Cg(Id, 'name') * sp * '=' * Exp),
     Seti   = Ct(keyvalue('type', 'seti') * currentline() * 'set' * sps * Cg(Id, 'name') * sp * '[' * Cg(Exp, 1) * ']' * sp * '=' * Cg(Exp, 2)),
-    Return = Ct(keyvalue('type', 'return') * currentline() * 'return' * (Cg(Exp, 1) + P(true))),
-    Exit   = Ct(keyvalue('type', 'exit') * currentline() * 'exitwhen' * sps * Cg(Exp, 1)),
+
+    Return = Ct(keyvalue('type', 'return') * currentline() * 'return'   * Cut * (Cg(Exp, 1) + P(true))),
+    Exit   = Ct(keyvalue('type', 'exit')   * currentline() * 'exitwhen' * Cut * Cg(Exp, 1)),
 }
 
 local Logic = P{
@@ -244,8 +247,8 @@ local Logic = P{
             * V'Ifelse'^-1
             * sp * 'endif' * endline()
             ),
-    Ifif     = Ct(keyvalue('type', 'if') * currentline() * sp * 'if' * #(1-Id) * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
-    Ifelseif = Ct(keyvalue('type', 'elseif') * currentline() * sp * 'elseif' * #(1-Id) * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
+    Ifif     = Ct(keyvalue('type', 'if') * currentline() * sp * 'if' * Cut * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
+    Ifelseif = Ct(keyvalue('type', 'elseif') * currentline() * sp * 'elseif' * Cut * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
     Ifelse   = Ct(keyvalue('type', 'else') * currentline() * sp * 'else' * spl * V'Ifdo'),
     Ifdo     = (spl + V'Def' + Line * spl)^0,
 
@@ -260,7 +263,7 @@ local Function = P{
     'Def',
     Def      = Ct(keyvalue('type', 'function') * currentline() * (V'Common' + V'Native')),
     Native   = sp * (P'constant' * keyvalue('constant', true) + P(true)) * sp * 'native' * keyvalue('native', true) * V'Head',
-    Common   = sp * 'function' * V'Head' * V'Content' * V'End',
+    Common   = sp * (P'constant' * keyvalue('constant', true) + P(true)) * sp * 'function' * V'Head' * V'Content' * V'End',
     Head     = sps * Cg(Id, 'name') * sps * 'takes' * sps * V'Takes' * sps * 'returns' * sps * V'Returns' * spl,
     Takes    = ('nothing' + Cg(V'Args', 'args')),
     Args     = Ct(sp * V'Arg' * (sp * ',' * sp * V'Arg')^0),
