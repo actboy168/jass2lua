@@ -65,6 +65,23 @@ local function struct_end()
     tab_count = tab_count - 1
 end
 
+local function int32(int)
+    if int & 0x80000000 == 0 then
+        return int & 0xFFFFFFFF
+    else
+        return - (int ~ 0xFFFFFFFF) - 1
+    end
+end
+
+local function get_integer(exp)
+    return int32(exp.value)
+end
+
+local function get_real(exp)
+    local int, float = math.modf(exp.value)
+    return int32(int) + float
+end
+
 local key_name = {'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while'}
 for _, name in ipairs(key_name) do
     key_name[name] = name .. '_'
@@ -225,9 +242,9 @@ function get_exp(exp)
     if exp.type == 'null' then
         return 'nil'
     elseif exp.type == 'integer' then
-        return exp.value
+        return get_integer(exp)
     elseif exp.type == 'real' then
-        return exp.value
+        return get_real(exp)
     elseif exp.type == 'string' then
         return get_string(exp)
     elseif exp.type == 'boolean' then
