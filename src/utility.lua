@@ -36,3 +36,8 @@ function print(...)
 	end
 	std_print(table.unpack(tbl))
 end
+
+local std_error = error
+function error(msg, level)
+	std_error(uni.u2a(msg), (level or 1) + 1)
+end
