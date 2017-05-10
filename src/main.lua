@@ -43,12 +43,12 @@ local function save_files(map, blizzard, war3map)
     map:remove_file('war3map.j')
     map:remove_file('scripts\\war3map.j')
 
-    map:save_file('blizzard.lua', blizzard)
-    map:save_file('war3map.lua', war3map)
-    map:save_file('runtime.lua', io.load(root / 'src' / 'import' / 'runtime.lua'))
-    map:save_file('utility.lua', io.load(root / 'src' / 'import' / 'utility.lua'))
-    map:save_file('config.lua',  io.load(root / 'src' / 'import' / 'config.lua'))
-    map:save_file('main.lua',    io.load(root / 'src' / 'import' / 'main.lua'))
+    map:save_file('jass2lua\\blizzard.lua', blizzard)
+    map:save_file('jass2lua\\war3map.lua', war3map)
+    map:save_file('jass2lua\\runtime.lua', io.load(root / 'src' / 'import' / 'runtime.lua'))
+    map:save_file('jass2lua\\utility.lua', io.load(root / 'src' / 'import' / 'utility.lua'))
+    map:save_file('jass2lua\\config.lua',  io.load(root / 'src' / 'import' / 'config.lua'))
+    map:save_file('jass2lua\\main.lua',    io.load(root / 'src' / 'import' / 'main.lua'))
     map:save_file('war3map.j',   io.load(root / 'src' / 'import' / 'war3map.j'))
 end
 
