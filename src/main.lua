@@ -20,8 +20,7 @@ local function convert_blizzard()
     local ast
     ast = parser(common,   'common.j',   ast)
     ast = parser(blizzard, 'blizzard.j', ast)
-    local buf = converter(ast)
-    return buf
+    return converter(ast)
 end
 
 local function convert_war3map(war3map)
@@ -31,20 +30,40 @@ local function convert_war3map(war3map)
     ast = parser(common,   'common.j',   ast)
     ast = parser(blizzard, 'blizzard.j', ast)
     ast = parser(war3map,  'war3map.j',  ast)
-    local buf = converter(ast)
-    return buf
+    return converter(ast)
 end
 
-local function load_jass(map)
-    return map:load_file 'war3map.j' or map:load_file 'scripts\\war3map.j'
+local function get_blizzard(map)
+    local blizzard = map:load_file 'blizzard.j' or map:load_file 'scripts\\blizzard.j'
+    if not blizzard then
+        return io.load(root / 'src' / 'import' / 'blizzard.lua')
+    end
+    local common   = io.load(root / 'src' / 'jass' / 'common.j')
+    local ast
+    ast = parser(common,   'common.j',   ast)
+    ast = parser(blizzard, 'blizzard.j', ast)
+    return converter(ast)
 end
 
-local function save_files(map, war3map)
+local function get_war3map(map)
+    local common   = io.load(root / 'src' / 'jass' / 'common.j')
+    local blizzard = map:load_file 'blizzard.j' or map:load_file 'scripts\\blizzard.j' or io.load(root / 'src' / 'jass' / 'blizzard.j')
+    local war3map  = map:load_file 'war3map.j' or map:load_file 'scripts\\war3map.j'
+    local ast
+    ast = parser(common,   'common.j',   ast)
+    ast = parser(blizzard, 'blizzard.j', ast)
+    ast = parser(war3map,  'war3map.j',  ast)
+    return converter(ast)
+end
+
+local function save_files(map, war3map, blizzard)
     map:remove_file('war3map.j')
+    map:remove_file('blizzard.j')
     map:remove_file('scripts\\war3map.j')
+    map:remove_file('scripts\\blizzard.j')
 
     map:save_file('jass2lua\\war3map.lua',  war3map)
-    map:save_file('jass2lua\\blizzard.lua', io.load(root / 'src' / 'import' / 'blizzard.lua'))
+    map:save_file('jass2lua\\blizzard.lua', blizzard)
     map:save_file('jass2lua\\runtime.lua',  io.load(root / 'src' / 'import' / 'runtime.lua'))
     map:save_file('jass2lua\\utility.lua',  io.load(root / 'src' / 'import' / 'utility.lua'))
     map:save_file('jass2lua\\config.lua',   io.load(root / 'src' / 'import' / 'config.lua'))
@@ -59,10 +78,9 @@ local function convert_map(path)
         return
     end
     local number = map:number_of_files()
-    local jass   = load_jass(map)
+    local blizzard = get_blizzard(map)
+    local war3map  = get_war3map(map)
     map:close()
-
-    local war3map  = convert_war3map(jass)
 
     local newpath  = path:parent_path() / (path:stem():string() .. '_lua.w3x')
     if not pcall(fs.copy_file, path, newpath, true) then
@@ -74,7 +92,7 @@ local function convert_map(path)
         print('地图保存失败')
         return
     end
-    save_files(map, war3map)
+    save_files(map, war3map, blizzard)
     map:close()
 end
 
