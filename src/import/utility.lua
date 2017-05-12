@@ -1,6 +1,5 @@
 local jass    = require 'jass.common'
 local japi    = require 'jass.japi'
-local ai      = require 'jass.ai'
 local console = require 'jass.console'
 local runtime = require 'jass.runtime'
 
@@ -16,7 +15,7 @@ local xpcall       = xpcall
 local mt = {}
 
 function mt:__index(key)
-    local v = japi[key] or jass[key] or ai[key]
+    local v = japi[key] or jass[key]
     if not v then
         return nil
     end
