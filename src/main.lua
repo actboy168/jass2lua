@@ -38,7 +38,7 @@ local function get_blizzard(map)
     if not blizzard then
         return io.load(root / 'src' / 'import' / 'blizzard.lua')
     end
-    local common   = io.load(root / 'src' / 'jass' / 'common.j')
+    local common = map:load_file 'common.j' or map:load_file 'scripts\\common.j' or io.load(root / 'src' / 'jass' / 'common.j')
     local ast
     ast = parser(common,   'common.j',   ast)
     ast = parser(blizzard, 'blizzard.j', ast)
@@ -46,9 +46,9 @@ local function get_blizzard(map)
 end
 
 local function get_war3map(map)
-    local common   = io.load(root / 'src' / 'jass' / 'common.j')
+    local common   = map:load_file 'common.j'   or map:load_file 'scripts\\common.j'   or io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = map:load_file 'blizzard.j' or map:load_file 'scripts\\blizzard.j' or io.load(root / 'src' / 'jass' / 'blizzard.j')
-    local war3map  = map:load_file 'war3map.j' or map:load_file 'scripts\\war3map.j'
+    local war3map  = map:load_file 'war3map.j'  or map:load_file 'scripts\\war3map.j'
     local ast
     ast = parser(common,   'common.j',   ast)
     ast = parser(blizzard, 'blizzard.j', ast)
