@@ -11,7 +11,7 @@ local function insert_one_line(n, str, ignore_tab)
     if tab > 0 then
         str = ('\t'):rep(tab) .. str
     end
-    if lines[n] then
+    if lines[n] and lines[n] ~= '' then
         print('该行已被使用:', n, lines[n], str)
         return
     end
@@ -460,11 +460,13 @@ function add_lines(chunk)
     end
 end
 
+local function add_native(func)
+    current_function = func
+    insert_line(func.line, ([[%s = _native_'%s']]):format(get_function_name(func.name), func.name))
+end
+
 local function add_function(func)
     current_function = func
-    if func.native then
-        return
-    end
     local args = {}
     if func.args then
         for i, arg in ipairs(func.args) do
@@ -481,7 +483,11 @@ end
 
 local function add_functions()
     for _, func in ipairs(jass.functions) do
-        add_function(func)
+        if func.native then
+            add_native(func)
+        else
+            add_function(func)
+        end
     end
 end
 

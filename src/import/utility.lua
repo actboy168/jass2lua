@@ -9,22 +9,6 @@ local debug        = debug
 local rawset       = rawset
 local rawget       = rawget
 local error        = error
-local type         = type
-local xpcall       = xpcall
-
-local mt = {}
-
-function mt:__index(key)
-    local v = japi[key] or jass[key]
-    if not v then
-        return nil
-    end
-    self[key] = v
-    return v
-end
-
-setmetatable(_G, mt)
-
 
 local function warning(msg)
     console.write("---------------------------------------")
@@ -34,7 +18,6 @@ local function warning(msg)
     console.write(debug.traceback())
     console.write("---------------------------------------")
 end
-
 
 local mt = {}
 function mt:__index(i)
@@ -53,6 +36,10 @@ function mt:__newindex(i, v)
     rawset(self, i, v)
 end
 
+function _native_(name)
+    return _G[name] or japi[name] or jass[name]
+end
+
 function _array_(default)
     return setmetatable({ _default = default }, mt)
 end
@@ -65,22 +52,5 @@ function _loop_()
         end
         i = i + 1
         return true
-    end
-end
-
-local key_name = {'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for', 'function', 'goto', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat', 'return', 'then', 'true', 'until', 'while'}
-for _, name in ipairs(key_name) do
-    key_name[name] = name .. '_'
-end
-local function get_available_name(name)
-    return key_name[name] or name
-end
-
-function ExecuteFunc(name)
-    local lname = get_available_name(name)
-    if _G[lname] and type(_G[lname]) == 'function' then
-        xpcall(_G[lname], runtime.error_handle)
-    else
-        jass.ExecuteFunc(name)
     end
 end
