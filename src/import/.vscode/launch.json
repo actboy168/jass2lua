@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "attach",
+            "type": "lua",
+            "request": "attach",
+            "stopOnEntry": true,
+            "ip": "127.0.0.1",
+            "port": 4278,
+            "sourceMaps": [
+                [
+                    "jass2lua",
+                    "${workspaceRoot}"
+                ]
+            ]
+        }
+    ]
+}
