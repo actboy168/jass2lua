@@ -102,6 +102,8 @@ local function convert_map(path)
     local war3map  = get_war3map(map)
     map:close()
 
+    io.save(root / 'src' / 'import' / 'war3map.lua', war3map)
+
     local newpath  = path:parent_path() / (path:stem():string() .. '_lua.w3x')
     if not pcall(fs.copy_file, path, newpath, true) then
         print('地图创建失败')
