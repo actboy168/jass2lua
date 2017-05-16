@@ -1,4 +1,4 @@
-local grammar = require 'grammar'
+local grammar = require 'parser.grammar'
 
 local ast
 

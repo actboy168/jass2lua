@@ -184,12 +184,12 @@ local Exp = P{
     Not   = Ct(keyvalue('type', 'not') * sp * 'not' * Cut * (V'Not' + V'Exp')) + sp * V'Exp',
 
     -- 由于消耗了字符串,可以递归回顶层
-    Paren = Ct(keyvalue('type', 'paren')    * sp * '(' * Cg(V'Def', 1) * ')' * sp),
-    Code  = Ct(keyvalue('type', 'code') * sp * 'function' * sps * Cg(Id, 'name') * sp),
-    Call  = Ct(keyvalue('type', 'call')     * sp * Cg(Id, 'name') * '(' * V'Args' * ')' * sp),
-    Vari  = Ct(keyvalue('type', 'vari')     * sp * Cg(Id, 'name') * sp * '[' * Cg(V'Def', 1) * ']' * sp),
-    Var   = Ct(keyvalue('type', 'var')      * sp * Cg(Id, 'name') * sp),
-    Neg   = Ct(keyvalue('type', 'neg')      * sp * '-' * sp * Cg(V'Exp', 1)),
+    Paren = Ct(keyvalue('type', 'paren') * sp * '(' * Cg(V'Def', 1) * ')' * sp),
+    Code  = Ct(keyvalue('type', 'code')  * sp * 'function' * sps * Cg(Id, 'name') * sp),
+    Call  = Ct(keyvalue('type', 'call')  * sp * Cg(Id, 'name') * '(' * V'Args' * ')' * sp),
+    Vari  = Ct(keyvalue('type', 'vari')  * sp * Cg(Id, 'name') * sp * '[' * Cg(V'Def', 1) * ']' * sp),
+    Var   = Ct(keyvalue('type', 'var')   * sp * Cg(Id, 'name') * sp),
+    Neg   = Ct(keyvalue('type', 'neg')   * sp * '-' * sp * Cg(V'Exp', 1)),
 
     Args  = V'Def' * (',' * V'Def')^0 + sp,
 }
@@ -230,8 +230,8 @@ local Line = P{
     Def    = sp * (V'Call' + V'Set' + V'Seti' + V'Return' + V'Exit'),
     Call   = Ct(keyvalue('type', 'call') * currentline() * 'call' * sps * Cg(Id, 'name') * sp * '(' * V'Args' * ')' * sp),
     Args   = Exp * (',' * Exp)^0 + sp,
-    Set    = Ct(keyvalue('type', 'set')  * currentline() * 'set' * sps * Cg(Id, 'name') * sp * '=' * Exp),
-    Seti   = Ct(keyvalue('type', 'seti') * currentline() * 'set' * sps * Cg(Id, 'name') * sp * '[' * Cg(Exp, 1) * ']' * sp * '=' * Cg(Exp, 2)),
+    Set    = Ct(keyvalue('type', 'set')  * currentline() * 'set'  * sps * Cg(Id, 'name') * sp * '=' * Exp),
+    Seti   = Ct(keyvalue('type', 'seti') * currentline() * 'set'  * sps * Cg(Id, 'name') * sp * '[' * Cg(Exp, 1) * ']' * sp * '=' * Cg(Exp, 2)),
 
     Return = Ct(keyvalue('type', 'return') * currentline() * 'return'   * Cut * (Cg(Exp, 1) + P(true))),
     Exit   = Ct(keyvalue('type', 'exit')   * currentline() * 'exitwhen' * Cut * Cg(Exp, 1)),
@@ -247,9 +247,9 @@ local Logic = P{
             * V'Ifelse'^-1
             * sp * 'endif' * endline()
             ),
-    Ifif     = Ct(keyvalue('type', 'if') * currentline() * sp * 'if' * Cut * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
+    Ifif     = Ct(keyvalue('type', 'if')     * currentline() * sp * 'if'     * Cut * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
     Ifelseif = Ct(keyvalue('type', 'elseif') * currentline() * sp * 'elseif' * Cut * Cg(Exp, 'condition') * 'then' * spl * V'Ifdo'),
-    Ifelse   = Ct(keyvalue('type', 'else') * currentline() * sp * 'else' * spl * V'Ifdo'),
+    Ifelse   = Ct(keyvalue('type', 'else')   * currentline() * sp * 'else'   * spl * V'Ifdo'),
     Ifdo     = (spl + V'Def' + Line * spl)^0,
 
     Loop     = Ct(keyvalue('type', 'loop') * currentline() * sp
