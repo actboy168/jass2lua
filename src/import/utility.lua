@@ -1,5 +1,6 @@
 local jass    = require 'jass.common'
 local japi    = require 'jass.japi'
+local ai      = require 'jass.ai'
 local console = require 'jass.console'
 local runtime = require 'jass.runtime'
 
@@ -37,7 +38,7 @@ function mt:__newindex(i, v)
 end
 
 function _native_(name)
-    return _G[name] or japi[name] or jass[name]
+    return _G[name] or japi[name] or jass[name] or ai[name]
 end
 
 function _array_(default)
