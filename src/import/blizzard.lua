@@ -660,7 +660,7 @@ end
 
 --===========================================================================
 function RMinBJ(a, b)
-	if (a < b) then
+	if a < b then
 		return a
 	else
 		return b
@@ -669,7 +669,7 @@ end
 
 --===========================================================================
 function RMaxBJ(a, b)
-	if (a < b) then
+	if a < b then
 		return b
 	else
 		return a
@@ -678,7 +678,7 @@ end
 
 --===========================================================================
 function RAbsBJ(a)
-	if (a >= 0) then
+	if a >= 0 then
 		return a
 	else
 		return  - a
@@ -687,7 +687,7 @@ end
 
 --===========================================================================
 function RSignBJ(a)
-	if (a >= 0.0) then
+	if a >= 0.0 then
 		return 1.0
 	else
 		return -1.0
@@ -696,7 +696,7 @@ end
 
 --===========================================================================
 function IMinBJ(a, b)
-	if (a < b) then
+	if a < b then
 		return a
 	else
 		return b
@@ -705,7 +705,7 @@ end
 
 --===========================================================================
 function IMaxBJ(a, b)
-	if (a < b) then
+	if a < b then
 		return b
 	else
 		return a
@@ -714,7 +714,7 @@ end
 
 --===========================================================================
 function IAbsBJ(a)
-	if (a >= 0) then
+	if a >= 0 then
 		return a
 	else
 		return  - a
@@ -723,7 +723,7 @@ end
 
 --===========================================================================
 function ISignBJ(a)
-	if (a >= 0) then
+	if a >= 0 then
 		return 1
 	else
 		return -1
@@ -804,12 +804,12 @@ end
 -- Examples:  18 mod 5 = 3.  15 mod 5 = 0.  -8 mod 5 = 2.
 --
 function ModuloInteger(dividend, divisor)
-	local modulus = dividend - (dividend // divisor) * divisor
+	local modulus = dividend - dividend // divisor * divisor
 
 	-- If the dividend was negative, the above modulus calculation will
 	-- be negative, but within (-divisor..0).  We can add (divisor) to
 	-- shift this result into the desired range of (0..divisor).
-	if (modulus < 0) then
+	if modulus < 0 then
 		modulus = modulus + divisor
 	end
 
@@ -826,7 +826,7 @@ function ModuloReal(dividend, divisor)
 	-- If the dividend was negative, the above modulus calculation will
 	-- be negative, but within (-divisor..0).  We can add (divisor) to
 	-- shift this result into the desired range of (0..divisor).
-	if (modulus < 0) then
+	if modulus < 0 then
 		modulus = modulus + divisor
 	end
 
@@ -852,7 +852,7 @@ end
 
 --===========================================================================
 function RectContainsCoords(r, x, y)
-	return (GetRectMinX(r) <= x) and (x <= GetRectMaxX(r)) and (GetRectMinY(r) <= y) and (y <= GetRectMaxY(r))
+	return GetRectMinX(r) <= x and x <= GetRectMaxX(r) and GetRectMinY(r) <= y and y <= GetRectMaxY(r)
 end
 
 --===========================================================================
@@ -867,11 +867,11 @@ end
 
 --===========================================================================
 function RectContainsItem(whichItem, r)
-	if (whichItem == nil) then
+	if whichItem == nil then
 		return false
 	end
 
-	if (IsItemOwned(whichItem)) then
+	if IsItemOwned(whichItem) then
 		return false
 	end
 
@@ -900,7 +900,7 @@ end
 --
 function TriggerExecuteBJ(trig, checkConditions)
 	if checkConditions then
-		if not (TriggerEvaluate(trig)) then
+		if not TriggerEvaluate(trig) then
 			return false
 		end
 	end
@@ -915,7 +915,7 @@ end
 --
 function PostTriggerExecuteBJ(trig, checkConditions)
 	if checkConditions then
-		if not (TriggerEvaluate(trig)) then
+		if not TriggerEvaluate(trig) then
 			return false
 		end
 	end
@@ -934,7 +934,7 @@ function QueuedTriggerCheck()
 	for _ in _loop_() do
 		if i >= bj_queuedExecTotal then break end
 		s = (s or "") .. "q[" .. (I2S(i) or "") .. "]="
-		if (bj_queuedExecTriggers[i] == nil) then
+		if bj_queuedExecTriggers[i] == nil then
 			s = (s or "") .. "null "
 		else
 			s = (s or "") .. "x "
@@ -954,7 +954,7 @@ function QueuedTriggerGetIndex(trig)
 	local index = 0
 	for _ in _loop_() do
 		if index >= bj_queuedExecTotal then break end
-		if (bj_queuedExecTriggers[index] == trig) then
+		if bj_queuedExecTriggers[index] == trig then
 			return index
 		end
 		index = index + 1
@@ -971,7 +971,7 @@ function QueuedTriggerRemoveByIndex(trigIndex)
 	local index
 
 	-- If the to-be-removed index is out of range, fail.
-	if (trigIndex >= bj_queuedExecTotal) then
+	if trigIndex >= bj_queuedExecTotal then
 		return false
 	end
 
@@ -1013,7 +1013,7 @@ end
 --
 function QueuedTriggerAddBJ(trig, checkConditions)
 	-- Make sure our queue isn't full.  If it is, return failure.
-	if (bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS) then
+	if bj_queuedExecTotal >= bj_MAX_QUEUED_TRIGGERS then
 		return false
 	end
 
@@ -1023,7 +1023,7 @@ function QueuedTriggerAddBJ(trig, checkConditions)
 	bj_queuedExecTotal = bj_queuedExecTotal + 1
 
 	-- If this is the only trigger in the queue, run it.
-	if (bj_queuedExecTotal == 1) then
+	if bj_queuedExecTotal == 1 then
 		QueuedTriggerAttemptExec()
 	end
 	return true
@@ -1040,7 +1040,7 @@ function QueuedTriggerRemoveBJ(trig)
 
 	-- Find the trigger's index.
 	trigIndex = QueuedTriggerGetIndex(trig)
-	if (trigIndex == -1) then
+	if trigIndex == -1 then
 		return
 	end
 
@@ -1048,7 +1048,7 @@ function QueuedTriggerRemoveBJ(trig)
 	QueuedTriggerRemoveByIndex(trigIndex)
 
 	-- If we just axed the currently running trigger, run the next one.
-	if (trigIndex == 0) then
+	if trigIndex == 0 then
 		PauseTimer(bj_queuedExecTimeoutTimer)
 		QueuedTriggerAttemptExec()
 	end
@@ -1062,7 +1062,7 @@ function QueuedTriggerDoneBJ()
 	local index
 
 	-- Make sure there's something on the queue to remove.
-	if (bj_queuedExecTotal <= 0) then
+	if bj_queuedExecTotal <= 0 then
 		return
 	end
 
@@ -1131,7 +1131,7 @@ function PolledWait(duration)
 	local t
 	local timeRemaining
 
-	if (duration > 0) then
+	if duration > 0 then
 		t = CreateTimer()
 		TimerStart(t, duration, false, nil)
 		for _ in _loop_() do
@@ -1141,7 +1141,7 @@ function PolledWait(duration)
 			-- If we have a bit of time left, skip past 10% of the remaining
 			-- duration instead of checking every interval, to minimize the
 			-- polling on long waits.
-			if (timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD) then
+			if timeRemaining > bj_POLLED_WAIT_SKIP_THRESHOLD then
 				TriggerSleepAction(0.1 * timeRemaining)
 			else
 				TriggerSleepAction(bj_POLLED_WAIT_INTERVAL)
@@ -1205,9 +1205,9 @@ end
 function PercentToInt(percentage, max)
 	local result = R2I(percentage * I2R(max) * 0.01)
 
-	if (result < 0) then
+	if result < 0 then
 		result = 0
-	elseif (result > max) then
+	elseif result > max then
 		result = max
 	end
 
@@ -1290,7 +1290,7 @@ end
 
 --===========================================================================
 function CameraSetupApplyForPlayer(doPan, whichSetup, whichPlayer, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		CameraSetupApplyForceDuration(whichSetup, doPan, duration)
 	end
@@ -1303,7 +1303,7 @@ end
 
 --===========================================================================
 function SetCameraFieldForPlayer(whichPlayer, whichField, value, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraField(whichField, value, duration)
 	end
@@ -1311,7 +1311,7 @@ end
 
 --===========================================================================
 function SetCameraTargetControllerNoZForPlayer(whichPlayer, whichUnit, xoffset, yoffset, inheritOrientation)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraTargetController(whichUnit, xoffset, yoffset, inheritOrientation)
 	end
@@ -1319,7 +1319,7 @@ end
 
 --===========================================================================
 function SetCameraPositionForPlayer(whichPlayer, x, y)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraPosition(x, y)
 	end
@@ -1327,7 +1327,7 @@ end
 
 --===========================================================================
 function SetCameraPositionLocForPlayer(whichPlayer, loc)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraPosition(GetLocationX(loc), GetLocationY(loc))
 	end
@@ -1335,7 +1335,7 @@ end
 
 --===========================================================================
 function RotateCameraAroundLocBJ(degrees, loc, whichPlayer, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraRotateMode(GetLocationX(loc), GetLocationY(loc), bj_DEGTORAD * degrees, duration)
 	end
@@ -1343,7 +1343,7 @@ end
 
 --===========================================================================
 function PanCameraToForPlayer(whichPlayer, x, y)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PanCameraTo(x, y)
 	end
@@ -1351,7 +1351,7 @@ end
 
 --===========================================================================
 function PanCameraToLocForPlayer(whichPlayer, loc)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PanCameraTo(GetLocationX(loc), GetLocationY(loc))
 	end
@@ -1359,7 +1359,7 @@ end
 
 --===========================================================================
 function PanCameraToTimedForPlayer(whichPlayer, x, y, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PanCameraToTimed(x, y, duration)
 	end
@@ -1367,7 +1367,7 @@ end
 
 --===========================================================================
 function PanCameraToTimedLocForPlayer(whichPlayer, loc, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
 	end
@@ -1375,7 +1375,7 @@ end
 
 --===========================================================================
 function PanCameraToTimedLocWithZForPlayer(whichPlayer, loc, zOffset, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PanCameraToTimedWithZ(GetLocationX(loc), GetLocationY(loc), zOffset, duration)
 	end
@@ -1384,14 +1384,14 @@ end
 --===========================================================================
 function SmartCameraPanBJ(whichPlayer, loc, duration)
 	local dist
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 		dist = DistanceBetweenPoints(loc, GetCameraTargetPositionLoc())
-		if (dist >= bj_SMARTPAN_TRESHOLD_SNAP) then
+		if dist >= bj_SMARTPAN_TRESHOLD_SNAP then
 			-- If the user is too far away, snap the camera.
 			PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), 0)
-		elseif (dist >= bj_SMARTPAN_TRESHOLD_PAN) then
+		elseif dist >= bj_SMARTPAN_TRESHOLD_PAN then
 			-- If the user is moderately close, pan the camera.
 			PanCameraToTimed(GetLocationX(loc), GetLocationY(loc), duration)
 		else
@@ -1402,7 +1402,7 @@ end
 
 --===========================================================================
 function SetCinematicCameraForPlayer(whichPlayer, cameraModelFile)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCinematicCamera(cameraModelFile)
 	end
@@ -1410,7 +1410,7 @@ end
 
 --===========================================================================
 function ResetToGameCameraForPlayer(whichPlayer, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ResetToGameCamera(duration)
 	end
@@ -1418,7 +1418,7 @@ end
 
 --===========================================================================
 function CameraSetSourceNoiseForPlayer(whichPlayer, magnitude, velocity)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		CameraSetSourceNoise(magnitude, velocity)
 	end
@@ -1426,7 +1426,7 @@ end
 
 --===========================================================================
 function CameraSetTargetNoiseForPlayer(whichPlayer, magnitude, velocity)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		CameraSetTargetNoise(magnitude, velocity)
 	end
@@ -1435,13 +1435,13 @@ end
 --===========================================================================
 function CameraSetEQNoiseForPlayer(whichPlayer, magnitude)
 	local richter = magnitude
-	if (richter > 5.0) then
+	if richter > 5.0 then
 		richter = 5.0
 	end
-	if (richter < 2.0) then
+	if richter < 2.0 then
 		richter = 2.0
 	end
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		CameraSetTargetNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
 		CameraSetSourceNoiseEx(magnitude * 2.0, magnitude * Pow(10, richter), true)
@@ -1450,7 +1450,7 @@ end
 
 --===========================================================================
 function CameraClearNoiseForPlayer(whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		CameraSetSourceNoise(0, 0)
 		CameraSetTargetNoise(0, 0)
@@ -1496,7 +1496,7 @@ end
 
 --===========================================================================
 function SetCameraBoundsToRectForPlayerBJ(whichPlayer, r)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraBoundsToRect(r)
 	end
@@ -1510,9 +1510,9 @@ function AdjustCameraBoundsBJ(adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 	local maxY = 0
 	local scale = 0
 
-	if (adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD) then
+	if adjustMethod == bj_CAMERABOUNDS_ADJUST_ADD then
 		scale = 1
-	elseif (adjustMethod == bj_CAMERABOUNDS_ADJUST_SUB) then
+	elseif adjustMethod == bj_CAMERABOUNDS_ADJUST_SUB then
 		scale = -1
 	else
 		-- Unrecognized adjustment method - ignore the request.
@@ -1526,11 +1526,11 @@ function AdjustCameraBoundsBJ(adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 	maxY = GetCameraBoundMaxY() + scale * dyNorth
 
 	-- Make sure the camera bounds are still valid.
-	if (maxX < minX) then
+	if maxX < minX then
 		minX = (minX + maxX) * 0.5
 		maxX = minX
 	end
-	if (maxY < minY) then
+	if maxY < minY then
 		minY = (minY + maxY) * 0.5
 		maxY = minY
 	end
@@ -1541,7 +1541,7 @@ end
 
 --===========================================================================
 function AdjustCameraBoundsForPlayerBJ(adjustMethod, whichPlayer, dxWest, dxEast, dyNorth, dySouth)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		AdjustCameraBoundsBJ(adjustMethod, dxWest, dxEast, dyNorth, dySouth)
 	end
@@ -1549,7 +1549,7 @@ end
 
 --===========================================================================
 function SetCameraQuickPositionForPlayer(whichPlayer, x, y)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraQuickPosition(x, y)
 	end
@@ -1557,7 +1557,7 @@ end
 
 --===========================================================================
 function SetCameraQuickPositionLocForPlayer(whichPlayer, loc)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraQuickPosition(GetLocationX(loc), GetLocationY(loc))
 	end
@@ -1570,7 +1570,7 @@ end
 
 --===========================================================================
 function StopCameraForPlayerBJ(whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		StopCamera()
 	end
@@ -1578,7 +1578,7 @@ end
 
 --===========================================================================
 function SetCameraOrientControllerForPlayerBJ(whichPlayer, whichUnit, xoffset, yoffset)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetCameraOrientController(whichUnit, xoffset, yoffset)
 	end
@@ -1604,7 +1604,7 @@ end
 
 --===========================================================================
 function DisplayTextToForce(toForce, message)
-	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), toForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		DisplayTextToPlayer(GetLocalPlayer(), 0, 0, message)
 	end
@@ -1612,7 +1612,7 @@ end
 
 --===========================================================================
 function DisplayTimedTextToForce(toForce, duration, message)
-	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), toForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, duration, message)
 	end
@@ -1620,7 +1620,7 @@ end
 
 --===========================================================================
 function ClearTextMessagesBJ(toForce)
-	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), toForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ClearTextMessages()
 	end
@@ -1694,29 +1694,29 @@ end
 
 --===========================================================================
 function TriggerRegisterPlayerKeyEventBJ(trig, whichPlayer, keType, keKey)
-	if (keType == bj_KEYEVENTTYPE_DEPRESS) then
+	if keType == bj_KEYEVENTTYPE_DEPRESS then
 		-- Depress event - find out what key
-		if (keKey == bj_KEYEVENTKEY_LEFT) then
+		if keKey == bj_KEYEVENTKEY_LEFT then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_DOWN)
-		elseif (keKey == bj_KEYEVENTKEY_RIGHT) then
+		elseif keKey == bj_KEYEVENTKEY_RIGHT then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_DOWN)
-		elseif (keKey == bj_KEYEVENTKEY_DOWN) then
+		elseif keKey == bj_KEYEVENTKEY_DOWN then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_DOWN)
-		elseif (keKey == bj_KEYEVENTKEY_UP) then
+		elseif keKey == bj_KEYEVENTKEY_UP then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_DOWN)
 		else
 			-- Unrecognized key - ignore the request and return failure.
 			return nil
 		end
-	elseif (keType == bj_KEYEVENTTYPE_RELEASE) then
+	elseif keType == bj_KEYEVENTTYPE_RELEASE then
 		-- Release event - find out what key
-		if (keKey == bj_KEYEVENTKEY_LEFT) then
+		if keKey == bj_KEYEVENTKEY_LEFT then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_LEFT_UP)
-		elseif (keKey == bj_KEYEVENTKEY_RIGHT) then
+		elseif keKey == bj_KEYEVENTKEY_RIGHT then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_RIGHT_UP)
-		elseif (keKey == bj_KEYEVENTKEY_DOWN) then
+		elseif keKey == bj_KEYEVENTKEY_DOWN then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_DOWN_UP)
-		elseif (keKey == bj_KEYEVENTKEY_UP) then
+		elseif keKey == bj_KEYEVENTKEY_UP then
 			return TriggerRegisterPlayerEvent(trig, whichPlayer, EVENT_PLAYER_ARROW_UP_UP)
 		else
 			-- Unrecognized key - ignore the request and return failure.
@@ -1830,7 +1830,7 @@ end
 --===========================================================================
 function RegisterDestDeathInRegionEnum()
 	bj_destInRegionDiesCount = bj_destInRegionDiesCount + 1
-	if (bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS) then
+	if bj_destInRegionDiesCount <= bj_MAX_DEST_IN_REGION_EVENTS then
 		TriggerRegisterDeathEvent(bj_destInRegionDiesTrig, GetEnumDestructable())
 	end
 end
@@ -1878,7 +1878,7 @@ function TerrainDeformationRippleBJ(duration, limitNeg, where, startRadius, endR
 	local timeWave
 	local radiusRatio
 
-	if (endRadius <= 0 or waveWidth <= 0 or wavePeriod <= 0) then
+	if endRadius <= 0 or waveWidth <= 0 or wavePeriod <= 0 then
 		return nil
 	end
 
@@ -1898,7 +1898,7 @@ function TerrainDeformationWaveBJ(duration, source, target, radius, depth, trail
 	local speed
 
 	distance = DistanceBetweenPoints(source, target)
-	if (distance == 0 or duration <= 0) then
+	if distance == 0 or duration <= 0 then
 		return nil
 	end
 
@@ -2164,7 +2164,7 @@ end
 --===========================================================================
 function PlaySoundBJ(soundHandle)
 	bj_lastPlayedSound = soundHandle
-	if (soundHandle ~= nil) then
+	if soundHandle ~= nil then
 		StartSound(soundHandle)
 	end
 end
@@ -2289,7 +2289,7 @@ end
 
 --===========================================================================
 function GetSoundDurationBJ(soundHandle)
-	if (soundHandle == nil) then
+	if soundHandle == nil then
 		return bj_NOTHING_SOUND_DURATION
 	else
 		return I2R(GetSoundDuration(soundHandle)) * 0.001
@@ -2415,14 +2415,14 @@ end
 
 --===========================================================================
 function StartSoundForPlayerBJ(whichPlayer, soundHandle)
-	if (whichPlayer == GetLocalPlayer()) then
+	if whichPlayer == GetLocalPlayer() then
 		StartSound(soundHandle)
 	end
 end
 
 --===========================================================================
 function VolumeGroupSetVolumeForPlayerBJ(whichPlayer, vgroup, scale)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		VolumeGroupSetVolume(vgroup, scale)
 	end
 end
@@ -2450,7 +2450,7 @@ function SetAmbientDaySound(inLabel)
 	local ToD
 
 	-- Stop old sound, if necessary
-	if (bj_dayAmbientSound ~= nil) then
+	if bj_dayAmbientSound ~= nil then
 		StopSound(bj_dayAmbientSound, true, true)
 	end
 
@@ -2459,7 +2459,7 @@ function SetAmbientDaySound(inLabel)
 
 	-- Start the sound if necessary, based on current time
 	ToD = GetTimeOfDay()
-	if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) then
+	if ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK then
 		StartSound(bj_dayAmbientSound)
 	end
 end
@@ -2469,7 +2469,7 @@ function SetAmbientNightSound(inLabel)
 	local ToD
 
 	-- Stop old sound, if necessary
-	if (bj_nightAmbientSound ~= nil) then
+	if bj_nightAmbientSound ~= nil then
 		StopSound(bj_nightAmbientSound, true, true)
 	end
 
@@ -2478,7 +2478,7 @@ function SetAmbientNightSound(inLabel)
 
 	-- Start the sound if necessary, based on current time
 	ToD = GetTimeOfDay()
-	if (ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK) then
+	if ToD < bj_TOD_DAWN or ToD >= bj_TOD_DUSK then
 		StartSound(bj_nightAmbientSound)
 	end
 end
@@ -2565,9 +2565,9 @@ end
 function SetHeroLevelBJ(whichHero, newLevel, showEyeCandy)
 	local oldLevel = GetHeroLevel(whichHero)
 
-	if (newLevel > oldLevel) then
+	if newLevel > oldLevel then
 		SetHeroLevel(whichHero, newLevel, showEyeCandy)
-	elseif (newLevel < oldLevel) then
+	elseif newLevel < oldLevel then
 		UnitStripHeroLevel(whichHero, oldLevel - newLevel)
 	else
 	-- No change in level - ignore the request.
@@ -2596,7 +2596,7 @@ end
 
 --===========================================================================
 function UnitHasBuffBJ(whichUnit, buffcode)
-	return (GetUnitAbilityLevel(whichUnit, buffcode) > 0)
+	return GetUnitAbilityLevel(whichUnit, buffcode) > 0
 end
 
 --===========================================================================
@@ -2686,11 +2686,11 @@ end
 
 --===========================================================================
 function GetHeroStatBJ(whichStat, whichHero, includeBonuses)
-	if (whichStat == bj_HEROSTAT_STR) then
+	if whichStat == bj_HEROSTAT_STR then
 		return GetHeroStr(whichHero, includeBonuses)
-	elseif (whichStat == bj_HEROSTAT_AGI) then
+	elseif whichStat == bj_HEROSTAT_AGI then
 		return GetHeroAgi(whichHero, includeBonuses)
-	elseif (whichStat == bj_HEROSTAT_INT) then
+	elseif whichStat == bj_HEROSTAT_INT then
 		return GetHeroInt(whichHero, includeBonuses)
 	else
 		-- Unrecognized hero stat - return 0
@@ -2701,15 +2701,15 @@ end
 --===========================================================================
 function SetHeroStat(whichHero, whichStat, value)
 	-- Ignore requests for negative hero stats.
-	if (value <= 0) then
+	if value <= 0 then
 		return
 	end
 
-	if (whichStat == bj_HEROSTAT_STR) then
+	if whichStat == bj_HEROSTAT_STR then
 		SetHeroStr(whichHero, value, true)
-	elseif (whichStat == bj_HEROSTAT_AGI) then
+	elseif whichStat == bj_HEROSTAT_AGI then
 		SetHeroAgi(whichHero, value, true)
-	elseif (whichStat == bj_HEROSTAT_INT) then
+	elseif whichStat == bj_HEROSTAT_INT then
 		SetHeroInt(whichHero, value, true)
 	else
 	-- Unrecognized hero stat - ignore the request.
@@ -2718,11 +2718,11 @@ end
 
 --===========================================================================
 function ModifyHeroStat(whichStat, whichHero, modifyMethod, value)
-	if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+	if modifyMethod == bj_MODIFYMETHOD_ADD then
 		SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) + value)
-	elseif (modifyMethod == bj_MODIFYMETHOD_SUB) then
+	elseif modifyMethod == bj_MODIFYMETHOD_SUB then
 		SetHeroStat(whichHero, whichStat, GetHeroStatBJ(whichStat, whichHero, false) - value)
-	elseif (modifyMethod == bj_MODIFYMETHOD_SET) then
+	elseif modifyMethod == bj_MODIFYMETHOD_SET then
 		SetHeroStat(whichHero, whichStat, value)
 	else
 	-- Unrecognized modification method - ignore the request.
@@ -2731,11 +2731,11 @@ end
 
 --===========================================================================
 function ModifyHeroSkillPoints(whichHero, modifyMethod, value)
-	if (modifyMethod == bj_MODIFYMETHOD_ADD) then
+	if modifyMethod == bj_MODIFYMETHOD_ADD then
 		return UnitModifySkillPoints(whichHero, value)
-	elseif (modifyMethod == bj_MODIFYMETHOD_SUB) then
+	elseif modifyMethod == bj_MODIFYMETHOD_SUB then
 		return UnitModifySkillPoints(whichHero,  - value)
-	elseif (modifyMethod == bj_MODIFYMETHOD_SET) then
+	elseif modifyMethod == bj_MODIFYMETHOD_SET then
 		return UnitModifySkillPoints(whichHero, value - GetHeroSkillPoints(whichHero))
 	else
 		-- Unrecognized modification method - ignore the request and return failure.
@@ -2793,7 +2793,7 @@ function GetInventoryIndexOfItemTypeBJ(whichUnit, itemId)
 	index = 0
 	for _ in _loop_() do
 		indexItem = UnitItemInSlot(whichUnit, index)
-		if (indexItem ~= nil) and (GetItemTypeId(indexItem) == itemId) then
+		if indexItem ~= nil and GetItemTypeId(indexItem) == itemId then
 			return index + 1
 		end
 
@@ -2807,7 +2807,7 @@ end
 function GetItemOfTypeFromUnitBJ(whichUnit, itemId)
 	local index = GetInventoryIndexOfItemTypeBJ(whichUnit, itemId)
 
-	if (index == 0) then
+	if index == 0 then
 		return nil
 	else
 		return UnitItemInSlot(whichUnit, index - 1)
@@ -2825,7 +2825,7 @@ function UnitInventoryCount(whichUnit)
 	local count = 0
 
 	for _ in _loop_() do
-		if (UnitItemInSlot(whichUnit, index) ~= nil) then
+		if UnitItemInSlot(whichUnit, index) ~= nil then
 			count = count + 1
 		end
 
@@ -2901,7 +2901,7 @@ end
 --
 function RandomItemInRectBJEnum()
 	bj_itemRandomConsidered = bj_itemRandomConsidered + 1
-	if (GetRandomInt(1, bj_itemRandomConsidered) == 1) then
+	if GetRandomInt(1, bj_itemRandomConsidered) == 1 then
 		bj_itemRandomCurrentPick = GetEnumItem()
 	end
 end
@@ -2926,17 +2926,17 @@ end
 
 --===========================================================================
 function CheckItemStatus(whichItem, status)
-	if (status == bj_ITEM_STATUS_HIDDEN) then
+	if status == bj_ITEM_STATUS_HIDDEN then
 		return not IsItemVisible(whichItem)
-	elseif (status == bj_ITEM_STATUS_OWNED) then
+	elseif status == bj_ITEM_STATUS_OWNED then
 		return IsItemOwned(whichItem)
-	elseif (status == bj_ITEM_STATUS_INVULNERABLE) then
+	elseif status == bj_ITEM_STATUS_INVULNERABLE then
 		return IsItemInvulnerable(whichItem)
-	elseif (status == bj_ITEM_STATUS_POWERUP) then
+	elseif status == bj_ITEM_STATUS_POWERUP then
 		return IsItemPowerup(whichItem)
-	elseif (status == bj_ITEM_STATUS_SELLABLE) then
+	elseif status == bj_ITEM_STATUS_SELLABLE then
 		return IsItemSellable(whichItem)
-	elseif (status == bj_ITEM_STATUS_PAWNABLE) then
+	elseif status == bj_ITEM_STATUS_PAWNABLE then
 		return IsItemPawnable(whichItem)
 	else
 		-- Unrecognized status - return false
@@ -2946,11 +2946,11 @@ end
 
 --===========================================================================
 function CheckItemcodeStatus(itemId, status)
-	if (status == bj_ITEMCODE_STATUS_POWERUP) then
+	if status == bj_ITEMCODE_STATUS_POWERUP then
 		return IsItemIdPowerup(itemId)
-	elseif (status == bj_ITEMCODE_STATUS_SELLABLE) then
+	elseif status == bj_ITEMCODE_STATUS_SELLABLE then
 		return IsItemIdSellable(itemId)
-	elseif (status == bj_ITEMCODE_STATUS_PAWNABLE) then
+	elseif status == bj_ITEMCODE_STATUS_PAWNABLE then
 		return IsItemIdPawnable(itemId)
 	else
 		-- Unrecognized status - return false
@@ -2980,7 +2980,7 @@ end
 function UnitId2StringBJ(unitId)
 	local unitString = UnitId2String(unitId)
 
-	if (unitString ~= nil) then
+	if unitString ~= nil then
 		return unitString
 	end
 
@@ -2994,13 +2994,13 @@ function String2OrderIdBJ(orderIdString)
 
 	-- Check to see if it's a generic order.
 	orderId = OrderId(orderIdString)
-	if (orderId ~= 0) then
+	if orderId ~= 0 then
 		return orderId
 	end
 
 	-- Check to see if it's a (train) unit order.
 	orderId = UnitId(orderIdString)
-	if (orderId ~= 0) then
+	if orderId ~= 0 then
 		return orderId
 	end
 
@@ -3014,13 +3014,13 @@ function OrderId2StringBJ(orderId)
 
 	-- Check to see if it's a generic order.
 	orderString = OrderId2String(orderId)
-	if (orderString ~= nil) then
+	if orderString ~= nil then
 		return orderString
 	end
 
 	-- Check to see if it's a (train) unit order.
 	orderString = UnitId2String(orderId)
-	if (orderString ~= nil) then
+	if orderString ~= nil then
 		return orderString
 	end
 
@@ -3040,7 +3040,7 @@ end
 
 --===========================================================================
 function CreateUnitAtLocSaveLast(id, unitid, loc, face)
-	if (unitid == 1969713004) then
+	if unitid == 1969713004 then
 		bj_lastCreatedUnit = CreateBlightedGoldmine(id, GetLocationX(loc), GetLocationY(loc), face)
 	else
 		bj_lastCreatedUnit = CreateUnitAtLoc(id, unitid, loc, face)
@@ -3098,7 +3098,7 @@ end
 function DelayedSuspendDecayStopAnimEnum()
 	local enumUnit = GetEnumUnit()
 
-	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+	if GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0 then
 		SetUnitTimeScale(enumUnit, 0.0001)
 	end
 end
@@ -3107,7 +3107,7 @@ end
 function DelayedSuspendDecayBoneEnum()
 	local enumUnit = GetEnumUnit()
 
-	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+	if GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0 then
 		UnitSuspendDecay(enumUnit, true)
 		SetUnitTimeScale(enumUnit, 0.0001)
 	end
@@ -3121,7 +3121,7 @@ end
 function DelayedSuspendDecayFleshEnum()
 	local enumUnit = GetEnumUnit()
 
-	if (GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0) then
+	if GetUnitState(enumUnit, UNIT_STATE_LIFE) <= 0 then
 		UnitSuspendDecay(enumUnit, true)
 		SetUnitTimeScale(enumUnit, 10.0)
 		SetUnitAnimation(enumUnit, "decay flesh")
@@ -3170,10 +3170,10 @@ function CreatePermanentCorpseLocBJ(style, unitid, whichPlayer, loc, facing)
 	bj_lastCreatedUnit = CreateCorpse(whichPlayer, unitid, GetLocationX(loc), GetLocationY(loc), facing)
 	SetUnitBlendTime(bj_lastCreatedUnit, 0)
 
-	if (style == bj_CORPSETYPE_FLESH) then
+	if style == bj_CORPSETYPE_FLESH then
 		SetUnitAnimation(bj_lastCreatedUnit, "decay flesh")
 		GroupAddUnit(bj_suspendDecayFleshGroup, bj_lastCreatedUnit)
-	elseif (style == bj_CORPSETYPE_BONE) then
+	elseif style == bj_CORPSETYPE_BONE then
 		SetUnitAnimation(bj_lastCreatedUnit, "decay bone")
 		GroupAddUnit(bj_suspendDecayBoneGroup, bj_lastCreatedUnit)
 	else
@@ -3197,7 +3197,7 @@ function GetUnitStatePercent(whichUnit, whichState, whichMaxState)
 	local maxValue = GetUnitState(whichUnit, whichMaxState)
 
 	-- Return 0 for null units.
-	if (whichUnit == nil) or (maxValue == 0) then
+	if whichUnit == nil or maxValue == 0 then
 		return 0.0
 	end
 
@@ -3243,7 +3243,7 @@ end
 
 --===========================================================================
 function ClearSelectionForPlayer(whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ClearSelection()
 	end
@@ -3251,7 +3251,7 @@ end
 
 --===========================================================================
 function SelectUnitForPlayerSingle(whichUnit, whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ClearSelection()
 		SelectUnit(whichUnit, true)
@@ -3260,7 +3260,7 @@ end
 
 --===========================================================================
 function SelectGroupForPlayerBJ(g, whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ClearSelection()
 		ForGroup(g, SelectGroupBJEnum)
@@ -3269,7 +3269,7 @@ end
 
 --===========================================================================
 function SelectUnitAddForPlayer(whichUnit, whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SelectUnit(whichUnit, true)
 	end
@@ -3277,7 +3277,7 @@ end
 
 --===========================================================================
 function SelectUnitRemoveForPlayer(whichUnit, whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SelectUnit(whichUnit, false)
 	end
@@ -3333,7 +3333,7 @@ function IsUnitGroupDeadBJ(g)
 	ForGroup(g, IsUnitGroupDeadBJEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(g)
 	end
 	return bj_isUnitGroupDeadResult
@@ -3357,7 +3357,7 @@ function IsUnitGroupEmptyBJ(g)
 	ForGroup(g, IsUnitGroupEmptyBJEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(g)
 	end
 	return bj_isUnitGroupEmptyResult
@@ -3393,7 +3393,7 @@ end
 --===========================================================================
 function ShowUnitShow(whichUnit)
 	-- Prevent dead heroes from being unhidden.
-	if (IsUnitType(whichUnit, UNIT_TYPE_HERO) and IsUnitDeadBJ(whichUnit)) then
+	if IsUnitType(whichUnit, UNIT_TYPE_HERO) and IsUnitDeadBJ(whichUnit) then
 		return
 	end
 
@@ -3417,7 +3417,7 @@ function IssueHauntOrderAtLocBJ(whichPeon, loc)
 	DestroyGroup(g)
 
 	-- If no mine was found, abort the request.
-	if (goldMine == nil) then
+	if goldMine == nil then
 		return false
 	end
 
@@ -3427,7 +3427,7 @@ end
 
 --===========================================================================
 function IssueBuildOrderByIdLocBJ(whichPeon, unitId, loc)
-	if (unitId == 1969713004) then
+	if unitId == 1969713004 then
 		return IssueHauntOrderAtLocBJ(whichPeon, loc)
 	else
 		return IssueBuildOrderById(whichPeon, unitId, GetLocationX(loc), GetLocationY(loc))
@@ -3467,9 +3467,9 @@ end
 --===========================================================================
 function SetUnitPropWindowBJ(whichUnit, propWindow)
 	local angle = propWindow
-	if (angle <= 0) then
+	if angle <= 0 then
 		angle = 1
-	elseif (angle >= 360) then
+	elseif angle >= 360 then
 		angle = 359
 	end
 	angle = angle * bj_DEGTORAD
@@ -3535,7 +3535,7 @@ function EnableCreepSleepBJ(enable)
 	SetPlayerState(Player(PLAYER_NEUTRAL_AGGRESSIVE), PLAYER_STATE_NO_CREEP_SLEEP, IntegerTertiaryOp(enable, 0, 1))
 
 	-- If we're disabling, attempt to wake any already-sleeping creeps.
-	if (not enable) then
+	if not enable then
 		WakePlayerUnits(Player(PLAYER_NEUTRAL_AGGRESSIVE))
 	end
 end
@@ -3569,7 +3569,7 @@ function PauseAllUnitsBJ(pause)
 		indexPlayer = Player(index)
 
 		-- If this is a computer slot, pause/resume the AI.
-		if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+		if GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER then
 			PauseCompAI(indexPlayer, pause)
 		end
 
@@ -3611,13 +3611,13 @@ end
 
 --===========================================================================
 function UnitRemoveBuffsBJ(buffType, whichUnit)
-	if (buffType == bj_REMOVEBUFFS_POSITIVE) then
+	if buffType == bj_REMOVEBUFFS_POSITIVE then
 		UnitRemoveBuffs(whichUnit, true, false)
-	elseif (buffType == bj_REMOVEBUFFS_NEGATIVE) then
+	elseif buffType == bj_REMOVEBUFFS_NEGATIVE then
 		UnitRemoveBuffs(whichUnit, false, true)
-	elseif (buffType == bj_REMOVEBUFFS_ALL) then
+	elseif buffType == bj_REMOVEBUFFS_ALL then
 		UnitRemoveBuffs(whichUnit, true, true)
-	elseif (buffType == bj_REMOVEBUFFS_NONTLIFE) then
+	elseif buffType == bj_REMOVEBUFFS_NONTLIFE then
 		UnitRemoveBuffsEx(whichUnit, true, true, false, false, false, true, false)
 	else
 	-- Unrecognized dispel type - ignore the request.
@@ -3626,20 +3626,20 @@ end
 
 --===========================================================================
 function UnitRemoveBuffsExBJ(polarity, resist, whichUnit, bTLife, bAura)
-	local bPos = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
-	local bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
-	local bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC)
-	local bPhys = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL)
+	local bPos = polarity == bj_BUFF_POLARITY_EITHER or polarity == bj_BUFF_POLARITY_POSITIVE
+	local bNeg = polarity == bj_BUFF_POLARITY_EITHER or polarity == bj_BUFF_POLARITY_NEGATIVE
+	local bMagic = resist == bj_BUFF_RESIST_BOTH or resist == bj_BUFF_RESIST_MAGIC
+	local bPhys = resist == bj_BUFF_RESIST_BOTH or resist == bj_BUFF_RESIST_PHYSICAL
 
 	UnitRemoveBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 end
 
 --===========================================================================
 function UnitCountBuffsExBJ(polarity, resist, whichUnit, bTLife, bAura)
-	local bPos = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_POSITIVE)
-	local bNeg = (polarity == bj_BUFF_POLARITY_EITHER) or (polarity == bj_BUFF_POLARITY_NEGATIVE)
-	local bMagic = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_MAGIC)
-	local bPhys = (resist == bj_BUFF_RESIST_BOTH) or (resist == bj_BUFF_RESIST_PHYSICAL)
+	local bPos = polarity == bj_BUFF_POLARITY_EITHER or polarity == bj_BUFF_POLARITY_POSITIVE
+	local bNeg = polarity == bj_BUFF_POLARITY_EITHER or polarity == bj_BUFF_POLARITY_NEGATIVE
+	local bMagic = resist == bj_BUFF_RESIST_BOTH or resist == bj_BUFF_RESIST_MAGIC
+	local bPhys = resist == bj_BUFF_RESIST_BOTH or resist == bj_BUFF_RESIST_PHYSICAL
 
 	return UnitCountBuffsEx(whichUnit, bPos, bNeg, bMagic, bPhys, bTLife, bAura, false)
 end
@@ -3718,7 +3718,7 @@ function ReplaceUnitBJ(whichUnit, newUnitId, unitStateMethod)
 	local oldRatio
 
 	-- If we have bogus data, don't attempt the replace.
-	if (oldUnit == nil) then
+	if oldUnit == nil then
 		bj_lastReplacedUnit = oldUnit
 		return oldUnit
 	end
@@ -3728,35 +3728,35 @@ function ReplaceUnitBJ(whichUnit, newUnitId, unitStateMethod)
 	ShowUnit(oldUnit, false)
 
 	-- Create the replacement unit.
-	if (newUnitId == 1969713004) then
+	if newUnitId == 1969713004 then
 		newUnit = CreateBlightedGoldmine(GetOwningPlayer(oldUnit), GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
 	else
 		newUnit = CreateUnit(GetOwningPlayer(oldUnit), newUnitId, GetUnitX(oldUnit), GetUnitY(oldUnit), GetUnitFacing(oldUnit))
 	end
 
 	-- Set the unit's life and mana according to the requested method.
-	if (unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE) then
+	if unitStateMethod == bj_UNIT_STATE_METHOD_RELATIVE then
 		-- Set the replacement's current/max life ratio to that of the old unit.
 		-- If both units have mana, do the same for mana.
-		if (GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0) then
+		if GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE) > 0 then
 			oldRatio = GetUnitState(oldUnit, UNIT_STATE_LIFE) / GetUnitState(oldUnit, UNIT_STATE_MAX_LIFE)
 			SetUnitState(newUnit, UNIT_STATE_LIFE, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
 		end
 
-		if (GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0) and (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+		if GetUnitState(oldUnit, UNIT_STATE_MAX_MANA) > 0 and GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0 then
 			oldRatio = GetUnitState(oldUnit, UNIT_STATE_MANA) / GetUnitState(oldUnit, UNIT_STATE_MAX_MANA)
 			SetUnitState(newUnit, UNIT_STATE_MANA, oldRatio * GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
 		end
-	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_ABSOLUTE) then
+	elseif unitStateMethod == bj_UNIT_STATE_METHOD_ABSOLUTE then
 		-- Set the replacement's current life to that of the old unit.
 		-- If the new unit has mana, do the same for mana.
 		SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(oldUnit, UNIT_STATE_LIFE))
-		if (GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0) then
+		if GetUnitState(newUnit, UNIT_STATE_MAX_MANA) > 0 then
 			SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(oldUnit, UNIT_STATE_MANA))
 		end
-	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_DEFAULTS) then
+	elseif unitStateMethod == bj_UNIT_STATE_METHOD_DEFAULTS then
 	-- The newly created unit should already have default life and mana.
-	elseif (unitStateMethod == bj_UNIT_STATE_METHOD_MAXIMUM) then
+	elseif unitStateMethod == bj_UNIT_STATE_METHOD_MAXIMUM then
 		-- Use max life and mana.
 		SetUnitState(newUnit, UNIT_STATE_LIFE, GetUnitState(newUnit, UNIT_STATE_MAX_LIFE))
 		SetUnitState(newUnit, UNIT_STATE_MANA, GetUnitState(newUnit, UNIT_STATE_MAX_MANA))
@@ -3769,13 +3769,13 @@ function ReplaceUnitBJ(whichUnit, newUnitId, unitStateMethod)
 	SetResourceAmount(newUnit, GetResourceAmount(oldUnit))
 
 	-- If both the old and new units are heroes, handle their hero info.
-	if (IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO)) then
+	if IsUnitType(oldUnit, UNIT_TYPE_HERO) and IsUnitType(newUnit, UNIT_TYPE_HERO) then
 		SetHeroXP(newUnit, GetHeroXP(oldUnit), false)
 
 		index = 0
 		for _ in _loop_() do
 			indexItem = UnitItemInSlot(oldUnit, index)
-			if (indexItem ~= nil) then
+			if indexItem ~= nil then
 				UnitRemoveItem(oldUnit, indexItem)
 				UnitAddItem(newUnit, indexItem)
 			end
@@ -3925,7 +3925,7 @@ end
 --
 function RandomDestructableInRectBJEnum()
 	bj_destRandomConsidered = bj_destRandomConsidered + 1
-	if (GetRandomInt(1, bj_destRandomConsidered) == 1) then
+	if GetRandomInt(1, bj_destRandomConsidered) == 1 then
 		bj_destRandomCurrentPick = GetEnumDestructable()
 	end
 end
@@ -3955,7 +3955,7 @@ end
 function EnumDestructablesInCircleBJ(radius, loc, actionFunc)
 	local r
 
-	if (radius >= 0) then
+	if radius >= 0 then
 		bj_enumDestructableCenter = loc
 		bj_enumDestructableRadius = radius
 		r = GetRectFromCircleBJ(loc, radius)
@@ -3976,18 +3976,18 @@ end
 
 --===========================================================================
 function ModifyGateBJ(gateOperation, d)
-	if (gateOperation == bj_GATEOPERATION_CLOSE) then
-		if (GetDestructableLife(d) <= 0) then
+	if gateOperation == bj_GATEOPERATION_CLOSE then
+		if GetDestructableLife(d) <= 0 then
 			DestructableRestoreLife(d, GetDestructableMaxLife(d), true)
 		end
 		SetDestructableAnimation(d, "stand")
-	elseif (gateOperation == bj_GATEOPERATION_OPEN) then
-		if (GetDestructableLife(d) > 0) then
+	elseif gateOperation == bj_GATEOPERATION_OPEN then
+		if GetDestructableLife(d) > 0 then
 			KillDestructable(d)
 		end
 		SetDestructableAnimation(d, "death alternate")
-	elseif (gateOperation == bj_GATEOPERATION_DESTROY) then
-		if (GetDestructableLife(d) > 0) then
+	elseif gateOperation == bj_GATEOPERATION_DESTROY then
+		if GetDestructableLife(d) > 0 then
 			KillDestructable(d)
 		end
 		SetDestructableAnimation(d, "death")
@@ -4003,7 +4003,7 @@ function GetElevatorHeight(d)
 	local height
 
 	height = 1 + R2I(GetDestructableOccluderHeight(d) / bj_CLIFFHEIGHT)
-	if (height < 1) or (height > 3) then
+	if height < 1 or height > 3 then
 		height = 1
 	end
 	return height
@@ -4028,33 +4028,33 @@ function ChangeElevatorHeight(d, newHeight)
 	-- Set the elevator's occlusion height.
 	SetDestructableOccluderHeight(d, bj_CLIFFHEIGHT * (newHeight - 1))
 
-	if (newHeight == 1) then
-		if (oldHeight == 2) then
+	if newHeight == 1 then
+		if oldHeight == 2 then
 			SetDestructableAnimation(d, "birth")
 			QueueDestructableAnimation(d, "stand")
-		elseif (oldHeight == 3) then
+		elseif oldHeight == 3 then
 			SetDestructableAnimation(d, "birth third")
 			QueueDestructableAnimation(d, "stand")
 		else
 			-- Unrecognized old height - snap to new height.
 			SetDestructableAnimation(d, "stand")
 		end
-	elseif (newHeight == 2) then
-		if (oldHeight == 1) then
+	elseif newHeight == 2 then
+		if oldHeight == 1 then
 			SetDestructableAnimation(d, "death")
 			QueueDestructableAnimation(d, "stand second")
-		elseif (oldHeight == 3) then
+		elseif oldHeight == 3 then
 			SetDestructableAnimation(d, "birth second")
 			QueueDestructableAnimation(d, "stand second")
 		else
 			-- Unrecognized old height - snap to new height.
 			SetDestructableAnimation(d, "stand second")
 		end
-	elseif (newHeight == 3) then
-		if (oldHeight == 1) then
+	elseif newHeight == 3 then
+		if oldHeight == 1 then
 			SetDestructableAnimation(d, "death third")
 			QueueDestructableAnimation(d, "stand third")
-		elseif (oldHeight == 2) then
+		elseif oldHeight == 2 then
 			SetDestructableAnimation(d, "death second")
 			QueueDestructableAnimation(d, "stand third")
 		else
@@ -4104,7 +4104,7 @@ function NearbyElevatorExistsEnum()
 	local d = GetEnumDestructable()
 	local dType = GetDestructableTypeId(d)
 
-	if (dType == bj_ELEVATOR_CODE01) or (dType == bj_ELEVATOR_CODE02) then
+	if dType == bj_ELEVATOR_CODE01 or dType == bj_ELEVATOR_CODE02 then
 		bj_elevatorNeighbor = d
 	end
 end
@@ -4148,32 +4148,32 @@ function ChangeElevatorWallBlocker(x, y, facing, open)
 	blocker = bj_elevatorWallBlocker
 
 	-- Ensure that the blocker exists.
-	if (blocker == nil) then
+	if blocker == nil then
 		blocker = CreateDeadDestructable(bj_ELEVATOR_BLOCKER_CODE, x, y, facing, 1, 0)
-	elseif (GetDestructableTypeId(blocker) ~= bj_ELEVATOR_BLOCKER_CODE) then
+	elseif GetDestructableTypeId(blocker) ~= bj_ELEVATOR_BLOCKER_CODE then
 		-- If a different destructible exists in the blocker's spot, ignore
 		-- the request.  (Two destructibles cannot occupy the same location
 		-- on the map, so we cannot create an elevator blocker here.)
 		return
 	end
 
-	if (open) then
+	if open then
 		-- Ensure that the blocker is dead.
-		if (GetDestructableLife(blocker) > 0) then
+		if GetDestructableLife(blocker) > 0 then
 			KillDestructable(blocker)
 		end
 	else
 		-- Ensure that the blocker is alive.
-		if (GetDestructableLife(blocker) <= 0) then
+		if GetDestructableLife(blocker) <= 0 then
 			DestructableRestoreLife(blocker, GetDestructableMaxLife(blocker), false)
 		end
 
 		-- Nudge any objects standing in the blocker's way.
-		if (facing == 0) then
+		if facing == 0 then
 			r = Rect(x - nudgeWidth / 2, y - nudgeLength / 2, x + nudgeWidth / 2, y + nudgeLength / 2)
 			NudgeObjectsInRect(r)
 			RemoveRect(r)
-		elseif (facing == 90) then
+		elseif facing == 90 then
 			r = Rect(x - nudgeLength / 2, y - nudgeWidth / 2, x + nudgeLength / 2, y + nudgeWidth / 2)
 			NudgeObjectsInRect(r)
 			RemoveRect(r)
@@ -4190,26 +4190,26 @@ function ChangeElevatorWalls(open, walls, d)
 	local distToBlocker = 192
 	local distToNeighbor = 256
 
-	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_EAST) then
-		if (not NearbyElevatorExists(x + distToNeighbor, y)) then
+	if walls == bj_ELEVATOR_WALL_TYPE_ALL or walls == bj_ELEVATOR_WALL_TYPE_EAST then
+		if not NearbyElevatorExists(x + distToNeighbor, y) then
 			ChangeElevatorWallBlocker(x + distToBlocker, y, 0, open)
 		end
 	end
 
-	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_NORTH) then
-		if (not NearbyElevatorExists(x, y + distToNeighbor)) then
+	if walls == bj_ELEVATOR_WALL_TYPE_ALL or walls == bj_ELEVATOR_WALL_TYPE_NORTH then
+		if not NearbyElevatorExists(x, y + distToNeighbor) then
 			ChangeElevatorWallBlocker(x, y + distToBlocker, 90, open)
 		end
 	end
 
-	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_SOUTH) then
-		if (not NearbyElevatorExists(x, y - distToNeighbor)) then
+	if walls == bj_ELEVATOR_WALL_TYPE_ALL or walls == bj_ELEVATOR_WALL_TYPE_SOUTH then
+		if not NearbyElevatorExists(x, y - distToNeighbor) then
 			ChangeElevatorWallBlocker(x, y - distToBlocker, 90, open)
 		end
 	end
 
-	if (walls == bj_ELEVATOR_WALL_TYPE_ALL) or (walls == bj_ELEVATOR_WALL_TYPE_WEST) then
-		if (not NearbyElevatorExists(x - distToNeighbor, y)) then
+	if walls == bj_ELEVATOR_WALL_TYPE_ALL or walls == bj_ELEVATOR_WALL_TYPE_WEST then
+		if not NearbyElevatorExists(x - distToNeighbor, y) then
 			ChangeElevatorWallBlocker(x - distToBlocker, y, 0, open)
 		end
 	end
@@ -4258,7 +4258,7 @@ end
 
 --===========================================================================
 function ForceUIKeyBJ(whichPlayer, key)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ForceUIKey(key)
 	end
@@ -4266,7 +4266,7 @@ end
 
 --===========================================================================
 function ForceUICancelBJ(whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ForceUICancel()
 	end
@@ -4290,7 +4290,7 @@ function ForGroupBJ(whichGroup, callback)
 	ForGroup(whichGroup, callback)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(whichGroup)
 	end
 end
@@ -4321,7 +4321,7 @@ function GroupAddGroup(sourceGroup, destGroup)
 	ForGroup(sourceGroup, GroupAddGroupEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(sourceGroup)
 	end
 end
@@ -4342,7 +4342,7 @@ function GroupRemoveGroup(sourceGroup, destGroup)
 	ForGroup(sourceGroup, GroupRemoveGroupEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(sourceGroup)
 	end
 end
@@ -4366,7 +4366,7 @@ end
 --
 function GroupPickRandomUnitEnum()
 	bj_groupRandomConsidered = bj_groupRandomConsidered + 1
-	if (GetRandomInt(1, bj_groupRandomConsidered) == 1) then
+	if GetRandomInt(1, bj_groupRandomConsidered) == 1 then
 		bj_groupRandomCurrentPick = GetEnumUnit()
 	end
 end
@@ -4385,7 +4385,7 @@ function GroupPickRandomUnit(whichGroup)
 	ForGroup(whichGroup, GroupPickRandomUnitEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(whichGroup)
 	end
 	return bj_groupRandomCurrentPick
@@ -4396,7 +4396,7 @@ end
 --
 function ForcePickRandomPlayerEnum()
 	bj_forceRandomConsidered = bj_forceRandomConsidered + 1
-	if (GetRandomInt(1, bj_forceRandomConsidered) == 1) then
+	if GetRandomInt(1, bj_forceRandomConsidered) == 1 then
 		bj_forceRandomCurrentPick = GetEnumPlayer()
 	end
 end
@@ -4590,7 +4590,7 @@ function CountUnitsInGroup(g)
 	ForGroup(g, CountUnitsInGroupEnum)
 
 	-- If the user wants the group destroyed, do so now.
-	if (wantDestroy) then
+	if wantDestroy then
 		DestroyGroup(g)
 	end
 	return bj_groupCountUnits
@@ -4610,8 +4610,8 @@ end
 
 --===========================================================================
 function GetRandomSubGroupEnum()
-	if (bj_randomSubGroupWant > 0) then
-		if (bj_randomSubGroupWant >= bj_randomSubGroupTotal) or (GetRandomReal(0, 1) < bj_randomSubGroupChance) then
+	if bj_randomSubGroupWant > 0 then
+		if bj_randomSubGroupWant >= bj_randomSubGroupTotal or GetRandomReal(0, 1) < bj_randomSubGroupChance then
 			-- We either need every remaining unit, or the unit passed its chance check.
 			GroupAddUnit(bj_randomSubGroupGroup, GetEnumUnit())
 			bj_randomSubGroupWant = bj_randomSubGroupWant - 1
@@ -4628,7 +4628,7 @@ function GetRandomSubGroup(count, sourceGroup)
 	bj_randomSubGroupWant = count
 	bj_randomSubGroupTotal = CountUnitsInGroup(sourceGroup)
 
-	if (bj_randomSubGroupWant <= 0 or bj_randomSubGroupTotal <= 0) then
+	if bj_randomSubGroupWant <= 0 or bj_randomSubGroupTotal <= 0 then
 		return g
 	end
 
@@ -4805,7 +4805,7 @@ end
 --===========================================================================
 function SetPlayerAllianceBJ(sourcePlayer, whichAllianceSetting, value, otherPlayer)
 	-- Prevent players from attempting to ally with themselves.
-	if (sourcePlayer == otherPlayer) then
+	if sourcePlayer == otherPlayer then
 		return
 	end
 
@@ -4848,7 +4848,7 @@ end
 --===========================================================================
 function SetPlayerAllianceStateBJ(sourcePlayer, otherPlayer, allianceState)
 	-- Prevent players from attempting to ally with themselves.
-	if (sourcePlayer == otherPlayer) then
+	if sourcePlayer == otherPlayer then
 		return
 	end
 
@@ -4909,10 +4909,10 @@ function SetForceAllianceStateBJ(sourceForce, targetForce, allianceState)
 	sourceIndex = 0
 	for _ in _loop_() do
 
-		if (sourceForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(sourceIndex), sourceForce)) then
+		if sourceForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(sourceIndex), sourceForce) then
 			targetIndex = 0
 			for _ in _loop_() do
-				if (targetForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(targetIndex), targetForce)) then
+				if targetForce == bj_FORCE_ALL_PLAYERS or IsPlayerInForce(Player(targetIndex), targetForce) then
 					SetPlayerAllianceStateBJ(Player(sourceIndex), Player(targetIndex), allianceState)
 				end
 
@@ -4931,7 +4931,7 @@ end
 --
 function PlayersAreCoAllied(playerA, playerB)
 	-- Players are considered to be allied with themselves.
-	if (playerA == playerB) then
+	if playerA == playerB then
 		return true
 	end
 
@@ -4955,8 +4955,8 @@ function ShareEverythingWithTeamAI(whichPlayer)
 	playerIndex = 0
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
-		if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer) then
-			if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+		if PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer then
+			if GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER then
 				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
 				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
 				SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_ADVANCED_CONTROL, true)
@@ -4978,7 +4978,7 @@ function ShareEverythingWithTeam(whichPlayer)
 	playerIndex = 0
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
-		if (PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer) then
+		if PlayersAreCoAllied(whichPlayer, indexPlayer) and whichPlayer ~= indexPlayer then
 			SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_VISION, true)
 			SetPlayerAlliance(whichPlayer, indexPlayer, ALLIANCE_SHARED_CONTROL, true)
 			SetPlayerAlliance(indexPlayer, whichPlayer, ALLIANCE_SHARED_CONTROL, true)
@@ -5058,14 +5058,14 @@ end
 -- Determine whether or not victory/defeat is disabled via cheat codes.
 --
 function AllowVictoryDefeat(gameResult)
-	if (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+	if gameResult == PLAYER_GAME_RESULT_VICTORY then
 		return not IsNoVictoryCheat()
 	end
-	if (gameResult == PLAYER_GAME_RESULT_DEFEAT) then
+	if gameResult == PLAYER_GAME_RESULT_DEFEAT then
 		return not IsNoDefeatCheat()
 	end
-	if (gameResult == PLAYER_GAME_RESULT_NEUTRAL) then
-		return (not IsNoVictoryCheat()) and (not IsNoDefeatCheat())
+	if gameResult == PLAYER_GAME_RESULT_NEUTRAL then
+		return not IsNoVictoryCheat() and not IsNoDefeatCheat()
 	end
 	return true
 end
@@ -5082,7 +5082,7 @@ function MeleeVictoryDialogBJ(whichPlayer, leftGame)
 	local formatString
 
 	-- Display "player was victorious" or "player has left the game" message
-	if (leftGame) then
+	if leftGame then
 		formatString = GetLocalizedString("PLAYER_LEFT_GAME")
 	else
 		formatString = GetLocalizedString("PLAYER_VICTORIOUS")
@@ -5107,7 +5107,7 @@ function MeleeDefeatDialogBJ(whichPlayer, leftGame)
 	local formatString
 
 	-- Display "player was defeated" or "player has left the game" message
-	if (leftGame) then
+	if leftGame then
 		formatString = GetLocalizedString("PLAYER_LEFT_GAME")
 	else
 		formatString = GetLocalizedString("PLAYER_DEFEATED")
@@ -5118,7 +5118,7 @@ function MeleeDefeatDialogBJ(whichPlayer, leftGame)
 	DialogSetMessage(d, GetLocalizedString("GAMEOVER_DEFEAT_MSG"))
 
 	-- Only show the continue button if the game is not over and observers on death are allowed
-	if (not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH)) then
+	if not bj_meleeGameOver and IsMapFlagSet(MAP_OBSERVERS_ON_DEATH) then
 		DialogAddButton(d, GetLocalizedString("GAMEOVER_CONTINUE_OBSERVING"), GetLocalizedHotkey("GAMEOVER_CONTINUE_OBSERVING"))
 	end
 
@@ -5138,7 +5138,7 @@ function GameOverDialogBJ(whichPlayer, leftGame)
 	-- Display "player left the game" message
 	DisplayTimedTextFromPlayer(whichPlayer, 0, 0, 60, GetLocalizedString("PLAYER_LEFT_GAME"))
 
-	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
+	if GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0 then
 		s = GetLocalizedString("GAMEOVER_DISCONNECTED")
 	else
 		s = GetLocalizedString("GAMEOVER_GAME_OVER")
@@ -5159,10 +5159,10 @@ function RemovePlayerPreserveUnitsBJ(whichPlayer, gameResult, leftGame)
 
 		RemovePlayer(whichPlayer, gameResult)
 
-		if (gameResult == PLAYER_GAME_RESULT_VICTORY) then
+		if gameResult == PLAYER_GAME_RESULT_VICTORY then
 			MeleeVictoryDialogBJ(whichPlayer, leftGame)
 			return
-		elseif (gameResult == PLAYER_GAME_RESULT_DEFEAT) then
+		elseif gameResult == PLAYER_GAME_RESULT_DEFEAT then
 			MeleeDefeatDialogBJ(whichPlayer, leftGame)
 		else
 			GameOverDialogBJ(whichPlayer, leftGame)
@@ -5179,7 +5179,7 @@ function CustomVictoryOkBJ()
 		SetGameDifficulty(GetDefaultDifficulty())
 	end
 
-	if (bj_changeLevelMapName == nil) then
+	if bj_changeLevelMapName == nil then
 		EndGame(bj_changeLevelShowScores)
 	else
 		ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
@@ -5212,7 +5212,7 @@ function CustomVictoryDialogBJ(whichPlayer)
 	TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
 	TriggerAddAction(t, CustomVictoryQuitBJ)
 
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		EnableUserControl(true)
 		if bj_isSinglePlayer then
 			PauseGame(true)
@@ -5227,13 +5227,13 @@ end
 
 --===========================================================================
 function CustomVictorySkipBJ(whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		if bj_isSinglePlayer then
 			-- Bump the difficulty back up to the default.
 			SetGameDifficulty(GetDefaultDifficulty())
 		end
 
-		if (bj_changeLevelMapName == nil) then
+		if bj_changeLevelMapName == nil then
 			EndGame(bj_changeLevelShowScores)
 		else
 			ChangeLevel(bj_changeLevelMapName, bj_changeLevelShowScores)
@@ -5251,7 +5251,7 @@ function CustomVictoryBJ(whichPlayer, showDialog, showScores)
 		end
 
 		-- UI only needs to be displayed to users.
-		if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
+		if GetPlayerController(whichPlayer) == MAP_CONTROL_USER then
 			bj_changeLevelShowScores = showScores
 			if showDialog then
 				CustomVictoryDialogBJ(whichPlayer)
@@ -5275,11 +5275,11 @@ function CustomDefeatReduceDifficultyBJ()
 	PauseGame(false)
 
 	-- Knock the difficulty down, if possible.
-	if (diff == MAP_DIFFICULTY_EASY) then
+	if diff == MAP_DIFFICULTY_EASY then
 	-- Sorry, but it doesn't get any easier than this.
-	elseif (diff == MAP_DIFFICULTY_NORMAL) then
+	elseif diff == MAP_DIFFICULTY_NORMAL then
 		SetGameDifficulty(MAP_DIFFICULTY_EASY)
-	elseif (diff == MAP_DIFFICULTY_HARD) then
+	elseif diff == MAP_DIFFICULTY_HARD then
 		SetGameDifficulty(MAP_DIFFICULTY_NORMAL)
 	else
 	-- Unrecognized difficulty
@@ -5317,7 +5317,7 @@ function CustomDefeatDialogBJ(whichPlayer, message)
 		TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_RESTART"), GetLocalizedHotkey("GAMEOVER_RESTART")))
 		TriggerAddAction(t, CustomDefeatRestartBJ)
 
-		if (GetGameDifficulty() ~= MAP_DIFFICULTY_EASY) then
+		if GetGameDifficulty() ~= MAP_DIFFICULTY_EASY then
 			t = CreateTrigger()
 			TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_REDUCE_DIFFICULTY"), GetLocalizedHotkey("GAMEOVER_REDUCE_DIFFICULTY")))
 			TriggerAddAction(t, CustomDefeatReduceDifficultyBJ)
@@ -5332,7 +5332,7 @@ function CustomDefeatDialogBJ(whichPlayer, message)
 	TriggerRegisterDialogButtonEvent(t, DialogAddButton(d, GetLocalizedString("GAMEOVER_QUIT_MISSION"), GetLocalizedHotkey("GAMEOVER_QUIT_MISSION")))
 	TriggerAddAction(t, CustomDefeatQuitBJ)
 
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		EnableUserControl(true)
 		if bj_isSinglePlayer then
 			PauseGame(true)
@@ -5355,7 +5355,7 @@ function CustomDefeatBJ(whichPlayer, message)
 		end
 
 		-- UI only needs to be displayed to users.
-		if (GetPlayerController(whichPlayer) == MAP_CONTROL_USER) then
+		if GetPlayerController(whichPlayer) == MAP_CONTROL_USER then
 			CustomDefeatDialogBJ(whichPlayer, message)
 		end
 	end
@@ -5363,7 +5363,7 @@ end
 
 --===========================================================================
 function SetNextLevelBJ(nextLevel)
-	if (nextLevel == "") then
+	if nextLevel == "" then
 		bj_changeLevelMapName = nil
 	else
 		bj_changeLevelMapName = nextLevel
@@ -5385,8 +5385,8 @@ end
 
 --===========================================================================
 function CreateQuestBJ(questType, title, description, iconPath)
-	local required = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_REQ_UNDISCOVERED)
-	local discovered = (questType == bj_QUESTTYPE_REQ_DISCOVERED) or (questType == bj_QUESTTYPE_OPT_DISCOVERED)
+	local required = questType == bj_QUESTTYPE_REQ_DISCOVERED or questType == bj_QUESTTYPE_REQ_UNDISCOVERED
+	local discovered = questType == bj_QUESTTYPE_REQ_DISCOVERED or questType == bj_QUESTTYPE_OPT_DISCOVERED
 
 	bj_lastCreatedQuest = CreateQuest()
 	QuestSetTitle(bj_lastCreatedQuest, title)
@@ -5490,72 +5490,72 @@ end
 
 --===========================================================================
 function QuestMessageBJ(f, messageType, message)
-	if (IsPlayerInForce(GetLocalPlayer(), f)) then
+	if IsPlayerInForce(GetLocalPlayer(), f) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
-		if (messageType == bj_QUESTMESSAGE_DISCOVERED) then
+		if messageType == bj_QUESTMESSAGE_DISCOVERED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUEST, message)
 			StartSound(bj_questDiscoveredSound)
 			FlashQuestDialogButton()
 
-		elseif (messageType == bj_QUESTMESSAGE_UPDATED) then
+		elseif messageType == bj_QUESTMESSAGE_UPDATED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTUPDATE, message)
 			StartSound(bj_questUpdatedSound)
 			FlashQuestDialogButton()
 
-		elseif (messageType == bj_QUESTMESSAGE_COMPLETED) then
+		elseif messageType == bj_QUESTMESSAGE_COMPLETED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTDONE, message)
 			StartSound(bj_questCompletedSound)
 			FlashQuestDialogButton()
 
-		elseif (messageType == bj_QUESTMESSAGE_FAILED) then
+		elseif messageType == bj_QUESTMESSAGE_FAILED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTFAILED, message)
 			StartSound(bj_questFailedSound)
 			FlashQuestDialogButton()
 
-		elseif (messageType == bj_QUESTMESSAGE_REQUIREMENT) then
+		elseif messageType == bj_QUESTMESSAGE_REQUIREMENT then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_QUESTREQUIREMENT, message)
 
-		elseif (messageType == bj_QUESTMESSAGE_MISSIONFAILED) then
+		elseif messageType == bj_QUESTMESSAGE_MISSIONFAILED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_MISSIONFAILED, message)
 			StartSound(bj_questFailedSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_HINT) then
+		elseif messageType == bj_QUESTMESSAGE_HINT then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_HINT, message)
 			StartSound(bj_questHintSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_ALWAYSHINT) then
+		elseif messageType == bj_QUESTMESSAGE_ALWAYSHINT then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ALWAYSHINT, message)
 			StartSound(bj_questHintSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_SECRET) then
+		elseif messageType == bj_QUESTMESSAGE_SECRET then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_SECRET, message)
 			StartSound(bj_questSecretSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_UNITACQUIRED) then
+		elseif messageType == bj_QUESTMESSAGE_UNITACQUIRED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITACQUIRED, message)
 			StartSound(bj_questHintSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_UNITAVAILABLE) then
+		elseif messageType == bj_QUESTMESSAGE_UNITAVAILABLE then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_UNITAVAILABLE, message)
 			StartSound(bj_questHintSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_ITEMACQUIRED) then
+		elseif messageType == bj_QUESTMESSAGE_ITEMACQUIRED then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_ITEMACQUIRED, message)
 			StartSound(bj_questItemAcquiredSound)
 
-		elseif (messageType == bj_QUESTMESSAGE_WARNING) then
+		elseif messageType == bj_QUESTMESSAGE_WARNING then
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, " ")
 			DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, bj_TEXT_DELAY_WARNING, message)
 			StartSound(bj_questWarningSound)
@@ -5642,7 +5642,7 @@ end
 
 --===========================================================================
 function TimerDialogDisplayForPlayerBJ(show, td, whichPlayer)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		TimerDialogDisplay(td, show)
 	end
@@ -5670,7 +5670,7 @@ end
 function LeaderboardResizeBJ(lb)
 	local size = LeaderboardGetItemCount(lb)
 
-	if (LeaderboardGetLabelText(lb) == "") then
+	if LeaderboardGetLabelText(lb) == "" then
 		size = size - 1
 	end
 	LeaderboardSetSizeByItemCount(lb, size)
@@ -5769,7 +5769,7 @@ end
 
 --===========================================================================
 function LeaderboardAddItemBJ(whichPlayer, lb, label, value)
-	if (LeaderboardHasPlayerItem(lb, whichPlayer)) then
+	if LeaderboardHasPlayerItem(lb, whichPlayer) then
 		LeaderboardRemovePlayerItem(lb, whichPlayer)
 	end
 	LeaderboardAddItem(lb, label, value, whichPlayer)
@@ -5785,11 +5785,11 @@ end
 
 --===========================================================================
 function LeaderboardSortItemsBJ(lb, sortType, ascending)
-	if (sortType == bj_SORTTYPE_SORTBYVALUE) then
+	if sortType == bj_SORTTYPE_SORTBYVALUE then
 		LeaderboardSortItemsByValue(lb, ascending)
-	elseif (sortType == bj_SORTTYPE_SORTBYPLAYER) then
+	elseif sortType == bj_SORTTYPE_SORTBYPLAYER then
 		LeaderboardSortItemsByPlayer(lb, ascending)
-	elseif (sortType == bj_SORTTYPE_SORTBYLABEL) then
+	elseif sortType == bj_SORTTYPE_SORTBYLABEL then
 		LeaderboardSortItemsByLabel(lb, ascending)
 	else
 	-- Unrecognized sort type - ignore the request.
@@ -5822,7 +5822,7 @@ function LeaderboardGetIndexedPlayerBJ(position, lb)
 	index = 0
 	for _ in _loop_() do
 		indexPlayer = Player(index)
-		if (LeaderboardGetPlayerIndex(lb, indexPlayer) == position - 1) then
+		if LeaderboardGetPlayerIndex(lb, indexPlayer) == position - 1 then
 			return indexPlayer
 		end
 
@@ -5903,7 +5903,7 @@ function MultiboardSetItemStyleBJ(mb, col, row, showValue, showIcon)
 		if curRow > numRows then break end
 
 		-- Apply setting to the requested row, or all rows (if row is 0)
-		if (row == 0 or row == curRow) then
+		if row == 0 or row == curRow then
 			-- Loop over columns, using 1-based index
 			curCol = 0
 			for _ in _loop_() do
@@ -5911,7 +5911,7 @@ function MultiboardSetItemStyleBJ(mb, col, row, showValue, showIcon)
 				if curCol > numCols then break end
 
 				-- Apply setting to the requested column, or all columns (if col is 0)
-				if (col == 0 or col == curCol) then
+				if col == 0 or col == curCol then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
 					MultiboardSetItemStyle(mbitem, showValue, showIcon)
 					MultiboardReleaseItem(mbitem)
@@ -5935,7 +5935,7 @@ function MultiboardSetItemValueBJ(mb, col, row, val)
 		if curRow > numRows then break end
 
 		-- Apply setting to the requested row, or all rows (if row is 0)
-		if (row == 0 or row == curRow) then
+		if row == 0 or row == curRow then
 			-- Loop over columns, using 1-based index
 			curCol = 0
 			for _ in _loop_() do
@@ -5943,7 +5943,7 @@ function MultiboardSetItemValueBJ(mb, col, row, val)
 				if curCol > numCols then break end
 
 				-- Apply setting to the requested column, or all columns (if col is 0)
-				if (col == 0 or col == curCol) then
+				if col == 0 or col == curCol then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
 					MultiboardSetItemValue(mbitem, val)
 					MultiboardReleaseItem(mbitem)
@@ -5967,7 +5967,7 @@ function MultiboardSetItemColorBJ(mb, col, row, red, green, blue, transparency)
 		if curRow > numRows then break end
 
 		-- Apply setting to the requested row, or all rows (if row is 0)
-		if (row == 0 or row == curRow) then
+		if row == 0 or row == curRow then
 			-- Loop over columns, using 1-based index
 			curCol = 0
 			for _ in _loop_() do
@@ -5975,7 +5975,7 @@ function MultiboardSetItemColorBJ(mb, col, row, red, green, blue, transparency)
 				if curCol > numCols then break end
 
 				-- Apply setting to the requested column, or all columns (if col is 0)
-				if (col == 0 or col == curCol) then
+				if col == 0 or col == curCol then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
 					MultiboardSetItemValueColor(mbitem, PercentTo255(red), PercentTo255(green), PercentTo255(blue), PercentTo255(100.0 - transparency))
 					MultiboardReleaseItem(mbitem)
@@ -5999,7 +5999,7 @@ function MultiboardSetItemWidthBJ(mb, col, row, width)
 		if curRow > numRows then break end
 
 		-- Apply setting to the requested row, or all rows (if row is 0)
-		if (row == 0 or row == curRow) then
+		if row == 0 or row == curRow then
 			-- Loop over columns, using 1-based index
 			curCol = 0
 			for _ in _loop_() do
@@ -6007,7 +6007,7 @@ function MultiboardSetItemWidthBJ(mb, col, row, width)
 				if curCol > numCols then break end
 
 				-- Apply setting to the requested column, or all columns (if col is 0)
-				if (col == 0 or col == curCol) then
+				if col == 0 or col == curCol then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
 					MultiboardSetItemWidth(mbitem, width / 100.0)
 					MultiboardReleaseItem(mbitem)
@@ -6031,7 +6031,7 @@ function MultiboardSetItemIconBJ(mb, col, row, iconFileName)
 		if curRow > numRows then break end
 
 		-- Apply setting to the requested row, or all rows (if row is 0)
-		if (row == 0 or row == curRow) then
+		if row == 0 or row == curRow then
 			-- Loop over columns, using 1-based index
 			curCol = 0
 			for _ in _loop_() do
@@ -6039,7 +6039,7 @@ function MultiboardSetItemIconBJ(mb, col, row, iconFileName)
 				if curCol > numCols then break end
 
 				-- Apply setting to the requested column, or all columns (if col is 0)
-				if (col == 0 or col == curCol) then
+				if col == 0 or col == curCol then
 					mbitem = MultiboardGetItem(mb, curRow - 1, curCol - 1)
 					MultiboardSetItemIcon(mbitem, iconFileName)
 					MultiboardReleaseItem(mbitem)
@@ -6156,7 +6156,7 @@ end
 
 --===========================================================================
 function ShowTextTagForceBJ(show, tt, whichForce)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		SetTextTagVisibility(tt, show)
 	end
@@ -6187,7 +6187,7 @@ end
 
 --===========================================================================
 function SetUserControlForceOn(whichForce)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		EnableUserControl(true)
 	end
@@ -6195,7 +6195,7 @@ end
 
 --===========================================================================
 function SetUserControlForceOff(whichForce)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		EnableUserControl(false)
 	end
@@ -6203,7 +6203,7 @@ end
 
 --===========================================================================
 function ShowInterfaceForceOn(whichForce, fadeDuration)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ShowInterface(true, fadeDuration)
 	end
@@ -6211,7 +6211,7 @@ end
 
 --===========================================================================
 function ShowInterfaceForceOff(whichForce, fadeDuration)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		ShowInterface(false, fadeDuration)
 	end
@@ -6219,7 +6219,7 @@ end
 
 --===========================================================================
 function PingMinimapForForce(whichForce, x, y, duration)
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PingMinimap(x, y, duration)
 	--call StartSound(bj_pingMinimapSound)
@@ -6233,7 +6233,7 @@ end
 
 --===========================================================================
 function PingMinimapForPlayer(whichPlayer, x, y, duration)
-	if (GetLocalPlayer() == whichPlayer) then
+	if GetLocalPlayer() == whichPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		PingMinimap(x, y, duration)
 	--call StartSound(bj_pingMinimapSound)
@@ -6251,19 +6251,19 @@ function PingMinimapForForceEx(whichForce, x, y, duration, style, red, green, bl
 	local green255 = PercentTo255(green)
 	local blue255 = PercentTo255(blue)
 
-	if (IsPlayerInForce(GetLocalPlayer(), whichForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), whichForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 		-- Prevent 100% red simple and flashy pings, as they become "attack" pings.
-		if (red255 == 255) and (green255 == 0) and (blue255 == 0) then
+		if red255 == 255 and green255 == 0 and blue255 == 0 then
 			red255 = 254
 		end
 
-		if (style == bj_MINIMAPPINGSTYLE_SIMPLE) then
+		if style == bj_MINIMAPPINGSTYLE_SIMPLE then
 			PingMinimapEx(x, y, duration, red255, green255, blue255, false)
-		elseif (style == bj_MINIMAPPINGSTYLE_FLASHY) then
+		elseif style == bj_MINIMAPPINGSTYLE_FLASHY then
 			PingMinimapEx(x, y, duration, red255, green255, blue255, true)
-		elseif (style == bj_MINIMAPPINGSTYLE_ATTACK) then
+		elseif style == bj_MINIMAPPINGSTYLE_ATTACK then
 			PingMinimapEx(x, y, duration, 255, 0, 0, false)
 		else
 		-- Unrecognized ping style - ignore the request.
@@ -6280,7 +6280,7 @@ end
 
 --===========================================================================
 function EnableWorldFogBoundaryBJ(enable, f)
-	if (IsPlayerInForce(GetLocalPlayer(), f)) then
+	if IsPlayerInForce(GetLocalPlayer(), f) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		EnableWorldFogBoundary(enable)
 	end
@@ -6288,7 +6288,7 @@ end
 
 --===========================================================================
 function EnableOcclusionBJ(enable, f)
-	if (IsPlayerInForce(GetLocalPlayer(), f)) then
+	if IsPlayerInForce(GetLocalPlayer(), f) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 		EnableOcclusion(enable)
 	end
@@ -6319,7 +6319,7 @@ end
 function TryInitCinematicBehaviorBJ()
 	local index
 
-	if (bj_cineSceneBeingSkipped == nil) then
+	if bj_cineSceneBeingSkipped == nil then
 		bj_cineSceneBeingSkipped = CreateTrigger()
 		index = 0
 		for _ in _loop_() do
@@ -6342,11 +6342,11 @@ end
 function GetTransmissionDuration(soundHandle, timeType, timeVal)
 	local duration
 
-	if (timeType == bj_TIMETYPE_ADD) then
+	if timeType == bj_TIMETYPE_ADD then
 		duration = GetSoundDurationBJ(soundHandle) + timeVal
-	elseif (timeType == bj_TIMETYPE_SET) then
+	elseif timeType == bj_TIMETYPE_SET then
 		duration = timeVal
-	elseif (timeType == bj_TIMETYPE_SUB) then
+	elseif timeType == bj_TIMETYPE_SUB then
 		duration = GetSoundDurationBJ(soundHandle) - timeVal
 	else
 		-- Unrecognized timeType - ignore timeVal.
@@ -6354,7 +6354,7 @@ function GetTransmissionDuration(soundHandle, timeType, timeVal)
 	end
 
 	-- Make sure we have a non-negative duration.
-	if (duration < 0) then
+	if duration < 0 then
 		duration = 0
 	end
 	return duration
@@ -6362,20 +6362,20 @@ end
 
 --===========================================================================
 function WaitTransmissionDuration(soundHandle, timeType, timeVal)
-	if (timeType == bj_TIMETYPE_SET) then
+	if timeType == bj_TIMETYPE_SET then
 		-- If we have a static duration wait, just perform the wait.
 		TriggerSleepAction(timeVal)
 
-	elseif (soundHandle == nil) then
+	elseif soundHandle == nil then
 		-- If the sound does not exist, perform a default length wait.
 		TriggerSleepAction(bj_NOTHING_SOUND_DURATION)
 
-	elseif (timeType == bj_TIMETYPE_SUB) then
+	elseif timeType == bj_TIMETYPE_SUB then
 		-- If the transmission is cutting off the sound, wait for the sound
 		-- to be mostly finished.
 		WaitForSoundBJ(soundHandle, timeVal)
 
-	elseif (timeType == bj_TIMETYPE_ADD) then
+	elseif timeType == bj_TIMETYPE_ADD then
 		-- If the transmission is extending beyond the sound's length, wait
 		-- for it to finish, and then wait the additional time.
 		WaitForSoundBJ(soundHandle, 0)
@@ -6390,7 +6390,7 @@ end
 function DoTransmissionBasicsXYBJ(unitId, color, x, y, soundHandle, unitName, message, duration)
 	SetCinematicSceneBJ(soundHandle, unitId, color, unitName, message, duration + bj_TRANSMISSION_PORT_HANGTIME, duration)
 
-	if (unitId ~= 0) then
+	if unitId ~= 0 then
 		PingMinimap(x, y, bj_TRANSMISSION_PING_TIME)
 	--call SetCameraQuickPosition(x, y)
 	end
@@ -6415,21 +6415,21 @@ function TransmissionFromUnitWithNameBJ(toForce, whichUnit, unitName, soundHandl
 	bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
 	bj_lastPlayedSound = soundHandle
 
-	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), toForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
-		if (whichUnit == nil) then
+		if whichUnit == nil then
 			-- If the unit reference is invalid, send the transmission from the center of the map with no portrait.
 			DoTransmissionBasicsXYBJ(0, PLAYER_COLOR_RED, 0, 0, soundHandle, unitName, message, bj_lastTransmissionDuration)
 		else
 			DoTransmissionBasicsXYBJ(GetUnitTypeId(whichUnit), GetPlayerColor(GetOwningPlayer(whichUnit)), GetUnitX(whichUnit), GetUnitY(whichUnit), soundHandle, unitName, message, bj_lastTransmissionDuration)
-			if (not IsUnitHidden(whichUnit)) then
+			if not IsUnitHidden(whichUnit) then
 				UnitAddIndicator(whichUnit, bj_TRANSMISSION_IND_RED, bj_TRANSMISSION_IND_BLUE, bj_TRANSMISSION_IND_GREEN, bj_TRANSMISSION_IND_ALPHA)
 			end
 		end
 	end
 
-	if wait and (bj_lastTransmissionDuration > 0) then
+	if wait and bj_lastTransmissionDuration > 0 then
 		-- call TriggerSleepAction(bj_lastTransmissionDuration)
 		WaitTransmissionDuration(soundHandle, timeType, timeVal)
 	end
@@ -6449,13 +6449,13 @@ function TransmissionFromUnitTypeWithNameBJ(toForce, fromPlayer, unitId, unitNam
 	bj_lastTransmissionDuration = GetTransmissionDuration(soundHandle, timeType, timeVal)
 	bj_lastPlayedSound = soundHandle
 
-	if (IsPlayerInForce(GetLocalPlayer(), toForce)) then
+	if IsPlayerInForce(GetLocalPlayer(), toForce) then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 		DoTransmissionBasicsXYBJ(unitId, GetPlayerColor(fromPlayer), GetLocationX(loc), GetLocationY(loc), soundHandle, unitName, message, bj_lastTransmissionDuration)
 	end
 
-	if wait and (bj_lastTransmissionDuration > 0) then
+	if wait and bj_lastTransmissionDuration > 0 then
 		-- call TriggerSleepAction(bj_lastTransmissionDuration)
 		WaitTransmissionDuration(soundHandle, timeType, timeVal)
 	end
@@ -6500,13 +6500,13 @@ end
 --
 function CinematicModeExBJ(cineMode, forForce, interfaceFadeTime)
 	-- If the game hasn't started yet, perform interface fades immediately
-	if (not bj_gameStarted) then
+	if not bj_gameStarted then
 		interfaceFadeTime = 0
 	end
 
-	if (cineMode) then
+	if cineMode then
 		-- Save the UI state so that we can restore it later.
-		if (not bj_cineModeAlreadyIn) then
+		if not bj_cineModeAlreadyIn then
 			bj_cineModeAlreadyIn = true
 			bj_cineModePriorSpeed = GetGameSpeed()
 			bj_cineModePriorFogSetting = IsFogEnabled()
@@ -6516,7 +6516,7 @@ function CinematicModeExBJ(cineMode, forForce, interfaceFadeTime)
 		end
 
 		-- Perform local changes
-		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+		if IsPlayerInForce(GetLocalPlayer(), forForce) then
 			-- Use only local code (no net traffic) within this block to avoid desyncs.
 			ClearTextMessages()
 			ShowInterface(false, interfaceFadeTime)
@@ -6539,7 +6539,7 @@ function CinematicModeExBJ(cineMode, forForce, interfaceFadeTime)
 		bj_cineModeAlreadyIn = false
 
 		-- Perform local changes
-		if (IsPlayerInForce(GetLocalPlayer(), forForce)) then
+		if IsPlayerInForce(GetLocalPlayer(), forForce) then
 			-- Use only local code (no net traffic) within this block to avoid desyncs.
 			ShowInterface(true, interfaceFadeTime)
 			EnableUserControl(true)
@@ -6580,7 +6580,7 @@ end
 
 --===========================================================================
 function CinematicFadeCommonBJ(red, green, blue, duration, tex, startTrans, endTrans)
-	if (duration == 0) then
+	if duration == 0 then
 		-- If the fade is instant, use the same starting and ending values,
 		-- so that we effectively do a set rather than a fade.
 		startTrans = endTrans
@@ -6635,29 +6635,29 @@ end
 
 --===========================================================================
 function AbortCinematicFadeBJ()
-	if (bj_cineFadeContinueTimer ~= nil) then
+	if bj_cineFadeContinueTimer ~= nil then
 		DestroyTimer(bj_cineFadeContinueTimer)
 	end
 
-	if (bj_cineFadeFinishTimer ~= nil) then
+	if bj_cineFadeFinishTimer ~= nil then
 		DestroyTimer(bj_cineFadeFinishTimer)
 	end
 end
 
 --===========================================================================
 function CinematicFadeBJ(fadetype, duration, tex, red, green, blue, trans)
-	if (fadetype == bj_CINEFADETYPE_FADEOUT) then
+	if fadetype == bj_CINEFADETYPE_FADEOUT then
 		-- Fade out to the requested color.
 		AbortCinematicFadeBJ()
 		CinematicFadeCommonBJ(red, green, blue, duration, tex, 100, trans)
-	elseif (fadetype == bj_CINEFADETYPE_FADEIN) then
+	elseif fadetype == bj_CINEFADETYPE_FADEIN then
 		-- Fade in from the requested color.
 		AbortCinematicFadeBJ()
 		CinematicFadeCommonBJ(red, green, blue, duration, tex, trans, 100)
 		FinishCinematicFadeAfterBJ(duration)
-	elseif (fadetype == bj_CINEFADETYPE_FADEOUTIN) then
+	elseif fadetype == bj_CINEFADETYPE_FADEOUTIN then
 		-- Fade out to the requested color, and then fade back in from it.
-		if (duration > 0) then
+		if duration > 0 then
 			AbortCinematicFadeBJ()
 			CinematicFadeCommonBJ(red, green, blue, duration * 0.5, tex, 100, trans)
 			ContinueCinematicFadeAfterBJ(duration * 0.5, red, green, blue, trans, tex)
@@ -6696,7 +6696,7 @@ end
 -- and optionally a unit color change.
 --
 function RescueUnitBJ(whichUnit, rescuer, changeColor)
-	if IsUnitDeadBJ(whichUnit) or (GetOwningPlayer(whichUnit) == rescuer) then
+	if IsUnitDeadBJ(whichUnit) or GetOwningPlayer(whichUnit) == rescuer then
 		return
 	end
 
@@ -6725,7 +6725,7 @@ end
 function TryInitRescuableTriggersBJ()
 	local index
 
-	if (bj_rescueUnitBehavior == nil) then
+	if bj_rescueUnitBehavior == nil then
 		bj_rescueUnitBehavior = CreateTrigger()
 		index = 0
 		for _ in _loop_() do
@@ -6775,7 +6775,7 @@ function InitRescuableBehaviorBJ()
 	for _ in _loop_() do
 		-- If at least one player slot is "Rescuable"-controlled, init the
 		-- rescue behavior triggers.
-		if (GetPlayerController(Player(index)) == MAP_CONTROL_RESCUABLE) then
+		if GetPlayerController(Player(index)) == MAP_CONTROL_RESCUABLE then
 			TryInitRescuableTriggersBJ()
 			return
 		end
@@ -6831,23 +6831,23 @@ end
 --***************************************************************************
 
 function SetCampaignMenuRaceBJ(campaignNumber)
-	if (campaignNumber == bj_CAMPAIGN_INDEX_T) then
+	if campaignNumber == bj_CAMPAIGN_INDEX_T then
 		SetCampaignMenuRace(RACE_OTHER)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_H) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_H then
 		SetCampaignMenuRace(RACE_HUMAN)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_U) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_U then
 		SetCampaignMenuRace(RACE_UNDEAD)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_O) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_O then
 		SetCampaignMenuRace(RACE_ORC)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_N) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_N then
 		SetCampaignMenuRace(RACE_NIGHTELF)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XN then
 		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XN)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XH) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XH then
 		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XH)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XU) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XU then
 		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XU)
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XO) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XO then
 		SetCampaignMenuRaceEx(bj_CAMPAIGN_OFFSET_XO)
 	else
 	-- Unrecognized campaign - ignore the request
@@ -6872,17 +6872,17 @@ end
 function SetCampaignAvailableBJ(available, campaignNumber)
 	local campaignOffset
 
-	if (campaignNumber == bj_CAMPAIGN_INDEX_H) then
+	if campaignNumber == bj_CAMPAIGN_INDEX_H then
 		SetTutorialCleared(true)
 	end
 
-	if (campaignNumber == bj_CAMPAIGN_INDEX_XN) then
+	if campaignNumber == bj_CAMPAIGN_INDEX_XN then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XN
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XH) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XH then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XH
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XU) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XU then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XU
-	elseif (campaignNumber == bj_CAMPAIGN_INDEX_XO) then
+	elseif campaignNumber == bj_CAMPAIGN_INDEX_XO then
 		campaignOffset = bj_CAMPAIGN_OFFSET_XO
 	else
 		campaignOffset = campaignNumber
@@ -6895,37 +6895,37 @@ end
 
 --===========================================================================
 function SetCinematicAvailableBJ(available, cinematicIndex)
-	if (cinematicIndex == bj_CINEMATICINDEX_TOP) then
+	if cinematicIndex == bj_CINEMATICINDEX_TOP then
 		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_T, available)
 		PlayCinematic("TutorialOp")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_HOP) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_HOP then
 		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
 		PlayCinematic("HumanOp")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_HED) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_HED then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_H, available)
 		PlayCinematic("HumanEd")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_OOP) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_OOP then
 		SetOpCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
 		PlayCinematic("OrcOp")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_OED) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_OED then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_O, available)
 		PlayCinematic("OrcEd")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_UOP) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_UOP then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
 		PlayCinematic("UndeadOp")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_UED) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_UED then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_U, available)
 		PlayCinematic("UndeadEd")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_NOP) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_NOP then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
 		PlayCinematic("NightElfOp")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_NED) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_NED then
 		SetEdCinematicAvailable(bj_CAMPAIGN_INDEX_N, available)
 		PlayCinematic("NightElfEd")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_XOP) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_XOP then
 		SetOpCinematicAvailable(bj_CAMPAIGN_OFFSET_XN, available)
 		PlayCinematic("IntroX")
-	elseif (cinematicIndex == bj_CINEMATICINDEX_XED) then
+	elseif cinematicIndex == bj_CINEMATICINDEX_XED then
 		SetEdCinematicAvailable(bj_CAMPAIGN_OFFSET_XU, available)
 		PlayCinematic("OutroX")
 	else
@@ -7224,7 +7224,7 @@ function GetStoredStringBJ(key, missionKey, cache)
 
 	--call SyncStoredString(cache, missionKey, key)
 	s = GetStoredString(cache, missionKey, key)
-	if (s == nil) then
+	if s == nil then
 		return ""
 	else
 		return s
@@ -7255,7 +7255,7 @@ function LoadStringBJ(key, missionKey, table)
 
 	--call SyncStoredString(table, missionKey, key)
 	s = LoadStr(table, missionKey, key)
-	if (s == nil) then
+	if s == nil then
 		return ""
 	else
 		return s
@@ -7492,15 +7492,15 @@ end
 
 --===========================================================================
 function HaveStoredValue(key, valueType, missionKey, cache)
-	if (valueType == bj_GAMECACHE_BOOLEAN) then
+	if valueType == bj_GAMECACHE_BOOLEAN then
 		return HaveStoredBoolean(cache, missionKey, key)
-	elseif (valueType == bj_GAMECACHE_INTEGER) then
+	elseif valueType == bj_GAMECACHE_INTEGER then
 		return HaveStoredInteger(cache, missionKey, key)
-	elseif (valueType == bj_GAMECACHE_REAL) then
+	elseif valueType == bj_GAMECACHE_REAL then
 		return HaveStoredReal(cache, missionKey, key)
-	elseif (valueType == bj_GAMECACHE_UNIT) then
+	elseif valueType == bj_GAMECACHE_UNIT then
 		return HaveStoredUnit(cache, missionKey, key)
-	elseif (valueType == bj_GAMECACHE_STRING) then
+	elseif valueType == bj_GAMECACHE_STRING then
 		return HaveStoredString(cache, missionKey, key)
 	else
 		-- Unrecognized value type - ignore the request.
@@ -7510,15 +7510,15 @@ end
 
 --===========================================================================
 function HaveSavedValue(key, valueType, missionKey, table)
-	if (valueType == bj_HASHTABLE_BOOLEAN) then
+	if valueType == bj_HASHTABLE_BOOLEAN then
 		return HaveSavedBoolean(table, missionKey, key)
-	elseif (valueType == bj_HASHTABLE_INTEGER) then
+	elseif valueType == bj_HASHTABLE_INTEGER then
 		return HaveSavedInteger(table, missionKey, key)
-	elseif (valueType == bj_HASHTABLE_REAL) then
+	elseif valueType == bj_HASHTABLE_REAL then
 		return HaveSavedReal(table, missionKey, key)
-	elseif (valueType == bj_HASHTABLE_STRING) then
+	elseif valueType == bj_HASHTABLE_STRING then
 		return HaveSavedString(table, missionKey, key)
-	elseif (valueType == bj_HASHTABLE_HANDLE) then
+	elseif valueType == bj_HASHTABLE_HANDLE then
 		return HaveSavedHandle(table, missionKey, key)
 	else
 		-- Unrecognized value type - ignore the request.
@@ -7603,7 +7603,7 @@ end
 
 --===========================================================================
 function GetFadeFromSeconds(seconds)
-	if (seconds ~= 0) then
+	if seconds ~= 0 then
 		return 128 // R2I(seconds)
 	end
 	return 10000
@@ -7611,7 +7611,7 @@ end
 
 --===========================================================================
 function GetFadeFromSecondsAsReal(seconds)
-	if (seconds ~= 0) then
+	if seconds ~= 0 then
 		return 128.0 / seconds
 	end
 	return 10000.0
@@ -7626,10 +7626,10 @@ end
 function AdjustPlayerStateBJ(delta, whichPlayer, whichPlayerState)
 	-- If the change was positive, apply the difference to the player's
 	-- gathered resources property as well.
-	if (delta > 0) then
-		if (whichPlayerState == PLAYER_STATE_RESOURCE_GOLD) then
+	if delta > 0 then
+		if whichPlayerState == PLAYER_STATE_RESOURCE_GOLD then
 			AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_GOLD_GATHERED, delta)
-		elseif (whichPlayerState == PLAYER_STATE_RESOURCE_LUMBER) then
+		elseif whichPlayerState == PLAYER_STATE_RESOURCE_LUMBER then
 			AdjustPlayerStateSimpleBJ(whichPlayer, PLAYER_STATE_LUMBER_GATHERED, delta)
 		end
 	end
@@ -7901,7 +7901,7 @@ function MeleeStartingResources()
 	local startingLumber
 
 	v = VersionGet()
-	if (v == VERSION_REIGN_OF_CHAOS) then
+	if v == VERSION_REIGN_OF_CHAOS then
 		startingGold = bj_MELEE_STARTING_GOLD_V0
 		startingLumber = bj_MELEE_STARTING_LUMBER_V0
 	else
@@ -7913,7 +7913,7 @@ function MeleeStartingResources()
 	index = 0
 	for _ in _loop_() do
 		indexPlayer = Player(index)
-		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING then
 			SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_GOLD, startingGold)
 			SetPlayerState(indexPlayer, PLAYER_STATE_RESOURCE_LUMBER, startingLumber)
 		end
@@ -7936,7 +7936,7 @@ function ReducePlayerTechMaxAllowed(whichPlayer, techId, limit)
 	local oldMax = GetPlayerTechMaxAllowed(whichPlayer, techId)
 
 	-- A value of -1 is used to indicate no limit, so check for that as well.
-	if (oldMax < 0 or oldMax > limit) then
+	if oldMax < 0 or oldMax > limit then
 		SetPlayerTechMaxAllowed(whichPlayer, techId, limit)
 	end
 end
@@ -8007,7 +8007,7 @@ function MeleeGrantItemsToHero(whichUnit)
 	local owner = GetPlayerId(GetOwningPlayer(whichUnit))
 
 	-- If we haven't twinked N heroes for this player yet, twink away.
-	if (bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES) then
+	if bj_meleeTwinkedHeroes[owner] < bj_MELEE_MAX_TWINKED_HEROES then
 		UnitAddItemById(whichUnit, 1937012592)
 		bj_meleeTwinkedHeroes[owner] = bj_meleeTwinkedHeroes[owner] + 1
 	end
@@ -8073,10 +8073,10 @@ function MeleeClearExcessUnit()
 	local theUnit = GetEnumUnit()
 	local owner = GetPlayerId(GetOwningPlayer(theUnit))
 
-	if (owner == PLAYER_NEUTRAL_AGGRESSIVE) then
+	if owner == PLAYER_NEUTRAL_AGGRESSIVE then
 		-- Remove any Neutral Hostile units from the area.
 		RemoveUnit(GetEnumUnit())
-	elseif (owner == PLAYER_NEUTRAL_PASSIVE) then
+	elseif owner == PLAYER_NEUTRAL_PASSIVE then
 		-- Remove non-structure Neutral Passive units from the area.
 		if not IsUnitType(theUnit, UNIT_TYPE_STRUCTURE) then
 			RemoveUnit(GetEnumUnit())
@@ -8106,7 +8106,7 @@ function MeleeClearExcessUnits()
 		indexPlayer = Player(index)
 
 		-- If the player slot is being used, clear any nearby creeps.
-		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING then
 			locX = GetStartLocationX(GetPlayerStartLocation(indexPlayer))
 			locY = GetStartLocationY(GetPlayerStartLocation(indexPlayer))
 
@@ -8132,13 +8132,13 @@ function MeleeEnumFindNearestMine()
 	local dist
 	local unitLoc
 
-	if (GetUnitTypeId(enumUnit) == 1852272492) then
+	if GetUnitTypeId(enumUnit) == 1852272492 then
 		unitLoc = GetUnitLoc(enumUnit)
 		dist = DistanceBetweenPoints(unitLoc, bj_meleeNearestMineToLoc)
 		RemoveLocation(unitLoc)
 
 		-- If this is our first mine, or the closest thusfar, use it instead.
-		if (bj_meleeNearestMineDist < 0) or (dist < bj_meleeNearestMineDist) then
+		if bj_meleeNearestMineDist < 0 or dist < bj_meleeNearestMineDist then
 			bj_meleeNearestMine = enumUnit
 			bj_meleeNearestMineDist = dist
 		end
@@ -8170,7 +8170,7 @@ function MeleeRandomHeroLoc(p, id1, id2, id3, id4, loc)
 
 	-- The selection of heroes is dependant on the game version.
 	v = VersionGet()
-	if (v == VERSION_REIGN_OF_CHAOS) then
+	if v == VERSION_REIGN_OF_CHAOS then
 		roll = GetRandomInt(1, 3)
 	else
 		roll = GetRandomInt(1, 4)
@@ -8210,9 +8210,9 @@ end
 
 --===========================================================================
 function MeleeGetNearestValueWithin(val, minVal, maxVal)
-	if (val < minVal) then
+	if val < minVal then
 		return minVal
-	elseif (val > maxVal) then
+	elseif val > maxVal then
 		return maxVal
 	else
 		return val
@@ -8241,12 +8241,12 @@ function MeleeStartingUnitsHuman(whichPlayer, startLoc, doHeroes, doCamera, doPr
 	local peonY
 	local townHall = nil
 
-	if (doPreload) then
+	if doPreload then
 		Preloader("scripts\\HumanMelee.pld")
 	end
 
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-	if (nearestMine ~= nil) then
+	if nearestMine ~= nil then
 		-- Spawn Town Hall at the start location.
 		townHall = CreateUnitAtLoc(whichPlayer, 1752461175, startLoc, bj_UNIT_FACING)
 
@@ -8279,12 +8279,12 @@ function MeleeStartingUnitsHuman(whichPlayer, startLoc, doHeroes, doCamera, doPr
 		heroLoc = Location(peonX, peonY - 2.0 * unitSpacing)
 	end
 
-	if (townHall ~= nil) then
+	if townHall ~= nil then
 		UnitAddAbilityBJ(1097689443, townHall)
 		UnitMakeAbilityPermanentBJ(true, 1097689443, townHall)
 	end
 
-	if (doHeroes) then
+	if doHeroes then
 		-- If the "Random Hero" option is set, start the player with a random hero.
 		-- Otherwise, give them a "free hero" token.
 		if useRandomHero then
@@ -8294,7 +8294,7 @@ function MeleeStartingUnitsHuman(whichPlayer, startLoc, doHeroes, doCamera, doPr
 		end
 	end
 
-	if (doCamera) then
+	if doCamera then
 		-- Center the camera on the initial Peasants.
 		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
 		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -8315,12 +8315,12 @@ function MeleeStartingUnitsOrc(whichPlayer, startLoc, doHeroes, doCamera, doPrel
 	local peonX
 	local peonY
 
-	if (doPreload) then
+	if doPreload then
 		Preloader("scripts\\OrcMelee.pld")
 	end
 
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-	if (nearestMine ~= nil) then
+	if nearestMine ~= nil then
 		-- Spawn Great Hall at the start location.
 		CreateUnitAtLoc(whichPlayer, 1869050469, startLoc, bj_UNIT_FACING)
 
@@ -8353,7 +8353,7 @@ function MeleeStartingUnitsOrc(whichPlayer, startLoc, doHeroes, doCamera, doPrel
 		heroLoc = Location(peonX, peonY - 2.0 * unitSpacing)
 	end
 
-	if (doHeroes) then
+	if doHeroes then
 		-- If the "Random Hero" option is set, start the player with a random hero.
 		-- Otherwise, give them a "free hero" token.
 		if useRandomHero then
@@ -8363,7 +8363,7 @@ function MeleeStartingUnitsOrc(whichPlayer, startLoc, doHeroes, doCamera, doPrel
 		end
 	end
 
-	if (doCamera) then
+	if doCamera then
 		-- Center the camera on the initial Peons.
 		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
 		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -8390,12 +8390,12 @@ function MeleeStartingUnitsUndead(whichPlayer, startLoc, doHeroes, doCamera, doP
 	local ghoulX
 	local ghoulY
 
-	if (doPreload) then
+	if doPreload then
 		Preloader("scripts\\UndeadMelee.pld")
 	end
 
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-	if (nearestMine ~= nil) then
+	if nearestMine ~= nil then
 		-- Spawn Necropolis at the start location.
 		CreateUnitAtLoc(whichPlayer, 1970172012, startLoc, bj_UNIT_FACING)
 
@@ -8440,7 +8440,7 @@ function MeleeStartingUnitsUndead(whichPlayer, startLoc, doHeroes, doCamera, doP
 		heroLoc = Location(peonX, peonY - 2.0 * unitSpacing)
 	end
 
-	if (doHeroes) then
+	if doHeroes then
 		-- If the "Random Hero" option is set, start the player with a random hero.
 		-- Otherwise, give them a "free hero" token.
 		if useRandomHero then
@@ -8450,7 +8450,7 @@ function MeleeStartingUnitsUndead(whichPlayer, startLoc, doHeroes, doCamera, doP
 		end
 	end
 
-	if (doCamera) then
+	if doCamera then
 		-- Center the camera on the initial Acolytes.
 		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
 		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -8475,12 +8475,12 @@ function MeleeStartingUnitsNightElf(whichPlayer, startLoc, doHeroes, doCamera, d
 	local peonY
 	local tree
 
-	if (doPreload) then
+	if doPreload then
 		Preloader("scripts\\NightElfMelee.pld")
 	end
 
 	nearestMine = MeleeFindNearestMine(startLoc, bj_MELEE_MINE_SEARCH_RADIUS)
-	if (nearestMine ~= nil) then
+	if nearestMine ~= nil then
 		-- Spawn Tree of Life near the mine and have it entangle the mine.
 		-- Project the Tree's coordinates from the gold mine, and then snap
 		-- the X and Y values to within minTreeDist of the Gold Mine.
@@ -8519,7 +8519,7 @@ function MeleeStartingUnitsNightElf(whichPlayer, startLoc, doHeroes, doCamera, d
 		heroLoc = Location(peonX, peonY - 2.0 * unitSpacing)
 	end
 
-	if (doHeroes) then
+	if doHeroes then
 		-- If the "Random Hero" option is set, start the player with a random hero.
 		-- Otherwise, give them a "free hero" token.
 		if useRandomHero then
@@ -8529,7 +8529,7 @@ function MeleeStartingUnitsNightElf(whichPlayer, startLoc, doHeroes, doCamera, d
 		end
 	end
 
-	if (doCamera) then
+	if doCamera then
 		-- Center the camera on the initial Wisps.
 		SetCameraPositionForPlayer(whichPlayer, peonX, peonY)
 		SetCameraQuickPositionForPlayer(whichPlayer, peonX, peonY)
@@ -8543,7 +8543,7 @@ end
 function MeleeStartingUnitsUnknownRace(whichPlayer, startLoc, doHeroes, doCamera, doPreload)
 	local index
 
-	if (doPreload) then
+	if doPreload then
 	end
 
 	index = 0
@@ -8553,12 +8553,12 @@ function MeleeStartingUnitsUnknownRace(whichPlayer, startLoc, doHeroes, doCamera
 		if index == 12 then break end
 	end
 
-	if (doHeroes) then
+	if doHeroes then
 		-- Give them a "free hero" token, out of pity.
 		SetPlayerState(whichPlayer, PLAYER_STATE_RESOURCE_HERO_TOKENS, bj_MELEE_STARTING_HERO_TOKENS)
 	end
 
-	if (doCamera) then
+	if doCamera then
 		-- Center the camera on the initial sheep.
 		SetCameraPositionLocForPlayer(whichPlayer, startLoc)
 		SetCameraQuickPositionLocForPlayer(whichPlayer, startLoc)
@@ -8577,18 +8577,18 @@ function MeleeStartingUnits()
 	index = 0
 	for _ in _loop_() do
 		indexPlayer = Player(index)
-		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING then
 			indexStartLoc = GetStartLocationLoc(GetPlayerStartLocation(indexPlayer))
 			indexRace = GetPlayerRace(indexPlayer)
 
 			-- Create initial race-specific starting units
-			if (indexRace == RACE_HUMAN) then
+			if indexRace == RACE_HUMAN then
 				MeleeStartingUnitsHuman(indexPlayer, indexStartLoc, true, true, true)
-			elseif (indexRace == RACE_ORC) then
+			elseif indexRace == RACE_ORC then
 				MeleeStartingUnitsOrc(indexPlayer, indexStartLoc, true, true, true)
-			elseif (indexRace == RACE_UNDEAD) then
+			elseif indexRace == RACE_UNDEAD then
 				MeleeStartingUnitsUndead(indexPlayer, indexStartLoc, true, true, true)
-			elseif (indexRace == RACE_NIGHTELF) then
+			elseif indexRace == RACE_NIGHTELF then
 				MeleeStartingUnitsNightElf(indexPlayer, indexStartLoc, true, true, true)
 			else
 				MeleeStartingUnitsUnknownRace(indexPlayer, indexStartLoc, true, true, true)
@@ -8604,13 +8604,13 @@ end
 --===========================================================================
 function MeleeStartingUnitsForPlayer(whichRace, whichPlayer, loc, doHeroes)
 	-- Create initial race-specific starting units
-	if (whichRace == RACE_HUMAN) then
+	if whichRace == RACE_HUMAN then
 		MeleeStartingUnitsHuman(whichPlayer, loc, doHeroes, false, false)
-	elseif (whichRace == RACE_ORC) then
+	elseif whichRace == RACE_ORC then
 		MeleeStartingUnitsOrc(whichPlayer, loc, doHeroes, false, false)
-	elseif (whichRace == RACE_UNDEAD) then
+	elseif whichRace == RACE_UNDEAD then
 		MeleeStartingUnitsUndead(whichPlayer, loc, doHeroes, false, false)
-	elseif (whichRace == RACE_NIGHTELF) then
+	elseif whichRace == RACE_NIGHTELF then
 		MeleeStartingUnitsNightElf(whichPlayer, loc, doHeroes, false, false)
 	else
 	-- Unrecognized race - ignore the request.
@@ -8663,18 +8663,18 @@ function MeleeStartingAI()
 	index = 0
 	for _ in _loop_() do
 		indexPlayer = Player(index)
-		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING then
 			indexRace = GetPlayerRace(indexPlayer)
-			if (GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER) then
+			if GetPlayerController(indexPlayer) == MAP_CONTROL_COMPUTER then
 				-- Run a race-specific melee AI script.
-				if (indexRace == RACE_HUMAN) then
+				if indexRace == RACE_HUMAN then
 					PickMeleeAI(indexPlayer, "human.ai", nil, nil)
-				elseif (indexRace == RACE_ORC) then
+				elseif indexRace == RACE_ORC then
 					PickMeleeAI(indexPlayer, "orc.ai", nil, nil)
-				elseif (indexRace == RACE_UNDEAD) then
+				elseif indexRace == RACE_UNDEAD then
 					PickMeleeAI(indexPlayer, "undead.ai", nil, nil)
 					RecycleGuardPosition(bj_ghoul[index])
-				elseif (indexRace == RACE_NIGHTELF) then
+				elseif indexRace == RACE_NIGHTELF then
 					PickMeleeAI(indexPlayer, "elf.ai", nil, nil)
 				else
 				-- Unrecognized race.
@@ -8705,25 +8705,25 @@ function MeleePlayerIsOpponent(playerIndex, opponentIndex)
 	local theOpponent = Player(opponentIndex)
 
 	-- The player himself is not an opponent.
-	if (playerIndex == opponentIndex) then
+	if playerIndex == opponentIndex then
 		return false
 	end
 
 	-- Unused player slots are not opponents.
-	if (GetPlayerSlotState(theOpponent) ~= PLAYER_SLOT_STATE_PLAYING) then
+	if GetPlayerSlotState(theOpponent) ~= PLAYER_SLOT_STATE_PLAYING then
 		return false
 	end
 
 	-- Players who are already defeated are not opponents.
-	if (bj_meleeDefeated[opponentIndex]) then
+	if bj_meleeDefeated[opponentIndex] then
 		return false
 	end
 
 	-- Allied players with allied victory set are not opponents.
 	if GetPlayerAlliance(thePlayer, theOpponent, ALLIANCE_PASSIVE) then
 		if GetPlayerAlliance(theOpponent, thePlayer, ALLIANCE_PASSIVE) then
-			if (GetPlayerState(thePlayer, PLAYER_STATE_ALLIED_VICTORY) == 1) then
-				if (GetPlayerState(theOpponent, PLAYER_STATE_ALLIED_VICTORY) == 1) then
+			if GetPlayerState(thePlayer, PLAYER_STATE_ALLIED_VICTORY) == 1 then
+				if GetPlayerState(theOpponent, PLAYER_STATE_ALLIED_VICTORY) == 1 then
 					return false
 				end
 			end
@@ -8749,7 +8749,7 @@ function MeleeGetAllyStructureCount(whichPlayer)
 
 		-- uncomment to cause defeat even if you have control of ally structures, but yours have been nixed
 		--if (PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex]) then
-		if (PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+		if PlayersAreCoAllied(whichPlayer, indexPlayer) then
 			buildingCount = buildingCount + GetPlayerStructureCount(indexPlayer, true)
 		end
 
@@ -8773,7 +8773,7 @@ function MeleeGetAllyCount(whichPlayer)
 	playerIndex = 0
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
-		if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex] and (whichPlayer ~= indexPlayer) then
+		if PlayersAreCoAllied(whichPlayer, indexPlayer) and not bj_meleeDefeated[playerIndex] and whichPlayer ~= indexPlayer then
 			playerCount = playerCount + 1
 		end
 
@@ -8800,7 +8800,7 @@ function MeleeGetAllyKeyStructureCount(whichPlayer)
 	playerIndex = 0
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
-		if (PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+		if PlayersAreCoAllied(whichPlayer, indexPlayer) then
 			keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "townhall", true, true)
 			keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "greathall", true, true)
 			keyStructs = keyStructs + GetPlayerTypedUnitCount(indexPlayer, "treeoflife", true, true)
@@ -8831,7 +8831,7 @@ function MeleeDoVictoryEnum()
 	local thePlayer = GetEnumPlayer()
 	local playerIndex = GetPlayerId(thePlayer)
 
-	if (not bj_meleeVictoried[playerIndex]) then
+	if not bj_meleeVictoried[playerIndex] then
 		bj_meleeVictoried[playerIndex] = true
 		CachePlayerHeroData(thePlayer)
 		RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_VICTORY, false)
@@ -8862,7 +8862,7 @@ end
 -- A specific player left the game.
 --
 function MeleeDoLeave(whichPlayer)
-	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
+	if GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0 then
 		GameOverDialogBJ(whichPlayer, true)
 	else
 		bj_meleeDefeated[GetPlayerId(whichPlayer)] = true
@@ -8882,7 +8882,7 @@ function MeleeRemoveObservers()
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
 
-		if (IsPlayerObserver(indexPlayer)) then
+		if IsPlayerObserver(indexPlayer) then
 			RemovePlayerPreserveUnitsBJ(indexPlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
 		end
 
@@ -8906,7 +8906,7 @@ function MeleeCheckForVictors()
 	-- Check to see if any players have opponents remaining.
 	playerIndex = 0
 	for _ in _loop_() do
-		if (not bj_meleeDefeated[playerIndex]) then
+		if not bj_meleeDefeated[playerIndex] then
 			-- Determine whether or not this player has any remaining opponents.
 			opponentIndex = 0
 			for _ in _loop_() do
@@ -8946,14 +8946,14 @@ function MeleeCheckForLosersAndVictors()
 	local gameOver = false
 
 	-- If the game is already over, do nothing
-	if (bj_meleeGameOver) then
+	if bj_meleeGameOver then
 		return
 	end
 
 	-- If the game was disconnected then it is over, in this case we
 	-- don't want to report results for anyone as they will most likely
 	-- conflict with the actual game results
-	if (GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0) then
+	if GetIntegerGameState(GAME_STATE_DISCONNECTED) ~= 0 then
 		bj_meleeGameOver = true
 		return
 	end
@@ -8963,9 +8963,9 @@ function MeleeCheckForLosersAndVictors()
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
 
-		if (not bj_meleeDefeated[playerIndex] and not bj_meleeVictoried[playerIndex]) then
+		if not bj_meleeDefeated[playerIndex] and not bj_meleeVictoried[playerIndex] then
 			--call DisplayTimedTextToPlayer(GetLocalPlayer(), 0, 0, 60, "Player"+I2S(playerIndex)+" has "+I2S(MeleeGetAllyStructureCount(indexPlayer))+" ally buildings.")
-			if (MeleeGetAllyStructureCount(indexPlayer) <= 0) then
+			if MeleeGetAllyStructureCount(indexPlayer) <= 0 then
 
 				-- Keep track of each defeated player so that we can give
 				-- them a defeat later.
@@ -8991,7 +8991,7 @@ function MeleeCheckForLosersAndVictors()
 	ForForce(victoriousPlayers, MeleeDoVictoryEnum)
 
 	-- If the game is over we should remove all observers
-	if (bj_meleeGameOver) then
+	if bj_meleeGameOver then
 		MeleeRemoveObservers()
 	end
 end
@@ -9002,13 +9002,13 @@ end
 function MeleeGetCrippledWarningMessage(whichPlayer)
 	local r = GetPlayerRace(whichPlayer)
 
-	if (r == RACE_HUMAN) then
+	if r == RACE_HUMAN then
 		return GetLocalizedString("CRIPPLE_WARNING_HUMAN")
-	elseif (r == RACE_ORC) then
+	elseif r == RACE_ORC then
 		return GetLocalizedString("CRIPPLE_WARNING_ORC")
-	elseif (r == RACE_NIGHTELF) then
+	elseif r == RACE_NIGHTELF then
 		return GetLocalizedString("CRIPPLE_WARNING_NIGHTELF")
-	elseif (r == RACE_UNDEAD) then
+	elseif r == RACE_UNDEAD then
 		return GetLocalizedString("CRIPPLE_WARNING_UNDEAD")
 	else
 		-- Unrecognized Race
@@ -9022,13 +9022,13 @@ end
 function MeleeGetCrippledTimerMessage(whichPlayer)
 	local r = GetPlayerRace(whichPlayer)
 
-	if (r == RACE_HUMAN) then
+	if r == RACE_HUMAN then
 		return GetLocalizedString("CRIPPLE_TIMER_HUMAN")
-	elseif (r == RACE_ORC) then
+	elseif r == RACE_ORC then
 		return GetLocalizedString("CRIPPLE_TIMER_ORC")
-	elseif (r == RACE_NIGHTELF) then
+	elseif r == RACE_NIGHTELF then
 		return GetLocalizedString("CRIPPLE_TIMER_NIGHTELF")
-	elseif (r == RACE_UNDEAD) then
+	elseif r == RACE_UNDEAD then
 		return GetLocalizedString("CRIPPLE_TIMER_UNDEAD")
 	else
 		-- Unrecognized Race
@@ -9055,7 +9055,7 @@ function MeleeExposePlayer(whichPlayer, expose)
 	playerIndex = 0
 	for _ in _loop_() do
 		indexPlayer = Player(playerIndex)
-		if (not PlayersAreCoAllied(whichPlayer, indexPlayer)) then
+		if not PlayersAreCoAllied(whichPlayer, indexPlayer) then
 			ForceAddPlayer(toExposeTo, indexPlayer)
 		end
 
@@ -9087,7 +9087,7 @@ function MeleeExposeAllPlayers()
 			indexPlayer2 = Player(playerIndex2)
 
 			if playerIndex ~= playerIndex2 then
-				if (not PlayersAreCoAllied(indexPlayer, indexPlayer2)) then
+				if not PlayersAreCoAllied(indexPlayer, indexPlayer2) then
 					ForceAddPlayer(toExposeTo, indexPlayer2)
 				end
 			end
@@ -9114,19 +9114,19 @@ function MeleeCrippledPlayerTimeout()
 	-- Determine which player's timer expired.
 	playerIndex = 0
 	for _ in _loop_() do
-		if (bj_crippledTimer[playerIndex] == expiredTimer) then
+		if bj_crippledTimer[playerIndex] == expiredTimer then
 			if true then break end
 		end
 
 		playerIndex = playerIndex + 1
 		if playerIndex == bj_MAX_PLAYERS then break end
 	end
-	if (playerIndex == bj_MAX_PLAYERS) then
+	if playerIndex == bj_MAX_PLAYERS then
 		return
 	end
 	exposedPlayer = Player(playerIndex)
 
-	if (GetLocalPlayer() == exposedPlayer) then
+	if GetLocalPlayer() == exposedPlayer then
 		-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 		-- Hide the timer window for this player.
@@ -9146,7 +9146,7 @@ function MeleePlayerIsCrippled(whichPlayer)
 	local allyKeyStructures = MeleeGetAllyKeyStructureCount(whichPlayer)
 
 	-- Dead teams are not considered to be crippled.
-	return (allyStructures > 0) and (allyKeyStructures <= 0)
+	return allyStructures > 0 and allyKeyStructures <= 0
 end
 
 --===========================================================================
@@ -9170,13 +9170,13 @@ function MeleeCheckForCrippledPlayers()
 		indexPlayer = Player(playerIndex)
 		isNowCrippled = MeleePlayerIsCrippled(indexPlayer)
 
-		if (not bj_playerIsCrippled[playerIndex] and isNowCrippled) then
+		if not bj_playerIsCrippled[playerIndex] and isNowCrippled then
 
 			-- Player became crippled; start their cripple timer.
 			bj_playerIsCrippled[playerIndex] = true
 			TimerStart(bj_crippledTimer[playerIndex], bj_MELEE_CRIPPLE_TIMEOUT, false, MeleeCrippledPlayerTimeout)
 
-			if (GetLocalPlayer() == indexPlayer) then
+			if GetLocalPlayer() == indexPlayer then
 				-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 				-- Show the timer window.
@@ -9186,21 +9186,21 @@ function MeleeCheckForCrippledPlayers()
 				DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, MeleeGetCrippledWarningMessage(indexPlayer))
 			end
 
-		elseif (bj_playerIsCrippled[playerIndex] and not isNowCrippled) then
+		elseif bj_playerIsCrippled[playerIndex] and not isNowCrippled then
 
 			-- Player became uncrippled; stop their cripple timer.
 			bj_playerIsCrippled[playerIndex] = false
 			PauseTimer(bj_crippledTimer[playerIndex])
 
-			if (GetLocalPlayer() == indexPlayer) then
+			if GetLocalPlayer() == indexPlayer then
 				-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 				-- Hide the timer window for this player.
 				TimerDialogDisplay(bj_crippledTimerWindows[playerIndex], false)
 
 				-- Display a confirmation message if the player's team is still alive.
-				if (MeleeGetAllyStructureCount(indexPlayer) > 0) then
-					if (bj_playerIsExposed[playerIndex]) then
+				if MeleeGetAllyStructureCount(indexPlayer) > 0 then
+					if bj_playerIsExposed[playerIndex] then
 						DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNREVEALED"))
 					else
 						DisplayTimedTextToPlayer(indexPlayer, 0, 0, bj_MELEE_CRIPPLE_MSG_DURATION, GetLocalizedString("CRIPPLE_UNCRIPPLED"))
@@ -9225,7 +9225,7 @@ function MeleeCheckLostUnit(lostUnit)
 	local lostUnitOwner = GetOwningPlayer(lostUnit)
 
 	-- We only need to check for mortality if this was the last building.
-	if (GetPlayerStructureCount(lostUnitOwner, true) <= 0) then
+	if GetPlayerStructureCount(lostUnitOwner, true) <= 0 then
 		MeleeCheckForLosersAndVictors()
 	end
 
@@ -9242,7 +9242,7 @@ function MeleeCheckAddedUnit(addedUnit)
 	local addedUnitOwner = GetOwningPlayer(addedUnit)
 
 	-- If the player was crippled, this unit may have uncrippled him/her.
-	if (bj_playerIsCrippled[GetPlayerId(addedUnitOwner)]) then
+	if bj_playerIsCrippled[GetPlayerId(addedUnitOwner)] then
 		MeleeCheckForCrippledPlayers()
 	end
 end
@@ -9254,7 +9254,7 @@ end
 
 --===========================================================================
 function MeleeTriggerActionUnitDeath()
-	if (IsUnitType(GetDyingUnit(), UNIT_TYPE_STRUCTURE)) then
+	if IsUnitType(GetDyingUnit(), UNIT_TYPE_STRUCTURE) then
 		MeleeCheckLostUnit(GetDyingUnit())
 	end
 end
@@ -9269,18 +9269,18 @@ function MeleeTriggerActionPlayerDefeated()
 	local thePlayer = GetTriggerPlayer()
 	CachePlayerHeroData(thePlayer)
 
-	if (MeleeGetAllyCount(thePlayer) > 0) then
+	if MeleeGetAllyCount(thePlayer) > 0 then
 		-- If at least one ally is still alive and kicking, share units with
 		-- them and proceed with death.
 		ShareEverythingWithTeam(thePlayer)
-		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+		if not bj_meleeDefeated[GetPlayerId(thePlayer)] then
 			MeleeDoDefeat(thePlayer)
 		end
 	else
 		-- If no living allies remain, swap all units and buildings over to
 		-- neutral_passive and proceed with death.
 		MakeUnitsPassiveForTeam(thePlayer)
-		if (not bj_meleeDefeated[GetPlayerId(thePlayer)]) then
+		if not bj_meleeDefeated[GetPlayerId(thePlayer)] then
 			MeleeDoDefeat(thePlayer)
 		end
 	end
@@ -9292,7 +9292,7 @@ function MeleeTriggerActionPlayerLeft()
 	local thePlayer = GetTriggerPlayer()
 
 	-- Just show game over for observers when they leave
-	if (IsPlayerObserver(thePlayer)) then
+	if IsPlayerObserver(thePlayer) then
 		RemovePlayerPreserveUnitsBJ(thePlayer, PLAYER_GAME_RESULT_NEUTRAL, false)
 		return
 	end
@@ -9302,7 +9302,7 @@ function MeleeTriggerActionPlayerLeft()
 	-- This is the same as defeat except the player generates the message 
 	-- "player left the game" as opposed to "player was defeated".
 
-	if (MeleeGetAllyCount(thePlayer) > 0) then
+	if MeleeGetAllyCount(thePlayer) > 0 then
 		-- If at least one ally is still alive and kicking, share units with
 		-- them and proceed with death.
 		ShareEverythingWithTeam(thePlayer)
@@ -9341,7 +9341,7 @@ function MeleeTriggerTournamentFinishSoon()
 				bj_playerIsCrippled[playerIndex] = false
 				PauseTimer(bj_crippledTimer[playerIndex])
 
-				if (GetLocalPlayer() == indexPlayer) then
+				if GetLocalPlayer() == indexPlayer then
 					-- Use only local code (no net traffic) within this block to avoid desyncs.
 
 					-- Hide the timer window.
@@ -9367,13 +9367,13 @@ end
 function MeleeWasUserPlayer(whichPlayer)
 	local slotState
 
-	if (GetPlayerController(whichPlayer) ~= MAP_CONTROL_USER) then
+	if GetPlayerController(whichPlayer) ~= MAP_CONTROL_USER then
 		return false
 	end
 
 	slotState = GetPlayerSlotState(whichPlayer)
 
-	return (slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT)
+	return slotState == PLAYER_SLOT_STATE_PLAYING or slotState == PLAYER_SLOT_STATE_LEFT
 end
 
 --===========================================================================
@@ -9466,7 +9466,7 @@ function MeleeTournamentFinishNowRuleA(multiplier)
 		index = 0
 		for _ in _loop_() do
 			if index ~= bestTeam then
-				if bestScore < (multiplier * teamScore[index]) then
+				if bestScore < multiplier * teamScore[index] then
 					draw = true
 				end
 			end
@@ -9512,7 +9512,7 @@ function MeleeTriggerTournamentFinishNow()
 		return
 	end
 
-	if (rule == 1) then
+	if rule == 1 then
 		-- Finals games
 		MeleeTournamentFinishNowRuleA(1)
 	else
@@ -9551,7 +9551,7 @@ function MeleeInitVictoryDefeat()
 		indexPlayer = Player(index)
 
 		-- Make sure this player slot is playing.
-		if (GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerSlotState(indexPlayer) == PLAYER_SLOT_STATE_PLAYING then
 			bj_meleeDefeated[index] = false
 			bj_meleeVictoried[index] = false
 
@@ -9597,7 +9597,7 @@ function MeleeInitVictoryDefeat()
 			bj_meleeVictoried[index] = false
 
 			-- Handle leave events for observers
-			if (IsPlayerObserver(indexPlayer)) then
+			if IsPlayerObserver(indexPlayer) then
 				-- Set a trigger to fire whenever this player leaves
 				trig = CreateTrigger()
 				TriggerRegisterPlayerEvent(trig, indexPlayer, EVENT_PLAYER_LEAVE)
@@ -9626,7 +9626,7 @@ end
 function CheckInitPlayerSlotAvailability()
 	local index
 
-	if (not bj_slotControlReady) then
+	if not bj_slotControlReady then
 		index = 0
 		for _ in _loop_() do
 			bj_slotControlUsed[index] = false
@@ -9667,11 +9667,11 @@ function TeamInitPlayerSlots(teamCount)
 	index = 0
 	team = 0
 	for _ in _loop_() do
-		if (bj_slotControlUsed[index]) then
+		if bj_slotControlUsed[index] then
 			indexPlayer = Player(index)
 			SetPlayerTeam(indexPlayer, team)
 			team = team + 1
-			if (team >= teamCount) then
+			if team >= teamCount then
 				team = 0
 			end
 		end
@@ -9703,19 +9703,19 @@ end
 function InitGenericPlayerSlots()
 	local gType = GetGameTypeSelected()
 
-	if (gType == GAME_TYPE_MELEE) then
+	if gType == GAME_TYPE_MELEE then
 		MeleeInitPlayerSlots()
-	elseif (gType == GAME_TYPE_FFA) then
+	elseif gType == GAME_TYPE_FFA then
 		FFAInitPlayerSlots()
-	elseif (gType == GAME_TYPE_USE_MAP_SETTINGS) then
+	elseif gType == GAME_TYPE_USE_MAP_SETTINGS then
 	-- Do nothing; the map-specific script handles this.
-	elseif (gType == GAME_TYPE_ONE_ON_ONE) then
+	elseif gType == GAME_TYPE_ONE_ON_ONE then
 		OneOnOneInitPlayerSlots()
-	elseif (gType == GAME_TYPE_TWO_TEAM_PLAY) then
+	elseif gType == GAME_TYPE_TWO_TEAM_PLAY then
 		TeamInitPlayerSlots(2)
-	elseif (gType == GAME_TYPE_THREE_TEAM_PLAY) then
+	elseif gType == GAME_TYPE_THREE_TEAM_PLAY then
 		TeamInitPlayerSlots(3)
-	elseif (gType == GAME_TYPE_FOUR_TEAM_PLAY) then
+	elseif gType == GAME_TYPE_FOUR_TEAM_PLAY then
 		TeamInitPlayerSlots(4)
 	else
 	-- Unrecognized Game Type
@@ -9748,7 +9748,7 @@ end
 function SetDNCSoundsDay()
 	local ToD = GetTimeOfDay()
 
-	if (ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK) and not bj_dncIsDaytime then
+	if ToD >= bj_TOD_DAWN and ToD < bj_TOD_DUSK and not bj_dncIsDaytime then
 		bj_dncIsDaytime = true
 
 		-- change ambient sounds
@@ -9844,12 +9844,12 @@ function InitBlizzardGlobals()
 	index = 0
 	for _ in _loop_() do
 		if index >= bj_MAX_PLAYERS then break end
-		if (GetPlayerController(Player(index)) == MAP_CONTROL_USER and GetPlayerSlotState(Player(index)) == PLAYER_SLOT_STATE_PLAYING) then
+		if GetPlayerController(Player(index)) == MAP_CONTROL_USER and GetPlayerSlotState(Player(index)) == PLAYER_SLOT_STATE_PLAYING then
 			userControlledPlayers = userControlledPlayers + 1
 		end
 		index = index + 1
 	end
-	bj_isSinglePlayer = (userControlledPlayers == 1)
+	bj_isSinglePlayer = userControlledPlayers == 1
 
 	-- Init sounds
 	--set bj_pingMinimapSound = CreateSoundFromLabel("AutoCastButtonClick", false, false, false, 10000, 10000)
@@ -9870,7 +9870,7 @@ function InitBlizzardGlobals()
 
 	-- Init version-specific data
 	v = VersionGet()
-	if (v == VERSION_REIGN_OF_CHAOS) then
+	if v == VERSION_REIGN_OF_CHAOS then
 		bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V0
 	else
 		bj_MELEE_MAX_TWINKED_HEROES = bj_MELEE_MAX_TWINKED_HEROES_V1
@@ -9899,12 +9899,12 @@ function InitSummonableCaps()
 		-- upgraded units
 		-- Note: Only do this if the corresponding upgrade is not yet researched
 		-- Barrage - Siege Engines
-		if (not GetPlayerTechResearched(Player(index), 1382576756, true)) then
+		if not GetPlayerTechResearched(Player(index), 1382576756, true) then
 			SetPlayerTechMaxAllowed(Player(index), 1752331380, 0)
 		end
 
 		-- Berserker Upgrade - Troll Berserkers
-		if (not GetPlayerTechResearched(Player(index), 1383031403, true)) then
+		if not GetPlayerTechResearched(Player(index), 1383031403, true) then
 			SetPlayerTechMaxAllowed(Player(index), 1869898347, 0)
 		end
 
@@ -9924,11 +9924,11 @@ function UpdateStockAvailability(whichItem)
 	local iLevel = GetItemLevel(whichItem)
 
 	-- Update allowed type/level combinations.
-	if (iType == ITEM_TYPE_PERMANENT) then
+	if iType == ITEM_TYPE_PERMANENT then
 		bj_stockAllowedPermanent[iLevel] = true
-	elseif (iType == ITEM_TYPE_CHARGED) then
+	elseif iType == ITEM_TYPE_CHARGED then
 		bj_stockAllowedCharged[iLevel] = true
-	elseif (iType == ITEM_TYPE_ARTIFACT) then
+	elseif iType == ITEM_TYPE_ARTIFACT then
 		bj_stockAllowedArtifact[iLevel] = true
 	else
 	-- Not interested in this item type - ignore the item.
@@ -9949,7 +9949,7 @@ function UpdateEachStockBuildingEnum()
 		-- If we get hung up on an entire class/level combo of unsellable
 		-- items, or a very unlucky series of random numbers, give up.
 		iteration = iteration + 1
-		if (iteration > bj_STOCK_MAX_ITERATIONS) then
+		if iteration > bj_STOCK_MAX_ITERATIONS then
 			return
 		end
 	end
@@ -9982,23 +9982,23 @@ function PerformStockUpdates()
 	-- Give each type/level combination a chance of being picked.
 	iLevel = 1
 	for _ in _loop_() do
-		if (bj_stockAllowedPermanent[iLevel]) then
+		if bj_stockAllowedPermanent[iLevel] then
 			allowedCombinations = allowedCombinations + 1
-			if (GetRandomInt(1, allowedCombinations) == 1) then
+			if GetRandomInt(1, allowedCombinations) == 1 then
 				pickedItemType = ITEM_TYPE_PERMANENT
 				pickedItemLevel = iLevel
 			end
 		end
-		if (bj_stockAllowedCharged[iLevel]) then
+		if bj_stockAllowedCharged[iLevel] then
 			allowedCombinations = allowedCombinations + 1
-			if (GetRandomInt(1, allowedCombinations) == 1) then
+			if GetRandomInt(1, allowedCombinations) == 1 then
 				pickedItemType = ITEM_TYPE_CHARGED
 				pickedItemLevel = iLevel
 			end
 		end
-		if (bj_stockAllowedArtifact[iLevel]) then
+		if bj_stockAllowedArtifact[iLevel] then
 			allowedCombinations = allowedCombinations + 1
-			if (GetRandomInt(1, allowedCombinations) == 1) then
+			if GetRandomInt(1, allowedCombinations) == 1 then
 				pickedItemType = ITEM_TYPE_ARTIFACT
 				pickedItemLevel = iLevel
 			end
@@ -10009,7 +10009,7 @@ function PerformStockUpdates()
 	end
 
 	-- Make sure we found a valid item type to add.
-	if (allowedCombinations == 0) then
+	if allowedCombinations == 0 then
 		return
 	end
 
@@ -10128,7 +10128,7 @@ function RandomDistChoose()
 	local done
 
 	-- No items?
-	if (bj_randDistCount == 0) then
+	if bj_randDistCount == 0 then
 		return -1
 	end
 
@@ -10151,13 +10151,13 @@ function RandomDistChoose()
 	for _ in _loop_() do
 		sum = sum + bj_randDistChance[index]
 
-		if (chance <= sum) then
+		if chance <= sum then
 			foundID = bj_randDistID[index]
 			done = true
 		end
 
 		index = index + 1
-		if (index == bj_randDistCount) then
+		if index == bj_randDistCount then
 			done = true
 		end
 
@@ -10189,7 +10189,7 @@ function UnitDropItem(inUnit, inItemID)
 	local unitY
 	local droppedItem
 
-	if (inItemID == -1) then
+	if inItemID == -1 then
 		return nil
 	end
 
@@ -10215,7 +10215,7 @@ function WidgetDropItem(inWidget, inItemID)
 	local widgetX
 	local widgetY
 
-	if (inItemID == -1) then
+	if inItemID == -1 then
 		return nil
 	end
 
