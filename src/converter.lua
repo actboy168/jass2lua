@@ -190,6 +190,7 @@ local function get_equal(exp)
 end
 
 local function get_unequal(exp)
+    exp.type = '~='
     return ('%s ~= %s'):format(get_exp(exp[1], '~=', 1), get_exp(exp[2], '~=', 2))
 end
 
@@ -222,6 +223,7 @@ local function get_not(exp)
 end
 
 local function get_code(exp)
+    exp.type = 'var'
     return get_function_name(exp.name)
 end
 
