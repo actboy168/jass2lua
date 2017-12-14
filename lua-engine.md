@@ -184,7 +184,7 @@ runtime.error_handle有一个默认值，等价于以下函数
 	
 注意，注册此函数后lua脚本的效率会降低(即使并没有发生错误)。
 
-#### runtime.handle_level(默认为2)
+#### runtime.handle_level(默认为0)
 lua引擎处理的handle的安全等级，有效值为0~2，注，等级越高，效率越低，安全性越高、
 
 ##### 0: handle直接使用number，jass无法了解你在lua中对这个handle的引用情况，也不会通过增加引用计数来保护这个handle
