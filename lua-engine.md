@@ -83,7 +83,7 @@ japi函数不同环境下可能会略有不同，你可以通过pairs遍历当�
 
 ```lua
 	for k, v in pairs(require 'jass.japi') do
-		print(k .. ' ' .. v)
+		print(k, v)
 	end
 ```
 
