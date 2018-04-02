@@ -1,9 +1,9 @@
 function main takes nothing returns nothing
-    call Cheat("exec-lua:jass2lua.runtime")
-    call Cheat("exec-lua:jass2lua.main")
+    call Cheat("exec-lua:scripts.runtime")
+    call Cheat("exec-lua:scripts.main")
 endfunction
 
 function config takes nothing returns nothing
-    call Cheat("exec-lua:jass2lua.runtime")
-    call Cheat("exec-lua:jass2lua.config")
+    call Cheat("exec-lua:scripts.runtime")
+    call Cheat("exec-lua:scripts.config")
 endfunction
