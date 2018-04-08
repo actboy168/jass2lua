@@ -27,7 +27,7 @@ local function errorpos(pos, str)
     local endpos = jass:find('[\r\n]', pos) or (#jass+1)
     local sp = (' '):rep(pos-line_pos)
     local line = ('%s|\r\n%s\r\n%s|'):format(sp, jass:sub(line_pos, endpos-1), sp)
-    error(('[%s]第[%d]行: %s:\n===========================\n%s\n==========================='):format(file, line_count, str, line))
+    error(('\n\n%s\n\n[%s] 第 %d 行：\n===========================\n%s\n===========================\n'):format(str, file, line_count, line))
 end
 
 local function err(str)
@@ -116,6 +116,7 @@ local sp  = (S' \t' + P'\xEF\xBB\xBF' + com)^0
 local sps = (S' \t' + P'\xEF\xBB\xBF' + com)^1
 local cl  = com^0 * nl
 local spl = sp * cl
+local finish = P'\0' * P(1)^0
 
 local Keys = {'globals', 'endglobals', 'constant', 'native', 'array', 'and', 'or', 'not', 'type', 'extends', 'function', 'endfunction', 'nothing', 'takes', 'returns', 'call', 'set', 'return', 'if', 'endif', 'elseif', 'else', 'loop', 'endloop', 'exitwhen'}
 for _, key in ipairs(Keys) do
@@ -203,7 +204,7 @@ local Exp = P{
     Paren = sp * '(' * V'Def' * ')' * sp,
 
     Code  = Ct(keyvalue('type', 'code')  * sp * Whole'function' * sps * Cg(Id, 'name') * sp),
-    Call  = Ct(keyvalue('type', 'call')  * sp * Cg(Id, 'name') * '(' * V'Args' * ')' * sp),
+    Call  = Ct(keyvalue('type', 'call')  * sp * Cg(Id, 'name') * sp * '(' * V'Args' * ')' * sp),
     Vari  = Ct(keyvalue('type', 'vari')  * sp * Cg(Id, 'name') * sp * '[' * Cg(V'Def', 1) * ']' * sp),
     Var   = Ct(keyvalue('type', 'var')   * sp * Cg(Id, 'name') * sp),
     Neg   = Ct(keyvalue('type', 'neg')   * sp * '-' * sp * Cg(V'Exp', 1)),
@@ -292,7 +293,7 @@ local Function = P{
     End      = expect(sp * Whole'endfunction', '缺少endfunction') * endline(),
 }
 
-local pjass = expect(sps + cl + Type + Function + Global, P(1), '语法不正确')^0
+local pjass = expect(sps + cl + finish + Type + Function + Global, P(1), '语法不正确')^0
 
 local mt = {}
 setmetatable(mt, mt)
@@ -315,7 +316,7 @@ function mt:__call(_jass, _file, mode)
     lpeg.setmaxstack(1000)
     
     if mode then
-        return Ct((mt[mode] + spl)^1 + err'语法不正确'):match(_jass)
+        return Ct(expect(mt[mode] + spl, P(1), '语法不正确')^0):match(_jass)
     else
         return Ct(pjass):match(_jass), comments
     end
