@@ -229,9 +229,6 @@ local static = {
         vtype = 'boolean',
         value = false,
     },
-    RETURN = {
-        type = 'return',
-    },
 }
 
 local function Integer(neg, int)
@@ -337,7 +334,7 @@ local function getBinary(op, e1, e2)
     if not t1 or not t2 then
         return
     end
-    
+
     if op == '+' then
         return getAdd(t1, t2)
     elseif op == '-' then
@@ -548,7 +545,7 @@ local function getVar(name)
     if var then
         return var, 'arg'
     end
-    
+
     local var = state.globals[name]
     if var then
         local exploit = state.exploit[name]
@@ -961,7 +958,9 @@ function parser.Return()
             parserError(lang.parser.ERROR_MISS_RETURN:format(func.name, t1))
         end
     end
-    return static.RETURN
+    return {
+        type = 'return',
+    }
 end
 
 function parser.ReturnExp(exp)
