@@ -1,42 +1,40 @@
-local exepath
-(function()
-	exepath = package.cpath:sub(1, package.cpath:find(';')-6)
-	package.path = package.path .. ';' .. exepath .. '..\\src\\?.lua;' .. exepath .. '..\\src\\?\\init.lua'
-end)()
+root = arg[0] .. '\\..\\..'
+package.path = package.path .. ';' .. root .. '\\src\\?.lua'
+                            .. ';' .. root .. '\\src\\?\\init.lua'
 
 require 'filesystem'
 require 'utility'
-local uni       = require 'unicode'
 local parser    = require 'parser'
 local converter = require 'converter'
-local stormlib  = require 'stormlib'
+local stormlib  = require 'ffi.stormlib'
 
 
-local root = fs.path(uni.a2u(exepath)):parent_path():parent_path()
+local root = fs.path(root)
 
 local function convert_common()
     local common = io.load(root / 'src' / 'jass' / 'common.j')
-    local ast = parser(common,   'common.j',   ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j', option)
+    return converter(ast, comments, option.state)
 end
 
 local function convert_blizzard()
     local common   = io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = io.load(root / 'src' / 'jass' / 'blizzard.j')
-    local ast
-    ast = parser(common,   'common.j',   ast)
-    ast = parser(blizzard, 'blizzard.j', ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j',   option)
+    local ast, comments = parser.parser(blizzard, 'blizzard.j', option)
+    return converter(ast, comments, option.state)
 end
 
 local function convert_war3map(war3map)
     local common   = io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = io.load(root / 'src' / 'jass' / 'blizzard.j')
-    local ast
-    ast = parser(common,   'common.j',   ast)
-    ast = parser(blizzard, 'blizzard.j', ast)
-    ast = parser(war3map,  'war3map.j',  ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j',   option)
+    local ast, comments = parser.parser(blizzard, 'blizzard.j', option)
+    local ast, comments = parser.parser(war3map,  'war3map.j',  option)
+    return converter(ast, comments, option.state)
 end
 
 local function get_common(map)
@@ -44,8 +42,9 @@ local function get_common(map)
     if not common then
         return io.load(root / 'src' / 'import' / 'common.lua')
     end
-    local ast = parser(common,   'common.j',   ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j', option)
+    return converter(ast, comments, option.state)
 end
 
 local function get_blizzard(map)
@@ -54,21 +53,21 @@ local function get_blizzard(map)
         return io.load(root / 'src' / 'import' / 'blizzard.lua')
     end
     local common = map:load_file 'common.j' or map:load_file 'scripts\\common.j' or io.load(root / 'src' / 'jass' / 'common.j')
-    local ast
-    ast = parser(common,   'common.j',   ast)
-    ast = parser(blizzard, 'blizzard.j', ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j',   option)
+    local ast, comments = parser.parser(blizzard, 'blizzard.j', option)
+    return converter(ast, comments, option.state)
 end
 
 local function get_war3map(map)
     local common   = map:load_file 'common.j'   or map:load_file 'scripts\\common.j'   or io.load(root / 'src' / 'jass' / 'common.j')
     local blizzard = map:load_file 'blizzard.j' or map:load_file 'scripts\\blizzard.j' or io.load(root / 'src' / 'jass' / 'blizzard.j')
     local war3map  = map:load_file 'war3map.j'  or map:load_file 'scripts\\war3map.j'
-    local ast
-    ast = parser(common,   'common.j',   ast)
-    ast = parser(blizzard, 'blizzard.j', ast)
-    ast = parser(war3map,  'war3map.j',  ast)
-    return converter(ast)
+    local option = {}
+    local ast, comments = parser.parser(common,   'common.j',   option)
+    local ast, comments = parser.parser(blizzard, 'blizzard.j', option)
+    local ast, comments = parser.parser(war3map,  'war3map.j',  option)
+    return converter(ast, comments, option.state)
 end
 
 local function save_files(map, common, blizzard, war3map)
@@ -123,7 +122,7 @@ local function main()
         io.save(root / 'common.lua', convert_common())
         io.save(root / 'blizzard.lua', convert_blizzard())
     else
-        local path = fs.path(uni.a2u(arg[1]))
+        local path = fs.path(arg[1])
         if path:extension():string() == '.j' then
             local buf = convert_war3map(io.load(path))
             io.save(root / 'war3map.lua', buf)
@@ -131,7 +130,7 @@ local function main()
             convert_map(path)
         end
     end
-    
+
     print('完成,用时', os.clock(), '秒')
 end
 

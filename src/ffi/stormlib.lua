@@ -1,4 +1,6 @@
 local ffi = require 'ffi'
+local loaddll = require 'ffi.loaddll'
+
 ffi.cdef[[
     struct SFILE_CREATE_MPQ {
         unsigned long cbSize;         // Size of this structure, in bytes
@@ -59,8 +61,9 @@ ffi.cdef[[
 
 local SFileMpqNumberOfFiles = 36
 
+loaddll 'stormlib'
 require 'filesystem'
-local uni = require 'unicode'
+local uni = require 'ffi.unicode'
 local stormlib = ffi.load('stormlib')
 
 local function current_filetime()

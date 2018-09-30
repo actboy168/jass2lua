@@ -1,5 +1,7 @@
 local lines
 local jass
+local comments
+local state
 local tab_count
 
 local current_function
@@ -17,15 +19,15 @@ local function insert_one_line(n, str, ignore_tab)
     end
     if n > #lines+1 then
         for i = #lines+1, n-1 do
-            if jass.comments[i] then
-                lines[i] = ('%s--%s'):format(('\t'):rep(tab), jass.comments[i])
+            if comments[i] then
+                lines[i] = ('%s--%s'):format(('\t'):rep(tab), comments[i])
             else
                 lines[i] = ''
             end
         end
     end
-    if jass.comments[n] then
-        lines[n] = ('%s --%s'):format(str, jass.comments[n])
+    if comments[n] then
+        lines[n] = ('%s --%s'):format(str, comments[n])
     else
         lines[n] = str
     end
@@ -79,7 +81,8 @@ local function get_integer(exp)
 end
 
 local function get_real(exp)
-    local int, float = math.modf(exp.value)
+    local real = exp.value:gsub('%s', '')
+    local int, float = math.modf(real)
     return int32(int) + float
 end
 
@@ -333,8 +336,8 @@ function get_exp(exp, op, pos)
 end
 
 local function base_type(type)
-    while jass.types[type].extends do
-        type = jass.types[type].extends
+    while state.types[type].extends do
+        type = state.types[type].extends
     end
     return type
 end
@@ -385,7 +388,7 @@ local function add_local(loc)
 end
 
 local function add_locals(locals)
-    if #locals == 0 then
+    if not locals or #locals == 0 then
         return
     end
     for _, loc in ipairs(locals) do
@@ -531,14 +534,14 @@ local function add_functions()
 end
 
 local function add_comments()
-    for n, comment in pairs(jass.comments) do
+    for n, comment in pairs(comments) do
         insert_comments(n, comment)
     end
 end
 
-return function (_jass)
+return function (...)
+    jass, comments, state = ...
     lines = {}
-    jass = _jass
     tab_count = 0
 
     add_globals()

@@ -1,43 +1,24 @@
-local uni = require 'unicode'
-
-local io_open = io.open
-function io.open(filename, ...)
-	return io_open(uni.u2a(filename:string()), ...)
+function io.load(file_path)
+    local f, e = io.open(file_path:string(), "rb")
+    if f then
+        if f:read(3) ~= '\xEF\xBB\xBF' then
+            f:seek('set')
+        end
+        local content = f:read 'a'
+        f:close()
+        return content
+    else
+        return false, e
+    end
 end
 
-function io.load(filename)
-	local f, e = io.open(filename, "rb")
-	if f then
-		local str = f:read 'a'
-		f:close()
-		return str
-	else
-		return false, e
-	end
-end
-
-function io.save(filename, str)
-	local f, e = io.open(filename, "wb")
-	if f then
-		f:write(str)
-		f:close()
-		return true
-	else
-		return false, e
-	end
-end
-
-local std_print = print
-function print(...)
-	local tbl = {...}
-	local count = select('#', ...)
-	for i = 1, count do
-		tbl[i] = uni.u2a(tostring(tbl[i]))
-	end
-	std_print(table.unpack(tbl))
-end
-
-local std_error = error
-function error(msg, level)
-	std_error(uni.u2a(msg), (level or 1) + 1)
+function io.save(file_path, content)
+    local f, e = io.open(file_path:string(), "wb")
+    if f then
+        f:write(content)
+        f:close()
+        return true
+    else
+        return false, e
+    end
 end
