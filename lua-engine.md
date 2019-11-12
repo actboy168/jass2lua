@@ -115,10 +115,10 @@ jass.slk库可以在地图运行时读取地图内的slk/w3*文件。
 ```lua
 	local slk = require 'jass.slk'
 	for k, v in pairs(slk.ability) do
-		print(k .. ' ' .. v)
+		print(k, v)
 	end
 	for k, v in pairs(slk.ability.AHbz) do
-		print(k .. ' ' .. v)
+		print(k, v)
 	end
 ```
 
