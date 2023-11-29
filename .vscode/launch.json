@@ -2,18 +2,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "launch",
+            "name": "转换脚本",
             "type": "lua",
             "request": "launch",
             "stopOnEntry": false,
             "program": "${workspaceRoot}/src/main.lua",
-            "cwd": "${workspaceRoot}/bin",
-            "path": "${workspaceRoot}/src/?.lua",
-            "cpath": "${workspaceRoot}/bin/?.dll;",
+            "luaexe": "${workspaceFolder}/bin/lua.exe",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
             "arg": [
-                "${workspaceRoot}/war3map.j"
+                "${workspaceRoot}/../../wars_map/爆战不死族_源码版/war3map.j"
             ],
-            "console": "ansi"
+        },
+        {
+            "name": "生成基础文件",
+            "type": "lua",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${workspaceRoot}/src/main.lua",
+            "luaexe": "${workspaceFolder}/bin/lua.exe",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
         }
     ]
 }
