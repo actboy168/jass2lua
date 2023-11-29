@@ -162,7 +162,7 @@ local function get_add(exp)
     if exp.vtype == 'integer' or exp.vtype == 'real' then
         return ('%s + %s'):format(get_exp(exp[1], '+', 1), get_exp(exp[2], '+', 2))
     elseif exp.vtype == 'string' then
-        return ('%s .. %s'):format(must_string(exp[1], '..', 1), must_string(exp[2], '..', 2))
+        return ('%s .. %s'):format(must_string(exp[1]), must_string(exp[2]))
     end
     error(('表达式类型错误:%s %s'):format(exp.type, exp.vtype))
 end
@@ -466,7 +466,7 @@ local function add_ifs(chunk)
         elseif data.type == 'else' then
             add_else(data)
         else
-            print('未知的判断类型', line.type)
+            print('未知的判断类型', data.type)
         end
     end
     insert_line(chunk.endline, 'end')

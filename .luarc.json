@@ -1,0 +1,17 @@
+{
+    "workspace.library": ["../LuaShare"],
+    "runtime.pathStrict": true,
+    "runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "../LuaShare/?.lua",
+        "../LuaShare/?/init.lua"
+    ],
+    "diagnostics.globals": [
+        "fs",
+        "root"
+    ],
+    "workspace.ignoreDir": [
+        "src/import"
+    ]
+}
